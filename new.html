@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข่าวสารและประกาศ - วิทยาลัยเทคโนโลยี</title>
+    
+    <!-- Ionic Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #2563eb;
+    --secondary-blue: #3b82f6;
+    --light-blue: #dbeafe;
+    --dark-blue: #1e40af;
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    --gradient-light: linear-gradient(135deg, var(--light-blue), var(--white));
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--light-blue) 100%);
+    color: var(--gray-700);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.header {
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--gray-200);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+}
+
+.logo h1 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav a {
+    text-decoration: none;
+    color: var(--gray-600);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    position: relative;
+}
+
+.nav a:hover {
+    color: var(--primary-blue);
+    background: var(--light-blue);
+    transform: translateY(-2px);
+}
+
+.nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-blue);
+    transition: var(--transition);
+    transform: translateX(-50%);
+}
+
+.nav a:hover::after {
+    width: 80%;
+}
+
+/* Urgent Notification */
+.urgent-notification {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    color: var(--white);
+    padding: 12px 0;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+.notification-icon {
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.notification-text {
+    flex: 1;
+    font-weight: 500;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 8px;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.main-content .container {
+    flex: 1;
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 3rem 0;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.hero-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-section p {
+    font-size: 1.1rem;
+    color: var(--gray-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Filter Section */
+.filter-section {
+    margin-bottom: 2rem;
+}
+
+.filter-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
+}
+
+.search-box {
+    display: flex;
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    background: var(--gray-50);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.search-btn:hover {
+    background: var(--dark-blue);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+}
+
+/* News Section */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.news-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--gray-200);
+    position: relative;
+}
+
+.news-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.news-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gray-300);
+    transition: var(--transition);
+}
+
+.news-card.urgent::before {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.news-card.news::before {
+    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+}
+
+.news-card.announcement::before {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.news-card.event::before {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.news-badge {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.urgent-badge {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    color: var(--white);
+}
+
+.news-badge {
+    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+}
+
+.announcement-badge {
+    background: linear-gradient(90deg, #10b981, #059669);
+    color: var(--white);
+}
+
+.event-badge {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+    color: var(--white);
+}
+
+.news-date {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.news-content {
+    padding: 1.5rem;
+}
+
+.news-content h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.news-content p {
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.news-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+}
+
+.news-author {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.read-more {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.read-more:hover {
+    background: var(--light-blue);
+    transform: translateX(4px);
+}
+
+/* Pagination */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    background: var(--white);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.page-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+    transform: translateY(-2px);
+}
+
+.page-btn.active {
+    background: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.sidebar-content {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sidebar-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.sidebar-section h3 {
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.sidebar-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--primary-blue);
+}
+
+.urgent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.urgent-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.urgent-item:hover {
+    background: var(--gray-50);
+}
+
+.urgent-dot {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.calendar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.calendar-item:hover {
+    background: var(--light-blue);
+    transform: translateX(4px);
+}
+
+.calendar-date {
+    font-weight: 600;
+    color: var(--primary-blue);
+    min-width: 60px;
+}
+
+.calendar-event {
+    color: var(--gray-700);
+    font-size: 0.9rem;
+}
+
+.link-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.link-list a {
+    text-decoration: none;
+    color: var(--gray-600);
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    display: block;
+}
+
+.link-list a:hover {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    transform: translateX(4px);
+}
+
+/* Footer */
+.footer {
+    background: var(--gray-800);
+    color: var(--white);
+    margin-top: 3rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.footer-section h4 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.footer-section p {
+    color: var(--gray-300);
+    line-height: 1.6;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: var(--gray-300);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    color: var(--white);
+    background: var(--primary-blue);
+    transform: translateY(-2px);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--gray-700);
+    padding: 1rem 0;
+    text-align: center;
+    color: var(--gray-400);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        order: -1;
+    }
+    
+    .sidebar-content {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+    
+    .sidebar-section {
+        min-width: 250px;
+    }
+    
+    .header .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        max-width: none;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-section h2 {
+        font-size: 2rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.news-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.news-card:nth-child(1) { animation-delay: 0.1s; }
+.news-card:nth-child(2) { animation-delay: 0.2s; }
+.news-card:nth-child(3) { animation-delay: 0.3s; }
+.news-card:nth-child(4) { animation-delay: 0.4s; }
+.news-card:nth-child(5) { animation-delay: 0.5s; }
+.news-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-blue);
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="./2.jpg" alt="โลโก้วิทยาลัย" class="logo-img">
+                <h1>วิทยาลัยเทคโนโลยีบริหารธุรกิจกิตติมา อินเตอร์</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="./index.html"><ion-icon name="home-outline"></ion-icon> หน้าแรก</a></li>
+                    <li><a href="#news"><ion-icon name="newspaper-outline"></ion-icon> ข่าวสาร</a></li>
+                    <li><a href="#announcement"><ion-icon name="megaphone-outline"></ion-icon> ประกาศ</a></li>
+                    <li><a href="./about.html"><ion-icon name="information-circle-outline"></ion-icon> เกี่ยวกับเรา</a></li>
+                    <li><a href="#contact"><ion-icon name="call-outline"></ion-icon> ติดต่อ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- แถบแจ้งเตือนด่วน -->
+    <div class="urgent-notification">
+        <div class="container">
+            <div class="notification-content">
+                <ion-icon name="warning-outline" class="notification-icon"></ion-icon>
+                <span class="notification-text">ประกาศด่วน: การปิดภาคเรียนเนื่องจากสถานการณ์พิเศษ</span>
+                <button class="close-btn"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- หัวข้อหลัก -->
+            <section class="hero-section">
+                <h2>ข่าวสารและประกาศ</h2>
+                <p>ติดตามข่าวสารและประกาศสำคัญจากวิทยาลัย</p>
+            </section>
+
+            <!-- ฟิลเตอร์และการค้นหา -->
+            <section class="filter-section">
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <input type="text" placeholder="ค้นหาข่าวสาร..." class="search-input">
+                        <button class="search-btn"><ion-icon name="search-outline"></ion-icon></button>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">
+                            <ion-icon name="apps-outline"></ion-icon> ทั้งหมด
+                        </button>
+                        <button class="filter-btn" data-filter="news">
+                            <ion-icon name="newspaper-outline"></ion-icon> ข่าวสาร
+                        </button>
+                        <button class="filter-btn" data-filter="announcement">
+                            <ion-icon name="megaphone-outline"></ion-icon> ประกาศ
+                        </button>
+                        <button class="filter-btn" data-filter="urgent">
+                            <ion-icon name="alert-circle-outline"></ion-icon> ด่วน
+                        </button>
+                        <button class="filter-btn" data-filter="event">
+                            <ion-icon name="calendar-outline"></ion-icon> กิจกรรม
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ข่าวสารหลัก -->
+            <section class="news-section">
+                <div class="news-grid">
+                    <!-- ข่าวด่วน -->
+                    <article class="news-card urgent">
+                        <div class="news-header">
+                            <span class="news-badge urgent-badge">
+                                <ion-icon name="flash-outline"></ion-icon> ด่วน
+                            </span>
+                            <span class="news-date">
+                                <ion-icon name="calendar-outline"></ion-icon> 13 กรกฎาคม 2568
+                            </span>
+                        </div>
+                        <div class="news-content">
+                            <h3>ประกาศเลื่อนการสอบกลางภาค</h3>
+                            <p>เนื่องจากสถานการณ์พิเศษ ทางวิทยาลัยขอประกาศเลื่อนการสอบกลางภาคออกไป...</p>
+                        </div>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <ion-icon name="person-outline"></ion-icon> โดย: งานวิชาการ
+                            </span>
+                            <a href="#" class="read-more">
+                                อ่านต่อ <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- ข่าวสารทั่วไป -->
+                    <article class="news-card news">
+                        <div class="news-header">
+                            <span class="news-badge news-badge">
+                                <ion-icon name="newspaper-outline"></ion-icon> ข่าวสาร
+                            </span>
+                            <span class="news-date">
+                                <ion-icon name="calendar-outline"></ion-icon> 12 กรกฎาคม 2568
+                            </span>
+                        </div>
+                        <div class="news-content">
+                            <h3>กิจกรรมวันภาษาไทยแห่งชาติ</h3>
+                            <p>ขอเชิญนักศึกษาทุกคนร่วมกิจกรรมวันภาษาไทยแห่งชาติ วันที่ 29 กรกฎาคม 2568...</p>
+                        </div>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <ion-icon name="person-outline"></ion-icon> โดย: งานกิจการนักศึกษา
+                            </span>
+                            <a href="#" class="read-more">
+                                อ่านต่อ <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- ประกาศ -->
+                    <article class="news-card announcement">
+                        <div class="news-header">
+                            <span class="news-badge announcement-badge">
+                                <ion-icon name="megaphone-outline"></ion-icon> ประกาศ
+                            </span>
+                            <span class="news-date">
+                                <ion-icon name="calendar-outline"></ion-icon> 11 กรกฎาคม 2568
+                            </span>
+                        </div>
+                        <div class="news-content">
+                            <h3>ประกาศรับสมัครทุนการศึกษา</h3>
+                            <p>เปิดรับสมัครทุนการศึกษาสำหรับนักศึกษาที่มีผลการเรียนดีเยี่ยม...</p>
+                        </div>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <ion-icon name="person-outline"></ion-icon> โดย: งานทุนการศึกษา
+                            </span>
+                            <a href="#" class="read-more">
+                                อ่านต่อ <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- กิจกรรม -->
+                    <article class="news-card event">
+                        <div class="news-header">
+                            <span class="news-badge event-badge">
+                                <ion-icon name="calendar-outline"></ion-icon> กิจกรรม
+                            </span>
+                            <span class="news-date">
+                                <ion-icon name="calendar-outline"></ion-icon> 10 กรกฎาคม 2568
+                            </span>
+                        </div>
+                        <div class="news-content">
+                            <h3>งานแสดงผลงานนักศึกษา</h3>
+                            <p>ขอเชิญร่วมชมงานแสดงผลงานนักศึกษา ภาควิชาคอมพิวเตอร์ และเทคโนโลยีสารสนเทศ...</p>
+                        </div>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <ion-icon name="person-outline"></ion-icon> โดย: ภาควิชาคอมพิวเตอร์
+                            </span>
+                            <a href="#" class="read-more">
+                                อ่านต่อ <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- ข่าวสารเพิ่มเติม -->
+                    <article class="news-card news">
+                        <div class="news-header">
+                            <span class="news-badge news-badge">
+                                <ion-icon name="newspaper-outline"></ion-icon> ข่าวสาร
+                            </span>
+                            <span class="news-date">
+                                <ion-icon name="calendar-outline"></ion-icon> 9 กรกฎาคม 2568
+                            </span>
+                        </div>
+                        <div class="news-content">
+                            <h3>การปรับปรุงระบบห้องสมุด</h3>
+                            <p>ห้องสมุดกำลังปรับปรุงระบบใหม่ เพื่อให้บริการที่ดียิ่งขึ้น...</p>
+                        </div>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <ion-icon name="person-outline"></ion-icon> โดย: งานห้องสมุด
+                            </span>
+                            <a href="#" class="read-more">
+                                อ่านต่อ <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- ประกาศเพิ่มเติม -->
+                    <article class="news-card announcement">
+                        <div class="news-header">
+                            <span class="news-badge announcement-badge">
+                                <ion-icon name="megaphone-outline"></ion-icon> ประกาศ
+                            </span>
+                            <span class="news-date">
+                                <ion-icon name="calendar-outline"></ion-icon> 8 กรกฎาคม 2568
+                            </span>
+                        </div>
+                        <div class="news-content">
+                            <h3>ตารางสอบปลายภาค</h3>
+                            <p>ประกาศตารางสอบปลายภาคเรียนที่ 1 ปีการศึกษา 2568...</p>
+                        </div>
+                        <div class="news-footer">
+                            <span class="news-author">
+                                <ion-icon name="person-outline"></ion-icon> โดย: งานทะเบียน
+                            </span>
+                            <a href="#" class="read-more">
+                                อ่านต่อ <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Pagination -->
+            <section class="pagination-section">
+                <div class="pagination">
+                    <button class="page-btn" disabled>
+                        <ion-icon name="chevron-back-outline"></ion-icon> ก่อนหน้า
+                    </button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">
+                        ถัดไป <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <!-- ข่าวด่วน -->
+            <div class="sidebar-section">
+                <h3><ion-icon name="alert-circle-outline"></ion-icon> ข่าวด่วน</h3>
+                <div class="urgent-list">
+                    <div class="urgent-item">
+                        <ion-icon name="radio-button-on-outline" class="urgent-dot"></ion-icon>
+                        <span>ประกาศเลื่อนการสอบ</span>
+                    </div>
+                    <div class="urgent-item">
+                        <ion-icon name="radio-button-on-outline" class="urgent-dot"></ion-icon>
+                        <span>เปลี่ยนแปลงตารางเรียน</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ปฏิทินกิจกรรม -->
+            <div class="sidebar-section">
+                <h3><ion-icon name="calendar-outline"></ion-icon> ปฏิทินกิจกรรม</h3>
+                <div class="calendar">
+                    <div class="calendar-item">
+                        <span class="calendar-date">
+                            <ion-icon name="calendar-number-outline"></ion-icon> 15 ก.ค.
+                        </span>
+                        <span class="calendar-event">วันสำคัญ</span>
+                    </div>
+                    <div class="calendar-item">
+                        <span class="calendar-date">
+                            <ion-icon name="calendar-number-outline"></ion-icon> 20 ก.ค.
+                        </span>
+                        <span class="calendar-event">สอบกลางภาค</span>
+                    </div>
+                    <div class="calendar-item">
+                        <span class="calendar-date">
+                            <ion-icon name="calendar-number-outline"></ion-icon> 25 ก.ค.
+                        </span>
+                        <span class="calendar-event">วันปิดภาคเรียน</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ลิงก์ที่เกี่ยวข้อง -->
+            <div class="sidebar-section">
+                <h3><ion-icon name="link-outline"></ion-icon> ลิงก์ที่เกี่ยวข้อง</h3>
+                <ul class="link-list">
+                    <li><a href="#"><ion-icon name="server-outline"></ion-icon> ระบบสารสนเทศ</a></li>
+                    <li><a href="#"><ion-icon name="school-outline"></ion-icon> E-Learning</a></li>
+                    <li><a href="#"><ion-icon name="library-outline"></ion-icon> ห้องสมุดออนไลน์</a></li>
+                    <li><a href="#"><ion-icon name="help-circle-outline"></ion-icon> ติดต่อสอบถาม</a></li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><ion-icon name="business-outline"></ion-icon> วิทยาลัยเทคโนโลยีบริหารธุรกิจกิตติมา อินเตอร์</h4>
+                    <p><ion-icon name="location-outline"></ion-icon> 123 ถนนเทคโนโลยี ตำบลนวัตกรรม<br>
+                    อำเภอการศึกษา จังหวัดความรู้ 12345</p>
+                </div>
+                <div class="footer-section">
+                    <h4><ion-icon name="call-outline"></ion-icon> ติดต่อเรา</h4>
+                    <p><ion-icon name="call-outline"></ion-icon> โทร: 061-060-7931<br>
+                    <ion-icon name="mail-outline"></ion-icon> อีเมล: Siributwicha015@Gmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4><ion-icon name="share-social-outline"></ion-icon> ติดตามเรา</h4>
+                    <div class="social-links">
+                        <a href="#"><ion-icon name="logo-facebook"></ion-icon> Facebook</a>
+                        <a href="#"><ion-icon name="chatbubble-outline"></ion-icon> Line</a>
+                        <a href="#"><ion-icon name="logo-instagram"></ion-icon> Instagram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p><ion-icon name="shield-checkmark-outline"></ion-icon> &copy; 2568 วิทยาลัยเทคโนโลยี สงวนลิขสิทธิ์</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // College News Website JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ข้อมูลข่าวสารจำลอง
+    const newsData = [
+        {
+            id: 1,
+            type: 'urgent',
+            title: 'ประกาศเลื่อนการสอบกลางภาค',
+            content: 'เนื่องจากสถานการณ์พิเศษ ทางวิทยาลัยขอประกาศเลื่อนการสอบกลางภาคออกไป...',
+            date: '2568-07-13',
+            author: 'งานวิชาการ',
+            views: 245
+        },
+        {
+            id: 2,
+            type: 'news',
+            title: 'กิจกรรมวันภาษาไทยแห่งชาติ',
+            content: 'ขอเชิญนักศึกษาทุกคนร่วมกิจกรรมวันภาษาไทยแห่งชาติ วันที่ 29 กรกฎาคม 2568...',
+            date: '2568-07-12',
+            author: 'งานกิจการนักศึกษา',
+            views: 189
+        },
+        {
+            id: 3,
+            type: 'announcement',
+            title: 'ประกาศรับสมัครทุนการศึกษา',
+            content: 'เปิดรับสมัครทุนการศึกษาสำหรับนักศึกษาที่มีผลการเรียนดีเยี่ยม...',
+            date: '2568-07-11',
+            author: 'งานทุนการศึกษา',
+            views: 156
+        },
+        {
+            id: 4,
+            type: 'event',
+            title: 'งานแสดงผลงานนักศึกษา',
+            content: 'ขอเชิญร่วมชมงานแสดงผลงานนักศึกษา ภาควิชาคอมพิวเตอร์ และเทคโนโลยีสารสนเทศ...',
+            date: '2568-07-10',
+            author: 'ภาควิชาคอมพิวเตอร์',
+            views: 123
+        },
+        {
+            id: 5,
+            type: 'news',
+            title: 'การปรับปรุงระบบห้องสมุด',
+            content: 'ห้องสมุดกำลังปรับปรุงระบบใหม่ เพื่อให้บริการที่ดียิ่งขึ้น...',
+            date: '2568-07-09',
+            author: 'งานห้องสมุด',
+            views: 98
+        },
+        {
+            id: 6,
+            type: 'announcement',
+            title: 'ตารางสอบปลายภาค',
+            content: 'ประกาศตารางสอบปลายภาคเรียนที่ 1 ปีการศึกษา 2568...',
+            date: '2568-07-08',
+            author: 'งานทะเบียน',
+            views: 301
+        }
+    ];
+
+    // ตัวแปรสำหรับเก็บสถานะ
+    let currentFilter = 'all';
+    let currentPage = 1;
+    let itemsPerPage = 6;
+    let filteredNews = [...newsData];
+
+    // ฟังก์ชันสำหรับปิดแจ้งเตือนด่วน
+    function initUrgentNotification() {
+        const closeBtn = document.querySelector('.close-btn');
+        const urgentNotification = document.querySelector('.urgent-notification');
+        
+        if (closeBtn && urgentNotification) {
+            closeBtn.addEventListener('click', function() {
+                urgentNotification.style.transform = 'translateY(-100%)';
+                urgentNotification.style.opacity = '0';
+                setTimeout(() => {
+                    urgentNotification.style.display = 'none';
+                }, 300);
+            });
+        }
+    }
+
+    // ฟังก์ชันสำหรับค้นหาข่าวสาร
+    function initSearch() {
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filteredNews = newsData.filter(news => 
+                    currentFilter === 'all' || news.type === currentFilter
+                );
+            } else {
+                filteredNews = newsData.filter(news => {
+                    const matchesSearch = news.title.toLowerCase().includes(searchTerm) ||
+                                        news.content.toLowerCase().includes(searchTerm) ||
+                                        news.author.toLowerCase().includes(searchTerm);
+                    const matchesFilter = currentFilter === 'all' || news.type === currentFilter;
+                    return matchesSearch && matchesFilter;
+                });
+            }
+            
+            currentPage = 1;
+            renderNews();
+            updatePagination();
+        }
+
+        if (searchInput && searchBtn) {
+            searchInput.addEventListener('input', debounce(performSearch, 300));
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
+    }
+
+    // ฟังก์ชันสำหรับ debounce
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // ฟังก์ชันสำหรับฟิลเตอร์ข่าวสาร
+    function initFilter() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // อัพเดต active state
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // อัพเดตฟิลเตอร์
+                currentFilter = this.getAttribute('data-filter');
+                
+                // กรองข่าวสาร
+                const searchTerm = document.querySelector('.search-input').value.toLowerCase().trim();
+                
+                if (currentFilter === 'all') {
+                    filteredNews = newsData.filter(news => 
+                        searchTerm === '' || 
+                        news.title.toLowerCase().includes(searchTerm) ||
+                        news.content.toLowerCase().includes(searchTerm) ||
+                        news.author.toLowerCase().includes(searchTerm)
+                    );
+                } else {
+                    filteredNews = newsData.filter(news => {
+                        const matchesType = news.type === currentFilter;
+                        const matchesSearch = searchTerm === '' || 
+                                            news.title.toLowerCase().includes(searchTerm) ||
+                                            news.content.toLowerCase().includes(searchTerm) ||
+                                            news.author.toLowerCase().includes(searchTerm);
+                        return matchesType && matchesSearch;
+                    });
+                }
+                
+                currentPage = 1;
+                renderNews();
+                updatePagination();
+                
+                // เพิ่มเอฟเฟกต์การเปลี่ยน
+                const newsGrid = document.querySelector('.news-grid');
+                newsGrid.style.opacity = '0.7';
+                newsGrid.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    newsGrid.style.opacity = '1';
+                    newsGrid.style.transform = 'translateY(0)';
+                }, 200);
+            });
+        });
+    }
+
+    // ฟังก์ชันสำหรับแสดงผลข่าวสาร
+    function renderNews() {
+        const newsGrid = document.querySelector('.news-grid');
+        if (!newsGrid) return;
+        
+        // คำนวณข่าวสารที่จะแสดงในหน้าปัจจุบัน
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const newsToShow = filteredNews.slice(startIndex, endIndex);
+        
+        // สร้าง HTML สำหรับข่าวสาร
+        newsGrid.innerHTML = newsToShow.map((news, index) => {
+            const badgeClass = `${news.type}-badge`;
+            const badgeText = getBadgeText(news.type);
+            const formattedDate = formatDate(news.date);
+            
+            return `
+                <article class="news-card ${news.type}" style="animation-delay: ${index * 0.1}s">
+                    <div class="news-header">
+                        <span class="news-badge ${badgeClass}">${badgeText}</span>
+                        <span class="news-date">${formattedDate}</span>
+                    </div>
+                    <div class="news-content">
+                        <h3>${news.title}</h3>
+                        <p>${news.content}</p>
+                    </div>
+                    <div class="news-footer">
+                        <span class="news-author">โดย: ${news.author}</span>
+                        <div class="news-actions">
+                            <span class="news-views">👁️ ${news.views}</span>
+                            <a href="#" class="read-more" data-news-id="${news.id}">อ่านต่อ</a>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }).join('');
+        
+        // เพิ่ม event listeners สำหรับปุ่ม "อ่านต่อ"
+        const readMoreBtns = newsGrid.querySelectorAll('.read-more');
+        readMoreBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const newsId = parseInt(this.getAttribute('data-news-id'));
+                showNewsModal(newsId);
+            });
+        });
+    }
+
+    // ฟังก์ชันสำหรับแสดง modal ข่าวสาร
+    function showNewsModal(newsId) {
+        const news = newsData.find(n => n.id === newsId);
+        if (!news) return;
+        
+        // สร้าง modal
+        const modal = document.createElement('div');
+        modal.className = 'news-modal';
+        modal.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${news.title}</h2>
+                        <button class="modal-close">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-meta">
+                            <span class="news-badge ${news.type}-badge">${getBadgeText(news.type)}</span>
+                            <span class="news-date">${formatDate(news.date)}</span>
+                            <span class="news-author">โดย: ${news.author}</span>
+                            <span class="news-views">👁️ ${news.views}</span>
+                        </div>
+                        <div class="modal-text">
+                            <p>${news.content}</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // เพิ่ม CSS สำหรับ modal
+        if (!document.querySelector('#modal-styles')) {
+            const modalStyles = document.createElement('style');
+            modalStyles.id = 'modal-styles';
+            modalStyles.textContent = `
+                .news-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1000;
+                    animation: fadeIn 0.3s ease-out;
+                }
+                
+                .modal-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    backdrop-filter: blur(5px);
+                }
+                
+                .modal-content {
+                    background: white;
+                    border-radius: 12px;
+                    max-width: 600px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                    animation: slideInUp 0.3s ease-out;
+                }
+                
+                .modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1.5rem;
+                    border-bottom: 1px solid #e2e8f0;
+                }
+                
+                .modal-header h2 {
+                    color: #1e293b;
+                    font-size: 1.5rem;
+                    margin: 0;
+                }
+                
+                .modal-close {
+                    background: none;
+                    border: none;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    color: #64748b;
+                    padding: 0.5rem;
+                    border-radius: 50%;
+                    transition: all 0.2s;
+                }
+                
+                .modal-close:hover {
+                    background: #f1f5f9;
+                    color: #1e293b;
+                }
+                
+                .modal-body {
+                    padding: 1.5rem;
+                }
+                
+                .modal-meta {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                    margin-bottom: 1.5rem;
+                    padding-bottom: 1rem;
+                    border-bottom: 1px solid #e2e8f0;
+                }
+                
+                .modal-text p {
+                    margin-bottom: 1rem;
+                    line-height: 1.7;
+                    color: #334155;
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
+                @keyframes slideInUp {
+                    from { 
+                        opacity: 0;
+                        transform: translateY(50px);
+                    }
+                    to { 
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                .news-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+                
+                .news-views {
+                    color: #64748b;
+                    font-size: 0.9rem;
+                }
+            `;
+            document.head.appendChild(modalStyles);
+        }
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        
+        // เพิ่ม event listeners สำหรับปิด modal
+        const closeBtn = modal.querySelector('.modal-close');
+        const overlay = modal.querySelector('.modal-overlay');
+        
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+        
+        function closeModal() {
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        // เพิ่ม animation สำหรับ fadeOut
+        const fadeOutKeyframes = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        
+        if (!document.querySelector('#fadeout-styles')) {
+            const fadeOutStyles = document.createElement('style');
+            fadeOutStyles.id = 'fadeout-styles';
+            fadeOutStyles.textContent = fadeOutKeyframes;
+            document.head.appendChild(fadeOutStyles);
+        }
+        
+        // เพิ่มจำนวนการดู
+        news.views++;
+        renderNews();
+    }
+
+    // ฟังก์ชันสำหรับ pagination
+    function initPagination() {
+        const paginationSection = document.querySelector('.pagination');
+        if (!paginationSection) return;
+        
+        paginationSection.addEventListener('click', function(e) {
+            if (e.target.classList.contains('page-btn')) {
+                const btnText = e.target.textContent;
+                
+                if (btnText === '« ก่อนหน้า') {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderNews();
+                        updatePagination();
+                    }
+                } else if (btnText === 'ถัดไป »') {
+                    const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderNews();
+                        updatePagination();
+                    }
+                } else if (!isNaN(parseInt(btnText))) {
+                    currentPage = parseInt(btnText);
+                    renderNews();
+                    updatePagination();
+                }
+            }
+        });
+    }
+
+    // ฟังก์ชันสำหรับอัพเดต pagination
+    function updatePagination() {
+        const pagination = document.querySelector('.pagination');
+        if (!pagination) return;
+        
+        const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+        
+        let paginationHTML = '';
+        
+        // ปุ่มก่อนหน้า
+        paginationHTML += `
+            <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''}>
+                « ก่อนหน้า
+            </button>
+        `;
+        
+        // หมายเลขหน้า
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPage) {
+                paginationHTML += `<button class="page-btn active">${i}</button>`;
+            } else {
+                paginationHTML += `<button class="page-btn">${i}</button>`;
+            }
+        }
+        
+        // ปุ่มถัดไป
+        paginationHTML += `
+            <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''}>
+                ถัดไป »
+            </button>
+        `;
+        
+        pagination.innerHTML = paginationHTML;
+    }
+
+    // ฟังก์ชันสำหรับเลื่อนหน้าเว็บแบบนุ่มนวล
+    function initSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+
+    // ฟังก์ชันสำหรับเอฟเฟกต์ parallax
+    function initParallaxEffect() {
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const heroSection = document.querySelector('.hero-section');
+            
+            if (heroSection) {
+                const rate = scrolled * -0.5;
+                heroSection.style.transform = `translateY(${rate}px)`;
+            }
+        });
+    }
+
+    // ฟังก์ชันสำหรับ back to top button
+    function initBackToTop() {
+        // สร้างปุ่ม back to top
+        const backToTopBtn = document.createElement('button');
+        backToTopBtn.className = 'back-to-top';
+        backToTopBtn.innerHTML = '↑';
+        backToTopBtn.setAttribute('aria-label', 'กลับไปด้านบน');
+        
+        // เพิ่ม CSS สำหรับปุ่ม
+        const backToTopStyles = document.createElement('style');
+        backToTopStyles.textContent = `
+            .back-to-top {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                width: 50px;
+                height: 50px;
+                background: var(--primary-blue);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                cursor: pointer;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(100px);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            }
+            
+            .back-to-top.visible {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+            
+            .back-to-top:hover {
+                background: var(--dark-blue);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+            }
+        `;
+        
+        document.head.appendChild(backToTopStyles);
+        document.body.appendChild(backToTopBtn);
+        
+        // แสดง/ซ่อนปุ่มตามการเลื่อน
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // เพิ่ม event listener สำหรับคลิก
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    // ฟังก์ชันช่วยเหลือ
+    function getBadgeText(type) {
+        const badgeTexts = {
+            'urgent': 'ด่วน',
+            'news': 'ข่าวสาร',
+            'announcement': 'ประกาศ',
+            'event': 'กิจกรรม'
+        };
+        return badgeTexts[type] || 'ทั่วไป';
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear() + 543; // แปลงเป็นพ.ศ.
+        
+        const months = [
+            'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
+            'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
+        ];
+        
+        return `${day} ${months[month - 1]} ${year}`;
+    }
+
+    // เริ่มต้นระบบทั้งหมด
+    function init() {
+        initUrgentNotification();
+        initSearch();
+        initFilter();
+        initPagination();
+        initSmoothScroll();
+        initParallaxEffect();
+        initBackToTop();
+        
+        // แสดงข่าวสารเริ่มต้น
+        renderNews();
+        updatePagination();
+        
+        // เพิ่ม loading animation
+        document.body.classList.add('loaded');
+    }
+
+    // เรียกใช้ฟังก์ชัน init
+    init();
+    
+    // เพิ่มประสิทธิภาพด้วย Service Worker (ถ้าต้องการ)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            // navigator.serviceWorker.register('/sw.js');
+        });
+    }
+});
+
+// ฟังก์ชันสำหรับแสดงการแจ้งเตือน
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    // เพิ่ม CSS สำหรับการแจ้งเตือน
+    if (!document.querySelector('#notification-styles')) {
+        const notificationStyles = document.createElement('style');
+        notificationStyles.id = 'notification-styles';
+        notificationStyles.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                z-index: 1001;
+                animation: slideInRight 0.3s ease-out;
+                max-width: 300px;
+            }
+            
+            .notification.success {
+                border-left: 4px solid #10b981;
+            }
+            
+            .notification.error {
+                border-left: 4px solid #ef4444;
+            }
+            
+            .notification.info {
+                border-left: 4px solid #3b82f6;
+            }
+            
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(notificationStyles);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // ลบการแจ้งเตือนหลังจาก 3 วินาที
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// ฟังก์ชันสำหรับโหลดข้อมูลเพิ่มเติม (จำลอง)
+function loadMoreNews() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            const moreNews = [
+                {
+                    id: 7,
+                    type: 'news',
+                    title: 'ข่าวสารใหม่ที่ 1',
+                    content: 'เนื้อหาข่าวสารใหม่...',
+                    date: '2568-07-07',
+                    author: 'งานประชาสัมพันธ์',
+                    views: 45
+                },
+                {
+                    id: 8,
+                    type: 'event',
+                    title: 'กิจกรรมใหม่',
+                    content: 'รายละเอียดกิจกรรม...',
+                    date: '2568-07-06',
+                    author: 'งานกิจกรรม',
+                    views: 67
+                }
+            ];
+            resolve(moreNews);
+        }, 1000);
+    });
+}
+    </script>
+</body>
+</html>

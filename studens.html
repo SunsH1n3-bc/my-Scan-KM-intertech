@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบเช็คชื่อนักเรียน</title>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* Enhanced Student Attendance System CSS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary-blue: #1e40af;
+    --primary-light: #3b82f6;
+    --primary-lighter: #60a5fa;
+    --primary-lightest: #93c5fd;
+    --success-green: #059669;
+    --success-light: #10b981;
+    --danger-red: #dc2626;
+    --danger-light: #ef4444;
+    --warning-orange: #d97706;
+    --warning-light: #f59e0b;
+    --info-purple: #7c3aed;
+    --info-light: #8b5cf6;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
+    --border-radius-2xl: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 25%, #81d4fa 50%, #4fc3f7 75%, #29b6f6 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: var(--primary-blue);
+    font-weight: 400;
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated background particles */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    z-index: -1;
+    animation: floatingParticles 20s ease-in-out infinite;
+}
+
+@keyframes floatingParticles {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-10px) rotate(2deg); }
+    66% { transform: translateY(10px) rotate(-2deg); }
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: var(--border-radius-2xl);
+    box-shadow: var(--shadow-2xl), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    animation: containerSlideIn 0.8s ease-out;
+}
+
+@keyframes containerSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 30%, #60a5fa 60%, #93c5fd 100%);
+    padding: 50px 40px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    animation: headerFloat 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0.3) 0%, 
+        rgba(255,255,255,0.6) 50%, 
+        rgba(255,255,255,0.3) 100%);
+}
+
+@keyframes headerFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    50% { transform: translateY(-20px) rotate(180deg) scale(1.05); }
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2);
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.025em;
+    animation: titlePulse 3s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% { text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+    50% { text-shadow: 2px 2px 8px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+}
+
+.header p {
+    font-size: 1.4em;
+    opacity: 0.95;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.025em;
+}
+
+.main-content {
+    padding: 60px 50px;
+}
+
+/* Subject Management Section */
+.subject-management {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 40px;
+    border-radius: var(--border-radius-xl);
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.subject-management::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-lighter), var(--primary-lightest));
+}
+
+.subject-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.subject-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group-inline {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.subject-selector {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+}
+
+.subject-selector select {
+    min-height: 55px;
+    flex: 1;
+}
+
+.btn-subject {
+    background: linear-gradient(135deg, var(--success-green) 0%, var(--success-light) 100%);
+    white-space: nowrap;
+    min-width: 160px;
+}
+
+.btn-subject:hover {
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+}
+
+.control-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.add-student-form, .grade-selector, .data-management {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 40px;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.data-management {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+}
+
+.add-student-form:hover, .grade-selector:hover, .data-management:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.add-student-form::before, .grade-selector::before, .data-management::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.add-student-form::before {
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-lighter), var(--primary-lightest));
+}
+
+.grade-selector::before {
+    background: linear-gradient(90deg, #06b6d4, #0891b2, #0e7490);
+}
+
+.data-management::before {
+    background: linear-gradient(90deg, var(--success-green), var(--warning-orange), var(--danger-red));
+}
+
+/* Toggle Forms */
+.toggle-forms {
+    display: flex;
+    margin-bottom: 25px;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: var(--gray-100);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--gray-600);
+    transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+    background: var(--primary-light);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.toggle-btn:hover:not(.active) {
+    background: var(--gray-200);
+}
+
+/* Form Visibility */
+.single-add-form, .bulk-add-form {
+    display: none;
+    animation: formSlideIn 0.3s ease-out;
+}
+
+.single-add-form.active, .bulk-add-form.active {
+    display: block;
+}
+
+@keyframes formSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Data Management Controls */
+.data-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-import {
+    background: linear-gradient(135deg, var(--info-purple) 0%, var(--info-light) 100%);
+}
+
+.btn-import:hover {
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+}
+
+.form-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+.form-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-lighter));
+    border-radius: 2px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    animation: formGroupSlideIn 0.6s ease-out;
+}
+
+@keyframes formGroupSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    font-size: 0.95em;
+    letter-spacing: 0.025em;
+}
+
+input[type="text"], input[type="file"], select, textarea {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius-md);
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    color: var(--primary-blue);
+    font-family: inherit;
+    box-shadow: var(--shadow-sm);
+}
+
+input[type="text"]:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), var(--shadow-md);
+    background: var(--gray-50);
+    transform: translateY(-1px);
+}
+
+input[type="text"]:hover, select:hover, textarea:hover {
+    border-color: var(--primary-lighter);
+    box-shadow: var(--shadow-md);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 140px;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+    color: white;
+    padding: 16px 32px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-lg);
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger-red) 0%, var(--danger-light) 100%);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--gray-600) 0%, var(--gray-400) 100%);
+    box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4);
+}
+
+.btn-export {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    font-size: 18px;
+    padding: 18px 36px;
+}
+
+.btn-export:hover {
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+}
+
+.btn-small {
+    padding: 10px 18px;
+    font-size: 14px;
+    margin: 3px;
+}
+
+.grade-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.tab-button {
+    padding: 20px 24px;
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--gray-600);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.tab-button:hover::before {
+    left: 100%;
+}
+
+.tab-button:hover {
+    border-color: var(--primary-light);
+    color: var(--primary-blue);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-lighter) 100%);
+    color: white;
+    border-color: var(--primary-light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Current Info Section */
+.current-info {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-lighter) 100%);
+    color: white;
+    padding: 25px 30px;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-lg);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    animation: infoSlideDown 0.5s ease-out;
+}
+
+@keyframes infoSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.info-item span:last-child {
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.student-card {
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius-xl);
+    padding: 30px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+    animation: cardSlideUp 0.6s ease-out;
+}
+
+@keyframes cardSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.student-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-lighter), var(--primary-lightest));
+}
+
+.student-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-light);
+}
+
+.student-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.student-name {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--primary-blue);
+    flex-grow: 1;
+    letter-spacing: -0.025em;
+}
+
+.student-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.status-time {
+    font-size: 0.9em;
+    color: var(--gray-600);
+    font-weight: 600;
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(148, 163, 184, 0.08);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    transition: all 0.3s ease;
+    animation: statusTimeAppear 0.4s ease-out;
+}
+
+@keyframes statusTimeAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.status-time.present {
+    background: rgba(5, 150, 105, 0.08);
+    color: #065f46;
+    border-color: rgba(5, 150, 105, 0.2);
+}
+
+.status-time.absent {
+    background: rgba(220, 38, 38, 0.08);
+    color: #991b1b;
+    border-color: rgba(220, 38, 38, 0.2);
+}
+
+.status-time.late {
+    background: rgba(217, 119, 6, 0.08);
+    color: #92400e;
+    border-color: rgba(217, 119, 6, 0.2);
+}
+
+.status-time.leave {
+    background: rgba(124, 58, 237, 0.08);
+    color: #6b21a8;
+    border-color: rgba(124, 58, 237, 0.2);
+}
+
+.status-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.status-btn {
+    padding: 14px 18px;
+    border: 2px solid;
+    border-radius: var(--border-radius-md);
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.status-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.status-btn:hover::before {
+    left: 100%;
+}
+
+.status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.status-btn.present {
+    border-color: var(--success-green);
+    color: var(--success-green);
+}
+
+.status-btn.present.active {
+    background: linear-gradient(135deg, var(--success-green) 0%, var(--success-light) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+}
+
+.status-btn.absent {
+    border-color: var(--danger-red);
+    color: var(--danger-red);
+}
+
+.status-btn.absent.active {
+    background: linear-gradient(135deg, var(--danger-red) 0%, var(--danger-light) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.status-btn.late {
+    border-color: var(--warning-orange);
+    color: var(--warning-orange);
+}
+
+.status-btn.late.active {
+    background: linear-gradient(135deg, var(--warning-orange) 0%, var(--warning-light) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+}
+
+.status-btn.leave {
+    border-color: var(--info-purple);
+    color: var(--info-purple);
+}
+
+.status-btn.leave.active {
+    background: linear-gradient(135deg, var(--info-purple) 0%, var(--info-light) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+}
+
+.summary {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 45px;
+    border-radius: var(--border-radius-xl);
+    margin-top: 50px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: summarySlideUp 0.8s ease-out;
+}
+
+@keyframes summarySlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.summary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--success-green), var(--warning-orange), var(--danger-red), var(--info-purple));
+}
+
+.summary h3 {
+    margin-bottom: 35px;
+    color: var(--primary-blue);
+    font-size: 1.8em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 25px;
+    margin-top: 35px;
+}
+
+.stat-item {
+    padding: 25px 20px;
+    border-radius: var(--border-radius-lg);
+    font-weight: 600;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: statItemPop 0.6s ease-out;
+}
+
+@keyframes statItemPop {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.stat-item:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-present { 
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); 
+    color: #065f46; 
+    border: 1px solid #a7f3d0;
+}
+
+.stat-absent { 
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+    color: #991b1b; 
+    border: 1px solid #fecaca;
+}
+
+.stat-late { 
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+    color: #92400e; 
+    border: 1px solid #fde68a;
+}
+
+.stat-leave { 
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); 
+    color: #6b21a8; 
+    border: 1px solid #ddd6fe;
+}
+
+.export-section {
+    margin-top: 35px;
+    padding-top: 30px;
+    border-top: 2px solid var(--gray-200);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--gray-600);
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
+    border-radius: var(--border-radius-xl);
+    margin-top: 40px;
+    border: 2px dashed var(--gray-200);
+    animation: emptyStateFloat 3s ease-in-out infinite;
+}
+
+@keyframes emptyStateFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.empty-state h3 {
+    margin-bottom: 20px;
+    color: var(--gray-700);
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 58, 138, 0.6);
+    backdrop-filter: blur(12px);
+    animation: modalBackdropFadeIn 0.3s ease-out;
+}
+
+@keyframes modalBackdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 50px;
+    border-radius: var(--border-radius-2xl);
+    width: 90%;
+    max-width: 650px;
+    box-shadow: var(--shadow-2xl);
+    position: relative;
+    animation: modalSlideIn 0.4s ease-out;
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-lighter), var(--primary-lightest));
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--gray-100);
+}
+
+.modal-title {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.close {
+    color: var(--gray-400);
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: var(--border-radius-md);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+}
+
+.close:hover {
+    color: var(--danger-red);
+    background: rgba(220, 38, 38, 0.1);
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .control-panel {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .students-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .main-content {
+        padding: 30px 25px;
+    }
+    
+    .header {
+        padding: 30px 25px;
+    }
+    
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .form-group-inline {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .subject-selector {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .students-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .student-card {
+        padding: 25px;
+    }
+    
+    .student-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .student-actions {
+        align-self: flex-end;
+    }
+    
+    .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        padding: 30px;
+        width: 95%;
+    }
+    
+    .data-controls {
+        flex-direction: column;
+    }
+    
+    .toggle-forms {
+        flex-direction: column;
+    }
+    
+    .toggle-btn {
+        border-radius: 0;
+    }
+    
+    .toggle-btn:first-child {
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    }
+    
+    .toggle-btn:last-child {
+        border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header p {
+        font-size: 1.1em;
+    }
+    
+    .student-actions {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .btn-small {
+        padding: 12px 16px;
+        font-size: 13px;
+        margin: 2px 0;
+    }
+    
+    .status-buttons {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .summary-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .current-info {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .grade-tabs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .container {
+        box-shadow: none;
+        border: none;
+    }
+    
+    .header::before,
+    .header::after {
+        display: none;
+    }
+    
+    .btn,
+    .student-actions,
+    .status-buttons,
+    .export-section,
+    .data-management,
+    .add-student-form,
+    .grade-selector {
+        display: none !important;
+    }
+    
+    .student-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--gray-300);
+    }
+    
+    .summary {
+        break-inside: avoid;
+    }
+}
+
+/* Animation for success messages and notifications */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-lighter));
+    border-radius: 6px;
+    border: 2px solid var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
+}
+
+/* Focus indicators for accessibility */
+.btn:focus,
+.tab-button:focus,
+.status-btn:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 3px solid rgba(59, 130, 246, 0.3);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .container {
+        border: 2px solid var(--gray-800);
+    }
+    
+    .student-card {
+        border: 2px solid var(--gray-600);
+    }
+    
+    .btn {
+        border: 2px solid transparent;
+    }
+    
+    .btn:focus {
+        border-color: var(--gray-800);
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><ion-icon name="bar-chart-outline"></ion-icon> ระบบเช็คชื่อนักเรียน</h1>
+            <p>จัดการข้อมูลการเข้าเรียนอย่างเป็นระบบและมีประสิทธิภาพ</p>
+        </div>
+
+        <div class="main-content">
+            <!-- ส่วนจัดการรายวิชา -->
+            <div class="subject-management">
+                <h2 class="form-title"><ion-icon name="library-outline"></ion-icon> จัดการรายวิชา</h2>
+                <div class="subject-controls">
+                    <div class="subject-add-form">
+                        <div class="form-group-inline">
+                            <input type="text" id="subjectCode" placeholder="รหัสวิชา เช่น 2101-1001" required>
+                            <input type="text" id="subjectName" placeholder="ชื่อรายวิชา เช่น คณิตศาสตร์พื้นฐาน" required>
+                            <button type="button" class="btn btn-subject" onclick="addSubject()"><ion-icon name="add-outline"></ion-icon> เพิ่มรายวิชา</button>
+                        </div>
+                    </div>
+                    <div class="subject-selector">
+                        <select id="currentSubject" onchange="changeSubject()">
+                            <option value="">เลือกรายวิชา</option>
+                        </select>
+                        <button type="button" class="btn btn-secondary" onclick="openEditSubjectModal()"><ion-icon name="create-outline"></ion-icon> แก้ไข</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="add-student-form">
+                    <h2 class="form-title"><ion-icon name="people-outline"></ion-icon> เพิ่มนักเรียน</h2>
+                    
+                    <div class="toggle-forms">
+                        <button class="toggle-btn active" id="singleToggle">เพิ่มรายบุคคล</button>
+                        <button class="toggle-btn" id="bulkToggle">เพิ่มหลายคน</button>
+                    </div>
+
+                    <form id="addStudentForm" class="single-add-form active">
+                        <div class="form-group">
+                            <label for="studentName">ชื่อ - นามสกุล</label>
+                            <input type="text" id="studentName" name="studentName" required placeholder="กรอกชื่อ-นามสกุล">
+                        </div>
+                        <div class="form-group">
+                            <label for="gradeLevel">ระดับชั้น</label>
+                            <select id="gradeLevel" name="gradeLevel" required>
+                                <option value="">เลือกระดับชั้น</option>
+                                <option value="ปวช.1/1">ปวช.1/1</option>
+                                <option value="ปวช.1/2">ปวช.1/2</option>
+                                <option value="ปวช.1/3">ปวช.1/3</option>
+                                <option value="ปวช.1/4">ปวช.1/4</option>
+                                <option value="ปวช.1/5">ปวช.1/5</option>
+                                <option value="ปวช.1/6">ปวช.1/6</option>
+                                <option value="ปวช.2/1">ปวช.2/1</option>
+                                <option value="ปวช.2/3">ปวช.2/3</option>
+                                <option value="ปวช.2/4">ปวช.2/4</option>
+                                <option value="ปวช.3/1">ปวช.3/1</option>
+                                <option value="ปวช.3/3">ปวช.3/3</option>
+                                <option value="ปวช.3/5">ปวช.3/5</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn"><ion-icon name="add-outline"></ion-icon> เพิ่มนักเรียน</button>
+                    </form>
+
+                    <form id="bulkAddForm" class="bulk-add-form">
+                        <div class="form-group">
+                            <label for="bulkGradeLevel">ระดับชั้น</label>
+                            <select id="bulkGradeLevel" name="bulkGradeLevel" required>
+                                <option value="">เลือกระดับชั้น</option>
+                                <option value="ปวช.1/1">ปวช.1/1</option>
+                                <option value="ปวช.1/2">ปวช.1/2</option>
+                                <option value="ปวช.1/3">ปวช.1/3</option>
+                                <option value="ปวช.1/4">ปวช.1/4</option>
+                                <option value="ปวช.1/5">ปวช.1/5</option>
+                                <option value="ปวช.1/6">ปวช.1/6</option>
+                                <option value="ปวช.2/1">ปวช.2/1</option>
+                                <option value="ปวช.2/3">ปวช.2/3</option>
+                                <option value="ปวช.2/4">ปวช.2/4</option>
+                                <option value="ปวช.3/1">ปวช.3/1</option>
+                                <option value="ปวช.3/3">ปวช.3/3</option>
+                                <option value="ปวช.3/5">ปวช.3/5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bulkStudentNames">รายชื่อนักเรียน</label>
+                            <textarea id="bulkStudentNames" name="bulkStudentNames" required 
+                                placeholder="กรอกรายชื่อนักเรียน แยกแต่ละคนด้วยการขึ้นบรรทัดใหม่&#10;&#10;ตัวอย่าง:&#10;นาย สมชาย ใจดี&#10;นางสาว สมหญิง สวยงาม&#10;นาย สมศักดิ์ เก่งมาก"></textarea>
+                        </div>
+                        <button type="submit" class="btn"><ion-icon name="people-outline"></ion-icon> เพิ่มนักเรียนหลายคน</button>
+                    </form>
+                </div>
+
+                <div class="grade-selector">
+                    <h2 class="form-title"><ion-icon name="school-outline"></ion-icon> เลือกระดับชั้น</h2>
+                    <div class="grade-tabs" id="gradeTabs">
+                        <!-- แท็บจะถูกสร้างแบบไดนามิก -->
+                    </div>
+                </div>
+
+                <!-- เพิ่มปุ่มจัดการข้อมูล -->
+                <div class="data-management">
+                    <h2 class="form-title"><ion-icon name="save-outline"></ion-icon> จัดการข้อมูล</h2>
+                    <div class="data-controls">
+                        <button type="button" class="btn btn-export" onclick="exportAllData()"><ion-icon name="cloud-upload-outline"></ion-icon> ส่งออกข้อมูลทั้งหมด</button>
+                        <button type="button" class="btn btn-import" onclick="document.getElementById('importFile').click()"><ion-icon name="cloud-download-outline"></ion-icon> นำเข้าข้อมูล</button>
+                        <button type="button" class="btn btn-danger" onclick="clearAllData()"><ion-icon name="trash-outline"></ion-icon> ลบข้อมูลทั้งหมด</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- แสดงข้อมูลรายวิชาปัจจุบัน -->
+            <div class="current-info" id="currentInfo" style="display: none;">
+                <div class="info-item">
+                    <span class="info-label">รายวิชา:</span>
+                    <span id="currentSubjectInfo"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ระดับชั้น:</span>
+                    <span id="currentGradeName"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">วันที่:</span>
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+
+            <div id="studentsContainer">
+                <div class="empty-state">
+                    <h3>ยังไม่มีนักเรียนในระบบ</h3>
+                    <p>เลือกรายวิชาและเพิ่มนักเรียนเพื่อเริ่มต้นใช้งานระบบเช็คชื่อ</p>
+                </div>
+            </div>
+
+            <div class="summary" id="summary" style="display: none;">
+                <h3><ion-icon name="analytics-outline"></ion-icon> สรุปผลการเข้าเรียน</h3>
+                <div class="summary-stats">
+                    <div class="stat-item stat-present">
+                        <div style="font-size: 1.8em; margin-bottom: 5px;" id="presentCount">0</div>
+                        <div>เข้าเรียน</div>
+                    </div>
+                    <div class="stat-item stat-absent">
+                        <div style="font-size: 1.8em; margin-bottom: 5px;" id="absentCount">0</div>
+                        <div>ขาดเรียน</div>
+                    </div>
+                    <div class="stat-item stat-late">
+                        <div style="font-size: 1.8em; margin-bottom: 5px;" id="lateCount">0</div>
+                        <div>มาสาย</div>
+                    </div>
+                    <div class="stat-item stat-leave">
+                        <div style="font-size: 1.8em; margin-bottom: 5px;" id="leaveCount">0</div>
+                        <div>ลา</div>
+                    </div>
+                </div>
+                <div class="export-section">
+                    <button class="btn btn-export" onclick="exportAttendance()"><ion-icon name="document-text-outline"></ion-icon> ส่งออกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับแก้ไขชื่อ -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><ion-icon name="create-outline"></ion-icon> แก้ไขข้อมูลนักเรียน</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <form id="editStudentForm">
+                <div class="form-group">
+                    <label for="editStudentName">ชื่อ - นามสกุล</label>
+                    <input type="text" id="editStudentName" name="editStudentName" required>
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">ยกเลิก</button>
+                    <button type="submit" class="btn"><ion-icon name="save-outline"></ion-icon> บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับแก้ไขรายวิชา -->
+    <div id="editSubjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><ion-icon name="create-outline"></ion-icon> แก้ไขรายวิชา</h2>
+                <span class="close" onclick="closeEditSubjectModal()">&times;</span>
+            </div>
+            <form id="editSubjectForm">
+                <div class="form-group">
+                    <label for="editSubjectCode">รหัสวิชา</label>
+                    <input type="text" id="editSubjectCode" name="editSubjectCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="editSubjectNameModal">ชื่อรายวิชา</label>
+                    <input type="text" id="editSubjectNameModal" name="editSubjectNameModal" required>
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-danger" onclick="deleteCurrentSubject()"><ion-icon name="trash-outline"></ion-icon> ลบรายวิชา</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditSubjectModal()">ยกเลิก</button>
+                    <button type="submit" class="btn"><ion-icon name="save-outline"></ion-icon> บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ข้อมูลระบบ
+        let subjects = [];
+        let currentSubjectId = null;
+        
+        // แยกข้อมูลแต่ละชั้นปี
+        let gradeData = {
+            'ปวช.1/1': [],
+            'ปวช.1/2': [],
+            'ปวช.1/3': [],
+            'ปวช.1/4': [],
+            'ปวช.1/5': [],
+            'ปวช.1/6': [],
+            'ปวช.2/1': [],
+            'ปวช.2/3': [],
+            'ปวช.2/4': [],
+            'ปวช.3/1': [],
+            'ปวช.3/3': [],
+            'ปวช.3/5': []
+        };
+        
+        let currentGrade = null;
+        let editingStudentId = null;
+
+        // ฟังก์ชันสำหรับบันทึกข้อมูลลง localStorage
+        function saveDataToStorage() {
+            const data = {
+                subjects: subjects,
+                currentSubjectId: currentSubjectId,
+                gradeData: gradeData,
+                currentGrade: currentGrade,
+                lastSaved: new Date().toISOString()
+            };
+            localStorage.setItem('studentAttendanceData', JSON.stringify(data));
+        }
+
+        // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
+        function loadDataFromStorage() {
+            try {
+                const savedData = localStorage.getItem('studentAttendanceData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    subjects = data.subjects || [];
+                    currentSubjectId = data.currentSubjectId || null;
+                    gradeData = data.gradeData || {
+                        'ปวช.1/1': [], 'ปวช.1/2': [], 'ปวช.1/3': [], 'ปวช.1/4': [],
+                        'ปวช.1/5': [], 'ปวช.1/6': [], 'ปวช.2/1': [], 'ปวช.2/3': [],
+                        'ปวช.2/4': [], 'ปวช.3/1': [], 'ปวช.3/3': [], 'ปวช.3/5': []
+                    };
+                    currentGrade = data.currentGrade || null;
+                    
+                    // อัพเดทหน้าจอ
+                    updateSubjectSelector();
+                    updateGradeTabs();
+                    displayStudents();
+                    updateSummary();
+                    showCurrentInfo();
+                    
+                    console.log('โหลดข้อมูลสำเร็จ - บันทึกล่าสุด:', data.lastSaved);
+                }
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+            }
+        }
+
+        // ฟังก์ชันสำหรับจัดรูปแบบเวลา
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}น.`;
+        }
+
+        // ฟังก์ชันสำหรับแสดงข้อความสถานะพร้อมเวลา
+        function getStatusMessage(status, time) {
+            const statusMessages = {
+                'present': 'เข้าเรียน',
+                'absent': 'ขาดเรียน',
+                'late': 'มาสาย',
+                'leave': 'ลา'
+            };
+            return `${statusMessages[status]} เวลา ${time}`;
+        }
+
+        // จัดการรายวิชา
+        function addSubject() {
+            const code = document.getElementById('subjectCode').value.trim();
+            const name = document.getElementById('subjectName').value.trim();
+            
+            if (code && name) {
+                const subject = {
+                    id: Date.now(),
+                    code: code,
+                    name: name
+                };
+                
+                subjects.push(subject);
+                document.getElementById('subjectCode').value = '';
+                document.getElementById('subjectName').value = '';
+                
+                updateSubjectSelector();
+                saveDataToStorage();
+                showSuccessMessage('เพิ่มรายวิชาสำเร็จ!');
+            }
+        }
+
+        function updateSubjectSelector() {
+            const selector = document.getElementById('currentSubject');
+            selector.innerHTML = '<option value="">เลือกรายวิชา</option>';
+            
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = `${subject.code} - ${subject.name}`;
+                if (subject.id === currentSubjectId) {
+                    option.selected = true;
+                }
+                selector.appendChild(option);
+            });
+        }
+
+        function changeSubject() {
+            const subjectId = document.getElementById('currentSubject').value;
+            currentSubjectId = subjectId ? parseInt(subjectId) : null;
+            showCurrentInfo();
+            saveDataToStorage();
+        }
+
+        function showCurrentInfo() {
+            const infoDiv = document.getElementById('currentInfo');
+            const dateSpan = document.getElementById('currentDate');
+            const subjectSpan = document.getElementById('currentSubjectInfo');
+            
+            if (currentSubjectId) {
+                const subject = subjects.find(s => s.id === currentSubjectId);
+                if (subject) {
+                    subjectSpan.textContent = `${subject.code} - ${subject.name}`;
+                    dateSpan.textContent = new Date().toLocaleDateString('th-TH');
+                    infoDiv.style.display = 'block';
+                    showCurrentGradeInfo();
+                }
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
+
+        function openEditSubjectModal() {
+            if (!currentSubjectId) {
+                alert('กรุณาเลือกรายวิชาก่อน');
+                return;
+            }
+            
+            const subject = subjects.find(s => s.id === currentSubjectId);
+            if (subject) {
+                document.getElementById('editSubjectCode').value = subject.code;
+                document.getElementById('editSubjectNameModal').value = subject.name;
+                document.getElementById('editSubjectModal').style.display = 'block';
+            }
+        }
+
+        function closeEditSubjectModal() {
+            document.getElementById('editSubjectModal').style.display = 'none';
+        }
+
+        function deleteCurrentSubject() {
+            if (confirm('คุณต้องการลบรายวิชานี้ใช่หรือไม่? ข้อมูลนักเรียนทั้งหมดจะถูกลบด้วย')) {
+                subjects = subjects.filter(s => s.id !== currentSubjectId);
+                currentSubjectId = null;
+                
+                // ล้างข้อมูลนักเรียนทั้งหมด
+                Object.keys(gradeData).forEach(grade => {
+                    gradeData[grade] = [];
+                });
+                
+                currentGrade = null;
+                
+                updateSubjectSelector();
+                updateGradeTabs();
+                displayStudents();
+                updateSummary();
+                showCurrentInfo();
+                closeEditSubjectModal();
+                saveDataToStorage();
+                showSuccessMessage('ลบรายวิชาสำเร็จ!');
+            }
+        }
+
+        // จัดการฟอร์มแก้ไขรายวิชา
+        document.getElementById('editSubjectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newCode = document.getElementById('editSubjectCode').value.trim();
+            const newName = document.getElementById('editSubjectNameModal').value.trim();
+            
+            if (newCode && newName && currentSubjectId) {
+                const subject = subjects.find(s => s.id === currentSubjectId);
+                if (subject) {
+                    subject.code = newCode;
+                    subject.name = newName;
+                    
+                    updateSubjectSelector();
+                    showCurrentInfo();
+                    closeEditSubjectModal();
+                    saveDataToStorage();
+                    showSuccessMessage('แก้ไขรายวิชาสำเร็จ!');
+                }
+            }
+        });
+
+        // Toggle between single and bulk add forms
+        document.getElementById('singleToggle').addEventListener('click', function() {
+            document.getElementById('singleToggle').classList.add('active');
+            document.getElementById('bulkToggle').classList.remove('active');
+            document.getElementById('addStudentForm').classList.add('active');
+            document.getElementById('bulkAddForm').classList.remove('active');
+        });
+
+        document.getElementById('bulkToggle').addEventListener('click', function() {
+            document.getElementById('bulkToggle').classList.add('active');
+            document.getElementById('singleToggle').classList.remove('active');
+            document.getElementById('bulkAddForm').classList.add('active');
+            document.getElementById('addStudentForm').classList.remove('active');
+        });
+
+        // เพิ่มนักเรียนรายบุคคล
+        document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentSubjectId) {
+                alert('กรุณาเลือกรายวิชาก่อน');
+                return;
+            }
+            
+            const name = document.getElementById('studentName').value.trim();
+            const grade = document.getElementById('gradeLevel').value;
+            
+            if (name && grade) {
+                const student = {
+                    id: Date.now(),
+                    name: name,
+                    grade: grade,
+                    status: null,
+                    statusTime: null,
+                    subjectId: currentSubjectId
+                };
+                
+                gradeData[grade].push(student);
+                document.getElementById('studentName').value = '';
+                document.getElementById('gradeLevel').value = '';
+                
+                updateGradeTabs();
+                if (currentGrade === grade) {
+                    displayStudents();
+                    updateSummary();
+                }
+                
+                saveDataToStorage();
+                showSuccessMessage('เพิ่มนักเรียนสำเร็จ!');
+            }
+        });
+
+        // เพิ่มนักเรียนหลายคน
+        document.getElementById('bulkAddForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentSubjectId) {
+                alert('กรุณาเลือกรายวิชาก่อน');
+                return;
+            }
+            
+            const names = document.getElementById('bulkStudentNames').value.trim();
+            const grade = document.getElementById('bulkGradeLevel').value;
+            
+            if (names && grade) {
+                const nameList = names.split('\n').filter(name => name.trim() !== '');
+                let addedCount = 0;
+                
+                nameList.forEach(name => {
+                    const trimmedName = name.trim();
+                    if (trimmedName) {
+                        const student = {
+                            id: Date.now() + Math.random(),
+                            name: trimmedName,
+                            grade: grade,
+                            status: null,
+                            statusTime: null,
+                            subjectId: currentSubjectId
+                        };
+                        
+                        gradeData[grade].push(student);
+                        addedCount++;
+                    }
+                });
+                
+                document.getElementById('bulkStudentNames').value = '';
+                document.getElementById('bulkGradeLevel').value = '';
+                
+                updateGradeTabs();
+                if (currentGrade === grade) {
+                    displayStudents();
+                    updateSummary();
+                }
+                
+                saveDataToStorage();
+                showSuccessMessage(`เพิ่มนักเรียนสำเร็จ ${addedCount} คน!`);
+            }
+        });
+
+        // แสดงข้อความสำเร็จ
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.innerHTML = `
+                <div style="position: fixed; top: 20px; right: 20px; z-index: 1001; 
+                           background: linear-gradient(135deg, #059669 0%, #10b981 100%); 
+                           color: white; padding: 15px 25px; border-radius: 12px; 
+                           box-shadow: 0 8px 32px rgba(5, 150, 105, 0.3);
+                           font-weight: 600; animation: slideIn 0.3s ease;">
+                    <ion-icon name="checkmark-circle-outline" style="vertical-align: middle; margin-right: 8px;"></ion-icon> ${message}
+                </div>
+            `;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        // อัพเดทแท็บชั้นปี - แสดงเฉพาะนักเรียนของรายวิชาปัจจุบัน
+        function updateGradeTabs() {
+            const tabsContainer = document.getElementById('gradeTabs');
+            tabsContainer.innerHTML = '';
+            
+            if (!currentSubjectId) return;
+            
+            Object.keys(gradeData).forEach(grade => {
+                const studentsInGrade = gradeData[grade].filter(s => s.subjectId === currentSubjectId);
+                if (studentsInGrade.length > 0) {
+                    const button = document.createElement('button');
+                    button.className = 'tab-button';
+                    button.setAttribute('data-grade', grade);
+                    button.innerHTML = `
+                        <div style="font-weight: 700; margin-bottom: 5px;">${grade}</div>
+                        <div style="font-size: 0.9em; opacity: 0.8;">${studentsInGrade.length} คน</div>
+                    `;
+                    button.addEventListener('click', function() {
+                        currentGrade = grade;
+                        updateActiveTab();
+                        displayStudents();
+                        updateSummary();
+                        showCurrentGradeInfo();
+                    });
+                    tabsContainer.appendChild(button);
+                }
+            });
+            
+            // ถ้าไม่มีแท็บที่เลือก ให้เลือกแท็บแรก
+            if ((currentGrade === null || gradeData[currentGrade].filter(s => s.subjectId === currentSubjectId).length === 0) 
+                && tabsContainer.children.length > 0) {
+                currentGrade = tabsContainer.children[0].getAttribute('data-grade');
+                updateActiveTab();
+                displayStudents();
+                updateSummary();
+                showCurrentGradeInfo();
+            }
+            
+            // ถ้าไม่มีแท็บเลย ให้ reset currentGrade
+            if (tabsContainer.children.length === 0) {
+                currentGrade = null;
+                displayStudents();
+                updateSummary();
+            }
+        }
+
+        // อัพเดทแท็บที่เลือก
+        function updateActiveTab() {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (currentGrade) {
+                const activeBtn = document.querySelector(`[data-grade="${currentGrade}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
+            }
+        }
+
+        // แสดงข้อมูลชั้นปีปัจจุบัน
+        function showCurrentGradeInfo() {
+            const nameSpan = document.getElementById('currentGradeName');
+            
+            if (currentGrade && currentSubjectId) {
+                const studentsInGrade = gradeData[currentGrade].filter(s => s.subjectId === currentSubjectId);
+                const checkedCount = studentsInGrade.filter(s => s.status !== null).length;
+                nameSpan.innerHTML = `<ion-icon name="school-outline"></ion-icon> ${currentGrade} • จำนวน ${studentsInGrade.length} คน • เช็คชื่อแล้ว ${checkedCount} คน`;
+            } else {
+                nameSpan.textContent = '';
+            }
+        }
+
+        // แสดงนักเรียน - แสดงเฉพาะนักเรียนของรายวิชาปัจจุบัน
+        function displayStudents() {
+            const container = document.getElementById('studentsContainer');
+            
+            if (!currentGrade || !currentSubjectId) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>ไม่มีนักเรียนในระดับชั้นนี้</h3>
+                        <p>เลือกรายวิชาและเพิ่มนักเรียนเพื่อเริ่มต้นใช้งานระบบเช็คชื่อ</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const studentsInGrade = gradeData[currentGrade].filter(s => s.subjectId === currentSubjectId);
+            
+            if (studentsInGrade.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>ไม่มีนักเรียนในระดับชั้นนี้</h3>
+                        <p>เพิ่มนักเรียนเพื่อเริ่มต้นใช้งานระบบเช็คชื่อ</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '<div class="students-grid"></div>';
+            const grid = container.querySelector('.students-grid');
+            
+            studentsInGrade.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                
+                // สร้าง HTML สำหรับแสดงเวลา
+                let statusTimeHTML = '';
+                if (student.status && student.statusTime) {
+                    const statusMessage = getStatusMessage(student.status, student.statusTime);
+                    statusTimeHTML = `
+                        <div class="status-time ${student.status}">
+                            <ion-icon name="create-outline"></ion-icon> ${statusMessage}
+                        </div>
+                    `;
+                }
+                
+                studentCard.innerHTML = `
+                    <div class="student-header">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editStudent(${student.id})">
+                                <ion-icon name="create-outline"></ion-icon> แก้ไข
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="deleteStudent(${student.id})">
+                                <ion-icon name="trash-outline"></ion-icon> ลบ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="status-buttons">
+                        <button class="status-btn present ${student.status === 'present' ? 'active' : ''}" 
+                                onclick="setStatus(${student.id}, 'present')">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon> เข้าเรียน
+                        </button>
+                        <button class="status-btn absent ${student.status === 'absent' ? 'active' : ''}" 
+                                onclick="setStatus(${student.id}, 'absent')">
+                            <ion-icon name="close-circle-outline"></ion-icon> ขาดเรียน
+                        </button>
+                        <button class="status-btn late ${student.status === 'late' ? 'active' : ''}" 
+                                onclick="setStatus(${student.id}, 'late')">
+                            <ion-icon name="time-outline"></ion-icon> มาสาย
+                        </button>
+                        <button class="status-btn leave ${student.status === 'leave' ? 'active' : ''}" 
+                                onclick="setStatus(${student.id}, 'leave')">
+                            <ion-icon name="document-outline"></ion-icon> ลา
+                        </button>
+                    </div>
+                    ${statusTimeHTML}
+                `;
+                grid.appendChild(studentCard);
+            });
+        }
+
+        // ตั้งค่าสถานะ
+        function setStatus(studentId, status) {
+            if (!currentGrade || !currentSubjectId) return;
+            
+            const student = gradeData[currentGrade].find(s => s.id === studentId && s.subjectId === currentSubjectId);
+            if (student) {
+                student.status = status;
+                student.statusTime = formatTime(new Date()); // บันทึกเวลาปัจจุบัน
+                displayStudents();
+                updateSummary();
+                showCurrentGradeInfo();
+                saveDataToStorage(); // บันทึกข้อมูล
+            }
+        }
+
+        // ลบนักเรียน
+        function deleteStudent(studentId) {
+            if (!currentGrade || !currentSubjectId) return;
+            
+            const student = gradeData[currentGrade].find(s => s.id === studentId && s.subjectId === currentSubjectId);
+            if (student && confirm(`คุณต้องการลบ "${student.name}" ใช่หรือไม่?`)) {
+                const index = gradeData[currentGrade].findIndex(s => s.id === studentId);
+                if (index > -1) {
+                    gradeData[currentGrade].splice(index, 1);
+                    displayStudents();
+                    updateSummary();
+                    updateGradeTabs();
+                    showCurrentGradeInfo();
+                    saveDataToStorage(); // บันทึกข้อมูล
+                }
+            }
+        }
+
+        // แก้ไขนักเรียน
+        function editStudent(studentId) {
+            if (!currentGrade || !currentSubjectId) return;
+            
+            const student = gradeData[currentGrade].find(s => s.id === studentId && s.subjectId === currentSubjectId);
+            if (student) {
+                editingStudentId = studentId;
+                document.getElementById('editStudentName').value = student.name;
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        // ปิด Modal
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingStudentId = null;
+        }
+
+        // บันทึกการแก้ไข
+        document.getElementById('editStudentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentGrade || !editingStudentId || !currentSubjectId) return;
+            
+            const newName = document.getElementById('editStudentName').value.trim();
+            if (newName) {
+                const student = gradeData[currentGrade].find(s => s.id === editingStudentId && s.subjectId === currentSubjectId);
+                if (student) {
+                    student.name = newName;
+                    displayStudents();
+                    closeEditModal();
+                    saveDataToStorage(); // บันทึกข้อมูล
+                    showSuccessMessage('แก้ไขข้อมูลสำเร็จ!');
+                }
+            }
+        });
+
+        // ปิด Modal เมื่อคลิกนอก Modal
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const editSubjectModal = document.getElementById('editSubjectModal');
+            if (event.target === editModal) {
+                closeEditModal();
+            }
+            if (event.target === editSubjectModal) {
+                closeEditSubjectModal();
+            }
+        }
+
+        // อัพเดทสรุป
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            
+            if (!currentGrade || !currentSubjectId) {
+                summary.style.display = 'none';
+                return;
+            }
+
+            const studentsInGrade = gradeData[currentGrade].filter(s => s.subjectId === currentSubjectId);
+            
+            if (studentsInGrade.length === 0) {
+                summary.style.display = 'none';
+                return;
+            }
+
+            summary.style.display = 'block';
+            
+            const counts = {
+                present: studentsInGrade.filter(s => s.status === 'present').length,
+                absent: studentsInGrade.filter(s => s.status === 'absent').length,
+                late: studentsInGrade.filter(s => s.status === 'late').length,
+                leave: studentsInGrade.filter(s => s.status === 'leave').length
+            };
+
+            document.getElementById('presentCount').textContent = counts.present;
+            document.getElementById('absentCount').textContent = counts.absent;
+            document.getElementById('lateCount').textContent = counts.late;
+            document.getElementById('leaveCount').textContent = counts.leave;
+        }
+
+        // ส่งออกข้อมูลการเข้าเรียน
+        function exportAttendance() {
+            if (!currentGrade || !currentSubjectId) {
+                alert('กรุณาเลือกรายวิชาและระดับชั้น');
+                return;
+            }
+            
+            const subject = subjects.find(s => s.id === currentSubjectId);
+            const studentsInGrade = gradeData[currentGrade].filter(s => s.subjectId === currentSubjectId);
+            
+            if (studentsInGrade.length === 0) {
+                alert('ไม่มีข้อมูลนักเรียนให้ส่งออก');
+                return;
+            }
+            
+            const currentDate = new Date().toLocaleDateString('th-TH');
+            let csvContent = `รายงานการเข้าเรียน\n`;
+            csvContent += `รายวิชา: ${subject.code} - ${subject.name}\n`;
+            csvContent += `ระดับชั้น: ${currentGrade}\n`;
+            csvContent += `วันที่: ${currentDate}\n\n`;
+            csvContent += `ลำดับ,ชื่อ-นามสกุล,สถานะ,เวลา\n`;
+            
+            studentsInGrade.forEach((student, index) => {
+                const status = student.status ? getStatusMessage(student.status, student.statusTime || '') : 'ยังไม่เช็คชื่อ';
+                csvContent += `${index + 1},${student.name},${status}\n`;
+            });
+            
+            // สร้างไฟล์และดาวน์โหลด
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `attendance_${subject.code}_${currentGrade}_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ส่งออกข้อมูลทั้งหมด
+        function exportAllData() {
+            const allData = {
+                subjects: subjects,
+                gradeData: gradeData,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_data_backup_${new Date().toISOString().split('T')[0]}.json`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showSuccessMessage('ส่งออกข้อมูลสำเร็จ!');
+        }
+
+        // นำเข้าข้อมูล
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (importedData.subjects && importedData.gradeData) {
+                        if (confirm('การนำเข้าข้อมูลจะเขียนทับข้อมูลปัจจุบัน คุณต้องการดำเนินการต่อหรือไม่?')) {
+                            subjects = importedData.subjects;
+                            gradeData = importedData.gradeData;
+                            currentSubjectId = null;
+                            currentGrade = null;
+                            
+                            updateSubjectSelector();
+                            updateGradeTabs();
+                            displayStudents();
+                            updateSummary();
+                            showCurrentInfo();
+                            saveDataToStorage();
+                            
+                            showSuccessMessage('นำเข้าข้อมูลสำเร็จ!');
+                        }
+                    } else {
+                        alert('ไฟล์ข้อมูลไม่ถูกต้อง');
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการอ่านไฟล์: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            
+            // รีเซ็ตค่า input file
+            event.target.value = '';
+        }
+
+        // ลบข้อมูลทั้งหมด
+        function clearAllData() {
+            if (confirm('คุณต้องการลบข้อมูลทั้งหมดใช่หรือไม่? การกระทำนี้ไม่สามารถยกเลิกได้')) {
+                if (confirm('กรุณายืนยันอีกครั้ง: ลบข้อมูลทั้งหมด?')) {
+                    // ลบข้อมูลจาก localStorage
+                    localStorage.removeItem('studentAttendanceData');
+                    
+                    // รีเซ็ตข้อมูลในตัวแปร
+                    subjects = [];
+                    currentSubjectId = null;
+                    gradeData = {
+                        'ปวช.1/1': [], 'ปวช.1/2': [], 'ปวช.1/3': [], 'ปวช.1/4': [],
+                        'ปวช.1/5': [], 'ปวช.1/6': [], 'ปวช.2/1': [], 'ปวช.2/3': [],
+                        'ปวช.2/4': [], 'ปวช.3/1': [], 'ปวช.3/3': [], 'ปวช.3/5': []
+                    };
+                    currentGrade = null;
+                    
+                    // อัพเดทหน้าจอ
+                    updateSubjectSelector();
+                    updateGradeTabs();
+                    displayStudents();
+                    updateSummary();
+                    showCurrentInfo();
+                    
+                    showSuccessMessage('ลบข้อมูลทั้งหมดเรียบร้อย!');
+                }
+            }
+        }
+
+        // เพิ่ม CSS สำหรับ animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            ion-icon {
+                vertical-align: middle;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // เริ่มต้นโปรแกรม - โหลดข้อมูลจาก localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDataFromStorage();
+        });
+
+        // บันทึกข้อมูลก่อนออกจากหน้าเว็บ
+        window.addEventListener('beforeunload', function() {
+            saveDataToStorage();
+        });
+
+        // บันทึกข้อมูลทุกๆ 30 วินาที (เป็นการสำรองเพิ่มเติม)
+        setInterval(function() {
+            saveDataToStorage();
+        }, 30000);
+
+        // เพิ่มส่วนนี้ในตัวแปรหลัก (ใส่หลังจาก let editingStudentId = null;)
+let lastResetDate = null;
+
+// ฟังก์ชันตรวจสอบและรีเซ็ตข้อมูลนักเรียน
+function checkAndResetStudentData() {
+    const today = new Date();
+    const todayDateString = today.toISOString().split('T')[0]; // รูปแบบ YYYY-MM-DD
+    
+    // ถ้าเป็นวันใหม่และผ่านไป 24 ชั่วโมงแล้ว
+    if (lastResetDate !== todayDateString) {
+        resetStudentAttendanceData();
+        lastResetDate = todayDateString;
+        saveDataToStorage(); // บันทึกข้อมูลหลังรีเซ็ต
+        
+        // แสดงข้อความแจ้งเตือน
+        showResetMessage();
+    }
+}
+
+// ฟังก์ชันรีเซ็ตข้อมูลการเช็คชื่อของนักเรียน (เก็บรายชื่อไว้ แต่ลบสถานะการเข้าเรียน)
+function resetStudentAttendanceData() {
+    Object.keys(gradeData).forEach(grade => {
+        gradeData[grade].forEach(student => {
+            // เก็บข้อมูลนักเรียนไว้ แต่ลบสถานะการเช็คชื่อ
+            student.status = null;
+            student.statusTime = null;
+        });
+    });
+    
+    // อัพเดทหน้าจอ
+    displayStudents();
+    updateSummary();
+    showCurrentGradeInfo();
+}
+
+// แสดงข้อความแจ้งการรีเซ็ต
+function showResetMessage() {
+    const resetDiv = document.createElement('div');
+    resetDiv.innerHTML = `
+        <div style="position: fixed; top: 20px; right: 20px; z-index: 1001; 
+                   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
+                   color: white; padding: 20px 25px; border-radius: 12px; 
+                   box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+                   font-weight: 600; animation: slideIn 0.3s ease; max-width: 300px;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <ion-icon name="refresh-circle-outline" style="margin-right: 8px; font-size: 1.2em;"></ion-icon> 
+                ข้อมูลการเช็คชื่อถูกรีเซ็ตแล้ว
+            </div>
+            <div style="font-size: 0.9em; opacity: 0.9;">
+                เริ่มต้นวันใหม่ (รายชื่อนักเรียนยังคงอยู่)
+            </div>
+        </div>
+    `;
+    document.body.appendChild(resetDiv);
+    
+    setTimeout(() => {
+        resetDiv.remove();
+    }, 5000); // แสดง 5 วินาที
+}
+
+// แก้ไขฟังก์ชัน saveDataToStorage ให้เก็บวันที่รีเซ็ตล่าสุดด้วย
+function saveDataToStorage() {
+    const data = {
+        subjects: subjects,
+        currentSubjectId: currentSubjectId,
+        gradeData: gradeData,
+        currentGrade: currentGrade,
+        lastResetDate: lastResetDate, // เพิ่มบรรทัดนี้
+        lastSaved: new Date().toISOString()
+    };
+    localStorage.setItem('studentAttendanceData', JSON.stringify(data));
+}
+
+// แก้ไขฟังก์ชัน loadDataFromStorage ให้โหลดวันที่รีเซ็ตล่าสุดด้วย
+function loadDataFromStorage() {
+    try {
+        const savedData = localStorage.getItem('studentAttendanceData');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            subjects = data.subjects || [];
+            currentSubjectId = data.currentSubjectId || null;
+            gradeData = data.gradeData || {
+                'ปวช.1/1': [], 'ปวช.1/2': [], 'ปวช.1/3': [], 'ปวช.1/4': [],
+                'ปวช.1/5': [], 'ปวช.1/6': [], 'ปวช.2/1': [], 'ปวช.2/3': [],
+                'ปวช.2/4': [], 'ปวช.3/1': [], 'ปวช.3/3': [], 'ปวช.3/5': []
+            };
+            currentGrade = data.currentGrade || null;
+            lastResetDate = data.lastResetDate || null; // เพิ่มบรรทัดนี้
+            
+            // ตรวจสอบการรีเซ็ตหลังโหลดข้อมูล
+            checkAndResetStudentData();
+            
+            // อัพเดทหน้าจอ
+            updateSubjectSelector();
+            updateGradeTabs();
+            displayStudents();
+            updateSummary();
+            showCurrentInfo();
+            
+            console.log('โหลดข้อมูลสำเร็จ - บันทึกล่าสุด:', data.lastSaved);
+            console.log('รีเซ็ตล่าสุด:', lastResetDate);
+        } else {
+            // ถ้าไม่มีข้อมูลเก่า ให้กำหนดวันที่รีเซ็ตเป็นวันนี้
+            lastResetDate = new Date().toISOString().split('T')[0];
+        }
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+        lastResetDate = new Date().toISOString().split('T')[0];
+    }
+}
+
+// เพิ่มฟังก์ชันรีเซ็ตข้อมูลการเช็คชื่อด้วยตนเอง (ไม่ลบรายชื่อนักเรียน)
+function manualResetAttendance() {
+    if (confirm('คุณต้องการรีเซ็ตข้อมูลการเช็คชื่อทั้งหมดใช่หรือไม่?\n(รายชื่อนักเรียนและรายวิชาจะไม่ถูกลบ)')) {
+        resetStudentAttendanceData();
+        lastResetDate = new Date().toISOString().split('T')[0];
+        saveDataToStorage();
+        showSuccessMessage('รีเซ็ตข้อมูลการเช็คชื่อเรียบร้อย!');
+    }
+}
+
+// เรียกใช้ฟังก์ชันตรวจสอบทุกๆ ชั่วโมง (3600000 มิลลิวินาที)
+setInterval(checkAndResetStudentData, 3600000);
+
+// เรียกใช้ฟังก์ชันตรวจสอบเมื่อเปิดหน้าเว็บ
+document.addEventListener('DOMContentLoaded', function() {
+    loadDataFromStorage();
+    checkAndResetStudentData(); // ตรวจสอบทันทีเมื่อโหลดหน้า
+});
+
+
+    </script>
+</body>
+</html>

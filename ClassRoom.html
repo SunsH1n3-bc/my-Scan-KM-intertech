@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตารางเรียนแบบไทย</title>
+    
+    <style>
+        /* รีเซ็ตพื้นฐาน */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ฟอนต์และพื้นหลังหลัก */
+body {
+    font-family: 'Sarabun', 'Noto Sans Thai', Arial, sans-serif;
+    background: #f5f6fa;
+    min-height: 100vh;
+    padding: 20px;
+    color: #2c3e50;
+}
+
+/* คอนเทนเนอร์หลัก */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ส่วนหัว */
+.header {
+    background: #34495e;
+    padding: 24px 20px;
+    text-align: center;
+    color: white;
+    border-bottom: 3px solid #2c3e50;
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* คอนเทนเนอร์ตาราง */
+.table-container {
+    overflow-x: auto;
+    padding: 20px;
+    background: white;
+}
+
+/* ตารางหลัก */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #d5dbdb;
+    background: white;
+}
+
+/* หัวตาราง */
+.schedule-table th {
+    background: #34495e;
+    color: white;
+    padding: 16px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 1px solid #2c3e50;
+}
+
+/* เซลล์ตาราง */
+.schedule-table td {
+    border: 1px solid #d5dbdb;
+    padding: 0;
+    text-align: center;
+    background: white;
+}
+
+/* เซลล์เวลา */
+.time-cell {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    vertical-align: middle;
+    width: 130px;
+    padding: 12px 8px;
+    font-size: 0.9rem;
+    border-right: 2px solid #d5dbdb;
+}
+
+/* เซลล์พัก */
+.break-cell {
+    background: #ecf0f1;
+    color: #7f8c8d;
+    font-weight: 600;
+    vertical-align: middle;
+    padding: 12px;
+    font-size: 1rem;
+    border-top: 2px solid #d5dbdb;
+    border-bottom: 2px solid #d5dbdb;
+}
+
+/* เซลล์วิชา */
+.subject-cell {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    padding: 10px;
+    height: 80px;
+    vertical-align: top;
+}
+
+.subject-cell:hover {
+    background: #f8f9fa !important;
+}
+
+/* เนื้อหาในเซลล์ */
+.cell-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.subject-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.teacher-name {
+    color: #5d6d7e;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+    font-weight: 400;
+}
+
+.room-name {
+    color: #85929e;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+/* สีไฮไลท์ - โทนสีที่เรียบง่าย */
+.color-none {
+    background: #ffffff;
+}
+
+.color-blue {
+    background: #eaf4fd;
+}
+
+.color-green {
+    background: #eafaf1;
+}
+
+.color-yellow {
+    background: #fef9e7;
+}
+
+.color-pink {
+    background: #fdf2f8;
+}
+
+.color-purple {
+    background: #f4f3ff;
+}
+
+.color-orange {
+    background: #fff7ed;
+}
+
+.color-red {
+    background: #fef2f2;
+}
+
+.color-gray {
+    background: #f8f9fa;
+}
+
+/* โต้ตอบ (Responsive) */
+@media (max-width: 1024px) {
+    .container {
+        margin: 10px;
+        border-radius: 6px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+        font-size: 0.9rem;
+        padding: 12px 8px;
+    }
+    
+    .time-cell {
+        width: 120px;
+    }
+    
+    .subject-cell {
+        height: 75px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 20px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header p {
+        font-size: 1rem;
+    }
+    
+    .table-container {
+        padding: 15px;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+        font-size: 0.85rem;
+        padding: 10px 6px;
+    }
+    
+    .time-cell {
+        width: 100px;
+        font-size: 0.8rem;
+    }
+    
+    .subject-cell {
+        height: 70px;
+    }
+    
+    .subject-name {
+        font-size: 0.9rem;
+    }
+    
+    .teacher-name {
+        font-size: 0.8rem;
+    }
+    
+    .room-name {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+        font-size: 0.8rem;
+        padding: 8px 4px;
+    }
+    
+    .time-cell {
+        width: 90px;
+        font-size: 0.75rem;
+    }
+    
+    .subject-cell {
+        height: 65px;
+    }
+    
+    .subject-name {
+        font-size: 0.85rem;
+    }
+    
+    .teacher-name {
+        font-size: 0.75rem;
+    }
+    
+    .room-name {
+        font-size: 0.7rem;
+    }
+}
+
+/* เอฟเฟกต์เรียบง่าย */
+.schedule-table tbody tr:hover {
+    background: rgba(52, 73, 94, 0.02);
+}
+
+.schedule-table tbody tr:nth-child(even) {
+    background: rgba(248, 249, 250, 0.3);
+}
+
+/* สไตล์สำหรับการพิมพ์ */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .container {
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .header {
+        background: #34495e !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+    }
+    
+    .subject-cell:hover {
+        background: inherit !important;
+    }
+    
+    .schedule-table {
+        border: 2px solid #2c3e50;
+    }
+    
+    .schedule-table th {
+        background: #34495e !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ตารางเรียน</h1>
+            <p>ภาคเรียนที่ 1 ปีการศึกษา 2568</p>
+        </div>
+
+        <div class="table-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>เวลา</th>
+                        <th>จันทร์</th>
+                        <th>อังคาร</th>
+                        <th>พุธ</th>
+                        <th>พฤหัสบดี</th>
+                        <th>ศุกร์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-cell">08:00-08:50<br>คาบ 1</td>
+                        <td class="subject-cell color-blue" data-day="จันทร์" data-period="1">
+                            <div class="cell-content">
+                                <div class="subject-name">คณิตศาสตร์</div>
+                                <div class="teacher-name">อ.สมชาย</div>
+                                <div class="room-name">ห้อง 101</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-green" data-day="อังคาร" data-period="1">
+                            <div class="cell-content">
+                                <div class="subject-name">วิทยาศาสตร์</div>
+                                <div class="teacher-name">อ.สมศักดิ์</div>
+                                <div class="room-name">ห้อง 201</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-yellow" data-day="พุธ" data-period="1">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาอังกฤษ</div>
+                                <div class="teacher-name">อ.สมใส</div>
+                                <div class="room-name">ห้อง 103</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-pink" data-day="พฤหัสบดี" data-period="1">
+                            <div class="cell-content">
+                                <div class="subject-name">สังคมศึกษา</div>
+                                <div class="teacher-name">อ.สมหมาย</div>
+                                <div class="room-name">ห้อง 104</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-purple" data-day="ศุกร์" data-period="1">
+                            <div class="cell-content">
+                                <div class="subject-name">ศิลปะ</div>
+                                <div class="teacher-name">อ.สมศรี</div>
+                                <div class="room-name">ห้อง 301</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">08:50-09:40<br>คาบ 2</td>
+                        <td class="subject-cell color-green" data-day="จันทร์" data-period="2">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาไทย</div>
+                                <div class="teacher-name">อ.สมหญิง</div>
+                                <div class="room-name">ห้อง 102</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-blue" data-day="อังคาร" data-period="2">
+                            <div class="cell-content">
+                                <div class="subject-name">คณิตศาสตร์</div>
+                                <div class="teacher-name">อ.สมชาย</div>
+                                <div class="room-name">ห้อง 101</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-orange" data-day="พุธ" data-period="2">
+                            <div class="cell-content">
+                                <div class="subject-name">ประวัติศาสตร์</div>
+                                <div class="teacher-name">อ.สมคิด</div>
+                                <div class="room-name">ห้อง 105</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-yellow" data-day="พฤหัสบดี" data-period="2">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาอังกฤษ</div>
+                                <div class="teacher-name">อ.สมใส</div>
+                                <div class="room-name">ห้อง 103</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-green" data-day="ศุกร์" data-period="2">
+                            <div class="cell-content">
+                                <div class="subject-name">วิทยาศาสตร์</div>
+                                <div class="teacher-name">อ.สมศักดิ์</div>
+                                <div class="room-name">ห้อง 201</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">09:40-10:30<br>คาบ 3</td>
+                        <td class="subject-cell color-yellow" data-day="จันทร์" data-period="3">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาอังกฤษ</div>
+                                <div class="teacher-name">อ.สมใส</div>
+                                <div class="room-name">ห้อง 103</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-pink" data-day="อังคาร" data-period="3">
+                            <div class="cell-content">
+                                <div class="subject-name">สังคมศึกษา</div>
+                                <div class="teacher-name">อ.สมหมาย</div>
+                                <div class="room-name">ห้อง 104</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-blue" data-day="พุธ" data-period="3">
+                            <div class="cell-content">
+                                <div class="subject-name">คณิตศาสตร์</div>
+                                <div class="teacher-name">อ.สมชาย</div>
+                                <div class="room-name">ห้อง 101</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-green" data-day="พฤหัสบดี" data-period="3">
+                            <div class="cell-content">
+                                <div class="subject-name">วิทยาศาสตร์</div>
+                                <div class="teacher-name">อ.สมศักดิ์</div>
+                                <div class="room-name">ห้อง 201</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-orange" data-day="ศุกร์" data-period="3">
+                            <div class="cell-content">
+                                <div class="subject-name">ประวัติศาสตร์</div>
+                                <div class="teacher-name">อ.สมคิด</div>
+                                <div class="room-name">ห้อง 105</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell break-cell">10:30-10:45<br>พักใหญ่</td>
+                        <td class="break-cell" colspan="5">พักใหญ่</td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">10:45-11:35<br>คาบ 4</td>
+                        <td class="subject-cell color-purple" data-day="จันทร์" data-period="4">
+                            <div class="cell-content">
+                                <div class="subject-name">ศิลปะ</div>
+                                <div class="teacher-name">อ.สมศรี</div>
+                                <div class="room-name">ห้อง 301</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-orange" data-day="อังคาร" data-period="4">
+                            <div class="cell-content">
+                                <div class="subject-name">ประวัติศาสตร์</div>
+                                <div class="teacher-name">อ.สมคิด</div>
+                                <div class="room-name">ห้อง 105</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-green" data-day="พุธ" data-period="4">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาไทย</div>
+                                <div class="teacher-name">อ.สมหญิง</div>
+                                <div class="room-name">ห้อง 102</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-blue" data-day="พฤหัสบดี" data-period="4">
+                            <div class="cell-content">
+                                <div class="subject-name">คณิตศาสตร์</div>
+                                <div class="teacher-name">อ.สมชาย</div>
+                                <div class="room-name">ห้อง 101</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-red" data-day="ศุกร์" data-period="4">
+                            <div class="cell-content">
+                                <div class="subject-name">พลศึกษา</div>
+                                <div class="teacher-name">อ.สมสุข</div>
+                                <div class="room-name">สนามกีฬา</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">11:35-12:25<br>คาบ 5</td>
+                        <td class="subject-cell color-orange" data-day="จันทร์" data-period="5">
+                            <div class="cell-content">
+                                <div class="subject-name">ประวัติศาสตร์</div>
+                                <div class="teacher-name">อ.สมคิด</div>
+                                <div class="room-name">ห้อง 105</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-green" data-day="อังคาร" data-period="5">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาไทย</div>
+                                <div class="teacher-name">อ.สมหญิง</div>
+                                <div class="room-name">ห้อง 102</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-purple" data-day="พุธ" data-period="5">
+                            <div class="cell-content">
+                                <div class="subject-name">ศิลปะ</div>
+                                <div class="teacher-name">อ.สมศรี</div>
+                                <div class="room-name">ห้อง 301</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-orange" data-day="พฤหัสบดี" data-period="5">
+                            <div class="cell-content">
+                                <div class="subject-name">ประวัติศาสตร์</div>
+                                <div class="teacher-name">อ.สมคิด</div>
+                                <div class="room-name">ห้อง 105</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="ศุกร์" data-period="5">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell break-cell">12:25-13:15<br>พักเที่ยง</td>
+                        <td class="break-cell" colspan="5">พักเที่ยง</td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">13:15-14:05<br>คาบ 6</td>
+                        <td class="subject-cell color-red" data-day="จันทร์" data-period="6">
+                            <div class="cell-content">
+                                <div class="subject-name">พลศึกษา</div>
+                                <div class="teacher-name">อ.สมสุข</div>
+                                <div class="room-name">สนามกีฬา</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-yellow" data-day="อังคาร" data-period="6">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาอังกฤษ</div>
+                                <div class="teacher-name">อ.สมใส</div>
+                                <div class="room-name">ห้อง 103</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-red" data-day="พุธ" data-period="6">
+                            <div class="cell-content">
+                                <div class="subject-name">พลศึกษา</div>
+                                <div class="teacher-name">อ.สมสุข</div>
+                                <div class="room-name">สนามกีฬา</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-purple" data-day="พฤหัสบดี" data-period="6">
+                            <div class="cell-content">
+                                <div class="subject-name">ศิลปะ</div>
+                                <div class="teacher-name">อ.สมศรี</div>
+                                <div class="room-name">ห้อง 301</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="ศุกร์" data-period="6">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">14:05-14:55<br>คาบ 7</td>
+                        <td class="subject-cell color-none" data-day="จันทร์" data-period="7">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-purple" data-day="อังคาร" data-period="7">
+                            <div class="cell-content">
+                                <div class="subject-name">ศิลปะ</div>
+                                <div class="teacher-name">อ.สมศรี</div>
+                                <div class="room-name">ห้อง 301</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="พุธ" data-period="7">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-green" data-day="พฤหัสบดี" data-period="7">
+                            <div class="cell-content">
+                                <div class="subject-name">ภาษาไทย</div>
+                                <div class="teacher-name">อ.สมหญิง</div>
+                                <div class="room-name">ห้อง 102</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="ศุกร์" data-period="7">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">14:55-15:45<br>คาบ 8</td>
+                        <td class="subject-cell color-none" data-day="จันทร์" data-period="8">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-red" data-day="อังคาร" data-period="8">
+                            <div class="cell-content">
+                                <div class="subject-name">พลศึกษา</div>
+                                <div class="teacher-name">อ.สมสุข</div>
+                                <div class="room-name">สนามกีฬา</div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="พุธ" data-period="8">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="พฤหัสบดี" data-period="8">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                        <td class="subject-cell color-none" data-day="ศุกร์" data-period="8">
+                            <div class="cell-content">
+                                <div class="subject-name"></div>
+                                <div class="teacher-name"></div>
+                                <div class="room-name"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script>
+        // ระบบแก้ไขตารางเรียน
+class ScheduleEditor {
+    constructor() {
+        this.isEditing = false;
+        this.currentEditCell = null;
+        this.originalContent = {};
+        this.scheduleData = {};
+        this.init();
+    }
+
+    init() {
+        // เริ่มต้นระบบ
+        this.loadScheduleData();
+        this.bindEvents();
+        this.addEditButtons();
+    }
+
+    // โหลดข้อมูลตารางเรียน
+    loadScheduleData() {
+        const cells = document.querySelectorAll('.subject-cell');
+        cells.forEach(cell => {
+            const day = cell.getAttribute('data-day');
+            const period = cell.getAttribute('data-period');
+            const key = `${day}-${period}`;
+            
+            const subjectName = cell.querySelector('.subject-name').textContent;
+            const teacherName = cell.querySelector('.teacher-name').textContent;
+            const roomName = cell.querySelector('.room-name').textContent;
+            
+            this.scheduleData[key] = {
+                subject: subjectName,
+                teacher: teacherName,
+                room: roomName,
+                color: this.getColorClass(cell)
+            };
+        });
+    }
+
+    // เพิ่มปุ่มควบคุม
+    addEditButtons() {
+        const header = document.querySelector('.header');
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'edit-controls';
+        controlsDiv.innerHTML = `
+            <button id="editMode" class="edit-btn">🖊️ แก้ไข</button>
+            <button id="saveChanges" class="save-btn" style="display:none;">💾 บันทึก</button>
+            <button id="cancelEdit" class="cancel-btn" style="display:none;">❌ ยกเลิก</button>
+            <button id="addPeriod" class="add-btn" style="display:none;">➕ เพิ่มคาบ</button>
+        `;
+        
+        // เพิ่ม CSS สำหรับปุ่ม
+        const style = document.createElement('style');
+        style.textContent = `
+            .edit-controls {
+                margin-top: 15px;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .edit-btn, .save-btn, .cancel-btn, .add-btn {
+                padding: 8px 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: all 0.2s ease;
+            }
+            .edit-btn {
+                background: #3498db;
+                color: white;
+            }
+            .edit-btn:hover {
+                background: #2980b9;
+            }
+            .save-btn {
+                background: #27ae60;
+                color: white;
+            }
+            .save-btn:hover {
+                background: #219a52;
+            }
+            .cancel-btn {
+                background: #e74c3c;
+                color: white;
+            }
+            .cancel-btn:hover {
+                background: #c0392b;
+            }
+            .add-btn {
+                background: #f39c12;
+                color: white;
+            }
+            .add-btn:hover {
+                background: #e67e22;
+            }
+            .editing-mode {
+                outline: 2px dashed #3498db;
+                cursor: text;
+            }
+            .time-cell.editing {
+                background: #e8f4f8 !important;
+                cursor: text;
+            }
+            .editable-input {
+                width: 100%;
+                padding: 4px;
+                border: 1px solid #3498db;
+                border-radius: 3px;
+                font-size: inherit;
+                font-family: inherit;
+                background: white;
+                text-align: center;
+            }
+            .header.editing h1, .header.editing p {
+                outline: 2px dashed #3498db;
+                padding: 5px;
+                border-radius: 3px;
+                cursor: text;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        header.appendChild(controlsDiv);
+        this.bindControlEvents();
+    }
+
+    // ผูกเหตุการณ์กับปุ่มควบคุม
+    bindControlEvents() {
+        document.getElementById('editMode').addEventListener('click', () => this.toggleEditMode());
+        document.getElementById('saveChanges').addEventListener('click', () => this.saveChanges());
+        document.getElementById('cancelEdit').addEventListener('click', () => this.cancelEdit());
+        document.getElementById('addPeriod').addEventListener('click', () => this.addNewPeriod());
+    }
+
+    // ผูกเหตุการณ์
+    bindEvents() {
+        // คลิกเพื่อแก้ไข
+        document.addEventListener('click', (e) => {
+            if (this.isEditing) {
+                this.handleEditClick(e);
+            }
+        });
+
+        // กด Enter เพื่อบันทึก
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && this.isEditing) {
+                this.finishEdit();
+            }
+            if (e.key === 'Escape' && this.isEditing) {
+                this.cancelCurrentEdit();
+            }
+        });
+    }
+
+    // เปิด/ปิดโหมดแก้ไข
+    toggleEditMode() {
+        this.isEditing = !this.isEditing;
+        const editBtn = document.getElementById('editMode');
+        const saveBtn = document.getElementById('saveChanges');
+        const cancelBtn = document.getElementById('cancelEdit');
+        const addBtn = document.getElementById('addPeriod');
+        
+        if (this.isEditing) {
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
+            addBtn.style.display = 'inline-block';
+            this.enableEditMode();
+        } else {
+            editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            addBtn.style.display = 'none';
+            this.disableEditMode();
+        }
+    }
+
+    // เปิดใช้งานโหมดแก้ไข
+    enableEditMode() {
+        document.body.classList.add('editing-mode');
+        document.querySelector('.header').classList.add('editing');
+        
+        // เพิ่มข้อความแนะนำ
+        const info = document.createElement('div');
+        info.id = 'edit-info';
+        info.innerHTML = `
+            <div style="background: #3498db; color: white; padding: 10px; text-align: center; font-size: 0.9rem;">
+                💡 คลิกที่ช่องใดก็ได้เพื่อแก้ไข | กด Enter เพื่อยืนยัน | กด Escape เพื่อยกเลิก
+            </div>
+        `;
+        document.querySelector('.container').insertBefore(info, document.querySelector('.table-container'));
+        
+        // ทำให้เซลล์สามารถแก้ไขได้
+        const allCells = document.querySelectorAll('.subject-cell, .time-cell');
+        allCells.forEach(cell => {
+            cell.classList.add('editing-mode');
+        });
+    }
+
+    // ปิดโหมดแก้ไข
+    disableEditMode() {
+        document.body.classList.remove('editing-mode');
+        document.querySelector('.header').classList.remove('editing');
+        
+        // ลบข้อความแนะนำ
+        const info = document.getElementById('edit-info');
+        if (info) info.remove();
+        
+        // ลบคลาสแก้ไข
+        const allCells = document.querySelectorAll('.subject-cell, .time-cell');
+        allCells.forEach(cell => {
+            cell.classList.remove('editing-mode');
+        });
+        
+        this.finishEdit();
+    }
+
+    // จัดการคลิกเพื่อแก้ไข
+    handleEditClick(e) {
+        const target = e.target;
+        
+        // แก้ไขหัวข้อ
+        if (target.matches('.header h1') || target.matches('.header p')) {
+            this.editHeaderText(target);
+            return;
+        }
+        
+        // แก้ไขเวลา
+        if (target.matches('.time-cell') || target.closest('.time-cell')) {
+            this.editTimeCell(target.closest('.time-cell') || target);
+            return;
+        }
+        
+        // แก้ไขข้อมูลวิชา
+        if (target.matches('.subject-name, .teacher-name, .room-name') || target.closest('.subject-cell')) {
+            this.editSubjectCell(target);
+            return;
+        }
+    }
+
+    // แก้ไขหัวข้อ
+    editHeaderText(element) {
+        if (element.querySelector('input')) return;
+        
+        const originalText = element.textContent;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = originalText;
+        input.className = 'editable-input';
+        input.style.width = '100%';
+        input.style.fontSize = window.getComputedStyle(element).fontSize;
+        input.style.fontWeight = window.getComputedStyle(element).fontWeight;
+        input.style.textAlign = 'center';
+        
+        element.innerHTML = '';
+        element.appendChild(input);
+        input.focus();
+        input.select();
+        
+        const finishEdit = () => {
+            const newText = input.value.trim() || originalText;
+            element.textContent = newText;
+        };
+        
+        input.addEventListener('blur', finishEdit);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                finishEdit();
+            }
+        });
+    }
+
+    // แก้ไขเซลล์เวลา
+    editTimeCell(cell) {
+        if (cell.querySelector('input')) return;
+        
+        const originalText = cell.innerHTML;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = cell.textContent;
+        input.className = 'editable-input';
+        
+        cell.innerHTML = '';
+        cell.appendChild(input);
+        cell.classList.add('editing');
+        input.focus();
+        input.select();
+        
+        const finishEdit = () => {
+            const newText = input.value.trim();
+            if (newText) {
+                cell.innerHTML = newText.replace(/\n/g, '<br>');
+            } else {
+                cell.innerHTML = originalText;
+            }
+            cell.classList.remove('editing');
+        };
+        
+        input.addEventListener('blur', finishEdit);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                finishEdit();
+            }
+        });
+    }
+
+    // แก้ไขข้อมูลวิชา
+    editSubjectCell(target) {
+        const cell = target.closest('.subject-cell');
+        if (!cell || cell.querySelector('input')) return;
+        
+        const subjectName = cell.querySelector('.subject-name');
+        const teacherName = cell.querySelector('.teacher-name');
+        const roomName = cell.querySelector('.room-name');
+        
+        // สร้างฟอร์มแก้ไข
+        const form = document.createElement('div');
+        form.className = 'edit-form';
+        form.innerHTML = `
+            <input type="text" class="subject-input" value="${subjectName.textContent}" placeholder="ชื่อวิชา">
+            <input type="text" class="teacher-input" value="${teacherName.textContent}" placeholder="ชื่อครู">
+            <input type="text" class="room-input" value="${roomName.textContent}" placeholder="ห้องเรียน">
+            <div class="color-picker">
+                <button type="button" class="color-option" data-color="color-none" style="background: #ffffff; border: 1px solid #ccc;"></button>
+                <button type="button" class="color-option" data-color="color-blue" style="background: #eaf4fd;"></button>
+                <button type="button" class="color-option" data-color="color-green" style="background: #eafaf1;"></button>
+                <button type="button" class="color-option" data-color="color-yellow" style="background: #fef9e7;"></button>
+                <button type="button" class="color-option" data-color="color-pink" style="background: #fdf2f8;"></button>
+                <button type="button" class="color-option" data-color="color-purple" style="background: #f4f3ff;"></button>
+                <button type="button" class="color-option" data-color="color-orange" style="background: #fff7ed;"></button>
+                <button type="button" class="color-option" data-color="color-red" style="background: #fef2f2;"></button>
+            </div>
+        `;
+        
+        // เพิ่ม CSS สำหรับฟอร์ม
+        if (!document.getElementById('edit-form-styles')) {
+            const style = document.createElement('style');
+            style.id = 'edit-form-styles';
+            style.textContent = `
+                .edit-form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    padding: 5px;
+                }
+                .edit-form input {
+                    padding: 4px;
+                    border: 1px solid #3498db;
+                    border-radius: 3px;
+                    font-size: 0.8rem;
+                    text-align: center;
+                }
+                .color-picker {
+                    display: flex;
+                    gap: 2px;
+                    justify-content: center;
+                    margin-top: 4px;
+                }
+                .color-option {
+                    width: 12px;
+                    height: 12px;
+                    border: 1px solid #ccc;
+                    border-radius: 2px;
+                    cursor: pointer;
+                    transition: transform 0.1s ease;
+                }
+                .color-option:hover {
+                    transform: scale(1.2);
+                }
+                .color-option.selected {
+                    border: 2px solid #3498db;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        const originalContent = cell.innerHTML;
+        cell.innerHTML = '';
+        cell.appendChild(form);
+        
+        // ไฮไลท์สีปัจจุบัน
+        const currentColor = this.getColorClass(cell);
+        const colorOption = form.querySelector(`[data-color="${currentColor}"]`);
+        if (colorOption) colorOption.classList.add('selected');
+        
+        // ผูกเหตุการณ์เลือกสี
+        form.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', () => {
+                form.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+        
+        // โฟกัสที่ input แรก
+        form.querySelector('.subject-input').focus();
+        
+        const finishEdit = () => {
+            const newSubject = form.querySelector('.subject-input').value.trim();
+            const newTeacher = form.querySelector('.teacher-input').value.trim();
+            const newRoom = form.querySelector('.room-input').value.trim();
+            const selectedColor = form.querySelector('.color-option.selected');
+            const newColor = selectedColor ? selectedColor.getAttribute('data-color') : 'color-none';
+            
+            // อัปเดตข้อมูล
+            const day = cell.getAttribute('data-day');
+            const period = cell.getAttribute('data-period');
+            const key = `${day}-${period}`;
+            
+            this.scheduleData[key] = {
+                subject: newSubject,
+                teacher: newTeacher,
+                room: newRoom,
+                color: newColor
+            };
+            
+            // อัปเดตหน้าตา
+            cell.innerHTML = `
+                <div class="cell-content">
+                    <div class="subject-name">${newSubject}</div>
+                    <div class="teacher-name">${newTeacher}</div>
+                    <div class="room-name">${newRoom}</div>
+                </div>
+            `;
+            
+            // เปลี่ยนสี
+            cell.className = `subject-cell ${newColor}`;
+            cell.setAttribute('data-day', day);
+            cell.setAttribute('data-period', period);
+        };
+        
+        // ผูกเหตุการณ์
+        form.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                finishEdit();
+            }
+            if (e.key === 'Escape') {
+                cell.innerHTML = originalContent;
+            }
+        });
+        
+        // คลิกนอกฟอร์มเพื่อยืนยัน
+        document.addEventListener('click', function outsideClick(e) {
+            if (!cell.contains(e.target)) {
+                finishEdit();
+                document.removeEventListener('click', outsideClick);
+            }
+        });
+    }
+
+    // หาคลาสสี
+    getColorClass(element) {
+        const classes = element.className.split(' ');
+        const colorClass = classes.find(cls => cls.startsWith('color-'));
+        return colorClass || 'color-none';
+    }
+
+    // เพิ่มคาบเรียนใหม่
+    addNewPeriod() {
+        const tbody = document.querySelector('.schedule-table tbody');
+        const newRow = document.createElement('tr');
+        const periodNumber = tbody.querySelectorAll('tr').length - 1; // ลบแถวพัก
+        
+        newRow.innerHTML = `
+            <td class="time-cell">คาบ ${periodNumber}<br>เวลาใหม่</td>
+            <td class="subject-cell color-none" data-day="จันทร์" data-period="${periodNumber}">
+                <div class="cell-content">
+                    <div class="subject-name">วิชาใหม่</div>
+                    <div class="teacher-name">ครูใหม่</div>
+                    <div class="room-name">ห้องใหม่</div>
+                </div>
+            </td>
+            <td class="subject-cell color-none" data-day="อังคาร" data-period="${periodNumber}">
+                <div class="cell-content">
+                    <div class="subject-name">วิชาใหม่</div>
+                    <div class="teacher-name">ครูใหม่</div>
+                    <div class="room-name">ห้องใหม่</div>
+                </div>
+            </td>
+            <td class="subject-cell color-none" data-day="พุธ" data-period="${periodNumber}">
+                <div class="cell-content">
+                    <div class="subject-name">วิชาใหม่</div>
+                    <div class="teacher-name">ครูใหม่</div>
+                    <div class="room-name">ห้องใหม่</div>
+                </div>
+            </td>
+            <td class="subject-cell color-none" data-day="พฤหัสบดี" data-period="${periodNumber}">
+                <div class="cell-content">
+                    <div class="subject-name">วิชาใหม่</div>
+                    <div class="teacher-name">ครูใหม่</div>
+                    <div class="room-name">ห้องใหม่</div>
+                </div>
+            </td>
+            <td class="subject-cell color-none" data-day="ศุกร์" data-period="${periodNumber}">
+                <div class="cell-content">
+                    <div class="subject-name">วิชาใหม่</div>
+                    <div class="teacher-name">ครูใหม่</div>
+                    <div class="room-name">ห้องใหม่</div>
+                </div>
+            </td>
+        `;
+        
+        tbody.appendChild(newRow);
+        
+        // เพิ่มคลาสแก้ไขให้เซลล์ใหม่
+        newRow.querySelectorAll('.subject-cell, .time-cell').forEach(cell => {
+            cell.classList.add('editing-mode');
+        });
+        
+        alert('เพิ่มคาบเรียนใหม่แล้ว! คลิกที่เซลล์เพื่อแก้ไขข้อมูล');
+    }
+
+    // บันทึกการเปลี่ยนแปลง
+    saveChanges() {
+        alert('บันทึกการเปลี่ยนแปลงเรียบร้อย! ✅');
+        console.log('ข้อมูลตารางเรียนที่บันทึก:', this.scheduleData);
+        this.toggleEditMode();
+    }
+
+    // ยกเลิกการแก้ไข
+    cancelEdit() {
+        if (confirm('คุณต้องการยกเลิกการแก้ไขทั้งหมดหรือไม่?')) {
+            location.reload(); // รีโหลดหน้าเพื่อกลับสู่สถานะเดิม
+        }
+    }
+
+    // เสร็จสิ้นการแก้ไข
+    finishEdit() {
+        const inputs = document.querySelectorAll('.editable-input');
+        inputs.forEach(input => {
+            input.blur();
+        });
+        this.currentEditCell = null;
+    }
+
+    // ยกเลิกการแก้ไขปัจจุบัน
+    cancelCurrentEdit() {
+        if (this.currentEditCell) {
+            this.currentEditCell.innerHTML = this.originalContent[this.currentEditCell.id] || this.currentEditCell.innerHTML;
+            this.currentEditCell = null;
+        }
+    }
+}
+
+// เริ่มต้นระบบเมื่อหน้าเว็บโหลดเสร็จ
+document.addEventListener('DOMContentLoaded', function() {
+    new ScheduleEditor();
+});
+
+// เพิ่มฟังก์ชันส่งออกข้อมูล
+function exportSchedule() {
+    const scheduleData = JSON.stringify(window.scheduleEditor?.scheduleData || {}, null, 2);
+    const blob = new Blob([scheduleData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'schedule-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// เพิ่มฟังก์ชันนำเข้าข้อมูล
+function importSchedule() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (window.scheduleEditor) {
+                        window.scheduleEditor.scheduleData = data;
+                        location.reload();
+                    }
+                } catch (error) {
+                    alert('ไฟล์ไม่ถูกต้อง!');
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+    input.click();
+}
+    </script>
+</body>
+</html>
