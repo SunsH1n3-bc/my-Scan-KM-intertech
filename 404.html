@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        // Get the current path
+        var path = window.location.pathname.split('/');
+        var repo = path[1]; // repository name
+        
+        // If it's a deep link, redirect to index with hash
+        if (path.length > 2) {
+            var newPath = '/' + repo + '/#' + path.slice(2).join('/');
+            window.location.replace(newPath);
+        } else {
+            // Redirect to index
+            window.location.replace('/' + repo + '/');
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>
