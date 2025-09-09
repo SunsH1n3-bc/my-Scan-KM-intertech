@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-        // Get the current path
-        var path = window.location.pathname.split('/');
-        var repo = path[1]; // repository name
+        // ดึง path ปัจจุบัน
+        var pathSegments = location.pathname.split('/');
+        var repo = pathSegments[1]; // ชื่อ repository (my-Scan-KM-intertech)
         
-        // If it's a deep link, redirect to index with hash
-        if (path.length > 2) {
-            var newPath = '/' + repo + '/#' + path.slice(2).join('/');
-            window.location.replace(newPath);
+        // ถ้ามี path ที่เฉพาะเจาะจง
+        if (pathSegments.length > 2) {
+            var fileName = pathSegments[pathSegments.length - 1];
+            
+            // ถ้าไม่มี .html ให้เพิ่มให้
+            if (!fileName.includes('.html')) {
+                fileName += '.html';
+            }
+            
+            // สร้าง URL ใหม่
+            var newPath = '/' + repo + '/' + fileName;
+            
+            // เก็บ original path ไว้ใน sessionStorage กรณีที่ไฟล์ไม่เจอจริงๆ
+            sessionStorage.setItem('attempted_path', location.pathname);
+            
+            // Redirect ไปยังไฟล์ที่ถูกต้อง
+            location.replace(newPath);
         } else {
-            // Redirect to index
-            window.location.replace('/' + repo + '/');
+            // ถ้าเป็น root path ให้ไปที่ index.html
+            location.replace('/' + repo + '/index.html');
         }
     </script>
+    <meta http-equiv="refresh" content="0; URL=/my-Scan-KM-intertech/">
 </head>
 <body>
-    <p>Redirecting...</p>
+    <h1>Redirecting...</h1>
+    <p>If you're not redirected automatically, <a href="/my-Scan-KM-intertech/">click here</a>.</p>
 </body>
 </html>
