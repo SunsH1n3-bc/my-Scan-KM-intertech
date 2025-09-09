@@ -1804,12 +1804,70 @@ let rememberLogin = false;
 // Global variable to store user data for password reset
 let resetUserData = null;
 
+// Helper function to detect GitHub Pages environment and construct proper paths
+function getBasePath() {
+    const currentPath = window.location.pathname;
+    const hostname = window.location.hostname;
+    
+    // Check if we're on GitHub Pages
+    if (hostname.includes('github.io')) {
+        // Extract repository name from path
+        const pathParts = currentPath.split('/').filter(part => part.length > 0);
+        if (pathParts.length > 0) {
+            // Return base path with repository name
+            return '/' + pathParts[0];
+        }
+    }
+    
+    // For local development or other hosting
+    return '';
+}
+
+// Helper function to navigate to pages with proper GitHub Pages support
+function navigateToPage(pageName) {
+    const basePath = getBasePath();
+    const fullPath = basePath + '/HTML/' + pageName;
+    
+    // Store user data in sessionStorage for GitHub Pages compatibility
+    if (currentUser && isLoggedIn) {
+        try {
+            sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
+            sessionStorage.setItem('scanCheckinLoggedIn', 'true');
+            sessionStorage.setItem('scanCheckinRemember', rememberLogin.toString());
+        } catch (e) {
+            console.warn('SessionStorage not available, user data will not persist');
+        }
+    }
+    
+    window.location.href = fullPath;
+}
+
 // Initialize the system
 function initializeSystem() {
     setupEventListeners();
     setupPasswordToggles();
     setupValidation();
     checkAutoRedirect();
+    restoreUserSession();
+}
+
+// Restore user session from sessionStorage (for GitHub Pages)
+function restoreUserSession() {
+    try {
+        const savedUser = sessionStorage.getItem('scanCheckinUser');
+        const savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        const savedRemember = sessionStorage.getItem('scanCheckinRemember');
+        
+        if (savedUser && savedLoggedIn === 'true') {
+            currentUser = JSON.parse(savedUser);
+            isLoggedIn = true;
+            rememberLogin = savedRemember === 'true';
+            
+            console.log('User session restored:', currentUser.username);
+        }
+    } catch (e) {
+        console.warn('Could not restore user session');
+    }
 }
 
 // Form toggle function
@@ -1819,27 +1877,45 @@ function toggleForm(formType) {
     const forgotContainer = document.getElementById('forgotContainer');
     const resetContainer = document.getElementById('resetContainer');
     
-    // Hide all containers
-    if (loginContainer) loginContainer.style.display = 'none';
-    if (registerContainer) registerContainer.style.display = 'none';
-    if (forgotContainer) forgotContainer.style.display = 'none';
-    if (resetContainer) resetContainer.style.display = 'none';
+    // Hide all containers with animation
+    const containers = [loginContainer, registerContainer, forgotContainer, resetContainer];
+    containers.forEach(container => {
+        if (container) {
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 200);
+        }
+    });
     
-    // Show selected container
-    switch(formType) {
-        case 'register':
-            if (registerContainer) registerContainer.style.display = 'block';
-            break;
-        case 'forgot':
-            if (forgotContainer) forgotContainer.style.display = 'block';
-            break;
-        case 'reset':
-            if (resetContainer) resetContainer.style.display = 'block';
-            break;
-        default:
-            if (loginContainer) loginContainer.style.display = 'block';
-    }
-    resetForms();
+    // Show selected container with animation
+    setTimeout(() => {
+        let targetContainer;
+        switch(formType) {
+            case 'register':
+                targetContainer = registerContainer;
+                break;
+            case 'forgot':
+                targetContainer = forgotContainer;
+                break;
+            case 'reset':
+                targetContainer = resetContainer;
+                break;
+            default:
+                targetContainer = loginContainer;
+        }
+        
+        if (targetContainer) {
+            targetContainer.style.display = 'block';
+            setTimeout(() => {
+                targetContainer.style.opacity = '1';
+                targetContainer.style.transform = 'translateY(0)';
+            }, 50);
+        }
+        
+        resetForms();
+    }, 200);
 }
 
 // Password toggle functionality
@@ -1872,7 +1948,7 @@ function setupPasswordToggles() {
     setupPasswordToggle('confirmNewPassword', 'confirmNewPasswordToggle', 'confirmNewToggleIcon');
 }
 
-// Setup validation
+// Setup validation with enhanced feedback
 function setupValidation() {
     // Username validation
     const regUsernameField = document.getElementById('regUsername');
@@ -1886,18 +1962,25 @@ function setupValidation() {
             if (username.length === 0) {
                 hint.textContent = '';
                 hint.style.color = '';
+                this.classList.remove('valid', 'invalid');
                 return;
             }
             
             if (username.length < 4) {
                 hint.textContent = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร';
-                hint.style.color = '#ff6b6b';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
             } else if (userDatabase[username]) {
                 hint.textContent = 'ชื่อผู้ใช้นี้ถูกใช้แล้ว';
-                hint.style.color = '#ff6b6b';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
             } else {
                 hint.textContent = 'ชื่อผู้ใช้พร้อมใช้งาน';
-                hint.style.color = '#4ecdc4';
+                hint.style.color = '#10b981';
+                this.classList.add('valid');
+                this.classList.remove('invalid');
             }
         });
     }
@@ -1913,15 +1996,21 @@ function setupValidation() {
             
             if (password.length === 0) {
                 hint.textContent = '';
+                hint.style.color = '';
+                this.classList.remove('valid', 'invalid');
                 return;
             }
             
             if (password.length < 6) {
                 hint.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-                hint.style.color = '#ff6b6b';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
             } else {
                 hint.textContent = 'รหัสผ่านแข็งแรง';
-                hint.style.color = '#4ecdc4';
+                hint.style.color = '#10b981';
+                this.classList.add('valid');
+                this.classList.remove('invalid');
             }
             
             // Check confirm password if filled
@@ -1949,15 +2038,21 @@ function setupValidation() {
             
             if (password.length === 0) {
                 hint.textContent = '';
+                hint.style.color = '';
+                this.classList.remove('valid', 'invalid');
                 return;
             }
             
             if (password.length < 6) {
                 hint.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-                hint.style.color = '#ff6b6b';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
             } else {
                 hint.textContent = 'รหัสผ่านแข็งแรง';
-                hint.style.color = '#4ecdc4';
+                hint.style.color = '#10b981';
+                this.classList.add('valid');
+                this.classList.remove('invalid');
             }
             
             // Check confirm password if filled
@@ -1996,6 +2091,44 @@ function setupValidation() {
             }
         });
     }
+
+    // Real-time email validation
+    const emailField = document.getElementById('email');
+    if (emailField) {
+        emailField.addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.length === 0) {
+                this.classList.remove('valid', 'invalid');
+            } else if (emailRegex.test(email)) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            } else {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            }
+        });
+    }
+
+    // Real-time phone validation
+    const phoneField = document.getElementById('phone');
+    if (phoneField) {
+        phoneField.addEventListener('input', function() {
+            let phone = this.value.replace(/[-\s]/g, '');
+            const phoneRegex = /^[0-9]{10}$/;
+            
+            if (phone.length === 0) {
+                this.classList.remove('valid', 'invalid');
+            } else if (phoneRegex.test(phone)) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            } else {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            }
+        });
+    }
 }
 
 // Confirm password validation function
@@ -2011,15 +2144,21 @@ function checkConfirmPassword() {
     
     if (confirmPassword.length === 0) {
         hint.textContent = '';
+        hint.style.color = '';
+        confirmPasswordField.classList.remove('valid', 'invalid');
         return;
     }
     
     if (password === confirmPassword) {
         hint.textContent = 'รหัสผ่านตรงกัน';
-        hint.style.color = '#4ecdc4';
+        hint.style.color = '#10b981';
+        confirmPasswordField.classList.add('valid');
+        confirmPasswordField.classList.remove('invalid');
     } else {
         hint.textContent = 'รหัสผ่านไม่ตรงกัน';
-        hint.style.color = '#ff6b6b';
+        hint.style.color = '#ef4444';
+        confirmPasswordField.classList.add('invalid');
+        confirmPasswordField.classList.remove('valid');
     }
 }
 
@@ -2036,15 +2175,21 @@ function checkConfirmNewPassword() {
     
     if (confirmNewPassword.length === 0) {
         hint.textContent = '';
+        hint.style.color = '';
+        confirmNewPasswordField.classList.remove('valid', 'invalid');
         return;
     }
     
     if (newPassword === confirmNewPassword) {
         hint.textContent = 'รหัสผ่านตรงกัน';
-        hint.style.color = '#4ecdc4';
+        hint.style.color = '#10b981';
+        confirmNewPasswordField.classList.add('valid');
+        confirmNewPasswordField.classList.remove('invalid');
     } else {
         hint.textContent = 'รหัสผ่านไม่ตรงกัน';
-        hint.style.color = '#ff6b6b';
+        hint.style.color = '#ef4444';
+        confirmNewPasswordField.classList.add('invalid');
+        confirmNewPasswordField.classList.remove('valid');
     }
 }
 
@@ -2107,6 +2252,16 @@ function setupEventListeners() {
             e.target.classList.remove('active');
         }
     });
+
+    // Enhanced keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // Close modals with Escape key
+            document.querySelectorAll('.success-modal.active, .error-modal.active').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+    });
 }
 
 // Handle login form submission
@@ -2116,40 +2271,65 @@ function handleLogin(e) {
     const usernameField = document.getElementById('username');
     const passwordField = document.getElementById('password');
     const rememberField = document.getElementById('remember');
+    const submitBtn = e.target.querySelector('.login-btn');
     
     if (!usernameField || !passwordField) return;
     
-    const username = usernameField.value;
+    const username = usernameField.value.trim();
     const password = passwordField.value;
     const remember = rememberField ? rememberField.checked : false;
     
-    if (username && password) {
-        showLoading('กำลังเข้าสู่ระบบ');
-        
-        setTimeout(() => {
-            hideLoading();
-            
-            const user = userDatabase[username];
-            if (user && user.password === password) {
-                // Set session data
-                currentUser = { ...user };
-                delete currentUser.password;
-                currentUser.loginTime = new Date().toISOString();
-                currentUser.rememberMe = remember;
-                
-                isLoggedIn = true;
-                rememberLogin = remember;
-                
-                showSuccessModal(
-                    'เข้าสู่ระบบสำเร็จ!',
-                    `ยินดีต้อนรับ ${user.firstName} ${user.lastName}`,
-                    'login'
-                );
-            } else {
-                showErrorModal('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
-            }
-        }, 2000);
+    if (!username || !password) {
+        showErrorModal('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+        return;
     }
+    
+    // Disable submit button and show loading state
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
+    showLoading('กำลังเข้าสู่ระบบ');
+    
+    setTimeout(() => {
+        hideLoading();
+        
+        // Re-enable submit button
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
+        
+        const user = userDatabase[username];
+        if (user && user.password === password) {
+            // Set session data
+            currentUser = { ...user };
+            delete currentUser.password;
+            currentUser.loginTime = new Date().toISOString();
+            currentUser.rememberMe = remember;
+            
+            isLoggedIn = true;
+            rememberLogin = remember;
+            
+            // Store in sessionStorage for GitHub Pages
+            try {
+                sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
+                sessionStorage.setItem('scanCheckinLoggedIn', 'true');
+                sessionStorage.setItem('scanCheckinRemember', remember.toString());
+            } catch (e) {
+                console.warn('Could not store user session');
+            }
+            
+            showSuccessModal(
+                'เข้าสู่ระบบสำเร็จ!',
+                `ยินดีต้อนรับ ${user.firstName} ${user.lastName}`,
+                'login'
+            );
+        } else {
+            showErrorModal('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        }
+    }, 2000);
 }
 
 // Handle register form submission
@@ -2165,10 +2345,21 @@ function handleRegister(e) {
         return;
     }
     
+    const submitBtn = e.target.querySelector('.login-btn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
     showLoading('กำลังสมัครสมาชิก');
     
     setTimeout(() => {
         hideLoading();
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
         
         // Create new user
         const newUser = {
@@ -2224,7 +2415,7 @@ function getRegistrationFormData() {
     const formData = {};
     for (const [key, field] of Object.entries(fields)) {
         if (!field) return null;
-        formData[key] = field.type === 'checkbox' ? field.checked : field.value;
+        formData[key] = field.type === 'checkbox' ? field.checked : field.value.trim();
     }
     
     return formData;
@@ -2237,17 +2428,33 @@ function handleForgotPassword(e) {
     const usernameField = document.getElementById('forgotUsername');
     const studentIdField = document.getElementById('forgotStudentId');
     const birthDateField = document.getElementById('forgotBirthDate');
+    const submitBtn = e.target.querySelector('.login-btn');
     
     if (!usernameField || !studentIdField || !birthDateField) return;
     
-    const username = usernameField.value;
-    const studentId = studentIdField.value;
+    const username = usernameField.value.trim();
+    const studentId = studentIdField.value.trim();
     const birthDate = birthDateField.value;
+    
+    if (!username || !studentId || !birthDate) {
+        showErrorModal('กรุณากรอกข้อมูลให้ครบถ้วน');
+        return;
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
     
     showLoading('กำลังตรวจสอบข้อมูล');
     
     setTimeout(() => {
         hideLoading();
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
         
         const user = userDatabase[username];
         if (user && user.studentId === studentId && user.birthDate === birthDate) {
@@ -2269,6 +2476,7 @@ function handleResetPassword(e) {
     
     const newPasswordField = document.getElementById('newPassword');
     const confirmNewPasswordField = document.getElementById('confirmNewPassword');
+    const submitBtn = e.target.querySelector('.login-btn');
     
     if (!newPasswordField || !confirmNewPasswordField) return;
     
@@ -2291,10 +2499,20 @@ function handleResetPassword(e) {
         return;
     }
     
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
     showLoading('กำลังเปลี่ยนรหัสผ่าน');
     
     setTimeout(() => {
         hideLoading();
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
         
         // Update password in database
         userDatabase[resetUserData.username].password = newPassword;
@@ -2318,17 +2536,29 @@ function handleQuickLogin() {
     showLoading(`กำลังเข้าสู่ระบบด้วย ${type}`);
     setTimeout(() => {
         hideLoading();
-        showErrorModal(`การเข้าสู่ระบบด้วย ${type} ยังไม่พร้อมใช้งาน`);
+        showErrorModal(`การเข้าสู่ระบบด้วย ${type} ยังไม่พร้อมใช้งาน กรุณาใช้ชื่อผู้ใช้และรหัสผ่าน`);
     }, 1500);
 }
 
-// Validation function
+// Enhanced validation function
 function validateRegistrationForm(data) {
     // Check required fields
     const requiredFields = ['username', 'password', 'firstName', 'lastName', 'email', 'phone', 'studentId', 'class', 'role', 'birthDate'];
     for (let field of requiredFields) {
         if (!data[field]) {
-            showErrorModal('กรุณากรอกข้อมูลให้ครบถ้วน');
+            const fieldNames = {
+                'username': 'ชื่อผู้ใช้งาน',
+                'password': 'รหัสผ่าน',
+                'firstName': 'ชื่อ',
+                'lastName': 'นามสกุล',
+                'email': 'อีเมล',
+                'phone': 'เบอร์โทรศัพท์',
+                'studentId': 'รหัสประจำตัว',
+                'class': 'ชั้นเรียน/แผนก',
+                'role': 'ประเภทผู้ใช้งาน',
+                'birthDate': 'วันเดือนปีเกิด'
+            };
+            showErrorModal(`กรุณากรอก ${fieldNames[field] || field}`);
             return false;
         }
     }
@@ -2379,6 +2609,13 @@ function validateRegistrationForm(data) {
         return false;
     }
     
+    // Check age (must be at least 10 years old)
+    const age = today.getFullYear() - birthDate.getFullYear();
+    if (age < 10) {
+        showErrorModal('อายุต้องมากกว่า 10 ปี');
+        return false;
+    }
+    
     // Check terms acceptance
     if (!data.acceptTerms) {
         showErrorModal('กรุณายอมรับเงื่อนไขการใช้งาน');
@@ -2388,21 +2625,29 @@ function validateRegistrationForm(data) {
     return true;
 }
 
-// Modal functions
+// Modal functions with enhanced animations
 function showLoading(text = 'กำลังประมวลผล') {
     const loadingText = document.getElementById('loadingText');
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     if (loadingText) loadingText.textContent = text;
-    if (loadingOverlay) loadingOverlay.classList.add('active');
+    if (loadingOverlay) {
+        loadingOverlay.classList.add('active');
+        // Disable scrolling
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function hideLoading() {
     const loadingOverlay = document.getElementById('loadingOverlay');
-    if (loadingOverlay) loadingOverlay.classList.remove('active');
+    if (loadingOverlay) {
+        loadingOverlay.classList.remove('active');
+        // Re-enable scrolling
+        document.body.style.overflow = 'auto';
+    }
 }
 
-// Show success modal
+// Show success modal with enhanced functionality
 function showSuccessModal(title, message, type) {
     const successModal = document.getElementById('successModal');
     const successTitle = document.getElementById('successTitle');
@@ -2415,43 +2660,57 @@ function showSuccessModal(title, message, type) {
     successTitle.textContent = title;
     successMessage.textContent = message;
     
+    // Configure buttons based on context
     switch(type) {
         case 'register':
             primaryBtn.innerHTML = '<ion-icon name="log-in-outline"></ion-icon> เข้าสู่ระบบ';
             primaryBtn.onclick = () => {
                 successModal.classList.remove('active');
                 toggleForm('login');
+                document.body.style.overflow = 'auto';
             };
             if (secondaryBtn) secondaryBtn.style.display = 'none';
             break;
+            
         case 'forgot':
             primaryBtn.innerHTML = '<ion-icon name="key-outline"></ion-icon> ตั้งรหัสผ่านใหม่';
             primaryBtn.onclick = () => {
                 successModal.classList.remove('active');
                 toggleForm('reset');
+                document.body.style.overflow = 'auto';
             };
             if (secondaryBtn) secondaryBtn.style.display = 'none';
             break;
+            
         case 'reset':
             primaryBtn.innerHTML = '<ion-icon name="log-in-outline"></ion-icon> เข้าสู่ระบบ';
             primaryBtn.onclick = () => {
                 successModal.classList.remove('active');
                 toggleForm('login');
+                document.body.style.overflow = 'auto';
             };
             if (secondaryBtn) secondaryBtn.style.display = 'none';
             break;
+            
         default: // login
             primaryBtn.innerHTML = '<ion-icon name="home-outline"></ion-icon> หน้าหลัก';
-            primaryBtn.onclick = () => redirectToHome();
+            primaryBtn.onclick = () => {
+                successModal.classList.remove('active');
+                redirectToHome();
+            };
             
             if (secondaryBtn) {
-                secondaryBtn.innerHTML = '<ion-icon name="person-outline"></ion-icon> แก้ไขโปรไฟล์';
+                secondaryBtn.innerHTML = '<ion-icon name="person-outline"></ion-icon> โปรไฟล์';
                 secondaryBtn.style.display = 'block';
-                secondaryBtn.onclick = () => redirectToProfile();
+                secondaryBtn.onclick = () => {
+                    successModal.classList.remove('active');
+                    redirectToProfile();
+                };
             }
     }
     
     successModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function showErrorModal(message) {
@@ -2459,43 +2718,60 @@ function showErrorModal(message) {
     const errorMessage = document.getElementById('errorMessage');
     
     if (errorMessage) errorMessage.textContent = message;
-    if (errorModal) errorModal.classList.add('active');
+    if (errorModal) {
+        errorModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 }
 
-// Redirect functions for GitHub Pages
+// Enhanced redirect functions for GitHub Pages
 function redirectToHome() {
-    // Check if we're in a GitHub Pages environment
-    const currentPath = window.location.pathname;
-    const basePath = currentPath.includes('/HTML/') ? 
-        currentPath.substring(0, currentPath.indexOf('/HTML/')) : '';
-    
-    window.location.href = basePath + '/HTML/index.html';
+    showLoading('กำลังไปยังหน้าหลัก');
+    setTimeout(() => {
+        navigateToPage('index.html');
+    }, 1000);
 }
 
 function redirectToProfile() {
-    // Check if we're in a GitHub Pages environment
-    const currentPath = window.location.pathname;
-    const basePath = currentPath.includes('/HTML/') ? 
-        currentPath.substring(0, currentPath.indexOf('/HTML/')) : '';
-    
-    window.location.href = basePath + '/HTML/Nav.html';
+    showLoading('กำลังไปยังหน้าโปรไฟล์');
+    setTimeout(() => {
+        navigateToPage('Profile.html');
+    }, 1000);
 }
 
-// Form reset function
+// Enhanced form reset function
 function resetForms() {
     const forms = ['loginForm', 'registerForm', 'forgotForm', 'resetForm'];
+    
     forms.forEach(formId => {
         const form = document.getElementById(formId);
         if (form) {
             form.reset();
-            // Remove focused class from form groups
-            form.querySelectorAll('.form-group').forEach(group => {
-                group.classList.remove('focused');
+            
+            // Remove focused class from input containers
+            form.querySelectorAll('.input-container').forEach(container => {
+                container.classList.remove('focused');
+            });
+            
+            // Remove validation classes from inputs
+            form.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('valid', 'invalid');
+            });
+            
+            // Reset password toggles
+            form.querySelectorAll('.password-toggle ion-icon').forEach(icon => {
+                icon.name = 'eye-outline';
+            });
+            
+            form.querySelectorAll('input[type="text"]').forEach(input => {
+                if (input.id.includes('password') || input.id.includes('Password')) {
+                    input.type = 'password';
+                }
             });
         }
     });
     
-    // Clear hints
+    // Clear all hints
     document.querySelectorAll('.form-hint').forEach(hint => {
         hint.textContent = '';
         hint.style.color = '';
@@ -2505,20 +2781,59 @@ function resetForms() {
     resetUserData = null;
 }
 
-// Auto-redirect check for GitHub Pages
+// Auto-redirect check for GitHub Pages compatibility
 function checkAutoRedirect() {
-    // For demonstration purposes, we'll skip auto-redirect in GitHub Pages
-    // since we can't reliably persist login state without localStorage
-    console.log('GitHub Pages mode: Auto-redirect disabled');
+    // Check for existing session on page load
+    try {
+        const savedUser = sessionStorage.getItem('scanCheckinUser');
+        const savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        
+        if (savedUser && savedLoggedIn === 'true') {
+            console.log('Found existing session, user already logged in');
+            
+            // Optional: Show a brief message or redirect automatically
+            setTimeout(() => {
+                const autoRedirect = confirm('พบว่าคุณได้เข้าสู่ระบบแล้ว ต้องการไปยังหน้าหลักหรือไม่?');
+                if (autoRedirect) {
+                    redirectToHome();
+                }
+            }, 1000);
+        }
+    } catch (e) {
+        console.log('No existing session found');
+    }
 }
 
-// Public API for accessing user data
+// Public API for accessing user data (GitHub Pages compatible)
 window.getUserData = function() {
-    return currentUser;
+    if (currentUser) {
+        return currentUser;
+    }
+    
+    // Try to restore from sessionStorage
+    try {
+        const savedUser = sessionStorage.getItem('scanCheckinUser');
+        if (savedUser) {
+            return JSON.parse(savedUser);
+        }
+    } catch (e) {
+        console.warn('Could not retrieve user data');
+    }
+    
+    return null;
 };
 
 window.isUserLoggedIn = function() {
-    return isLoggedIn;
+    if (isLoggedIn) {
+        return true;
+    }
+    
+    // Try to check sessionStorage
+    try {
+        return sessionStorage.getItem('scanCheckinLoggedIn') === 'true';
+    } catch (e) {
+        return false;
+    }
 };
 
 window.logoutUser = function() {
@@ -2526,17 +2841,64 @@ window.logoutUser = function() {
     isLoggedIn = false;
     rememberLogin = false;
     resetUserData = null;
+    
+    // Clear sessionStorage
+    try {
+        sessionStorage.removeItem('scanCheckinUser');
+        sessionStorage.removeItem('scanCheckinLoggedIn');
+        sessionStorage.removeItem('scanCheckinRemember');
+    } catch (e) {
+        console.warn('Could not clear session storage');
+    }
+    
+    console.log('User logged out successfully');
 };
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeSystem);
+// Additional utility functions
+window.getCurrentUserRole = function() {
+    const user = window.getUserData();
+    return user ? user.role : null;
+};
 
-// Also initialize immediately if DOM is already loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeSystem);
-} else {
-    initializeSystem();
+window.updateUserData = function(updatedData) {
+    if (currentUser && isLoggedIn) {
+        currentUser = { ...currentUser, ...updatedData };
+        
+        try {
+            sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
+        } catch (e) {
+            console.warn('Could not update user session');
+        }
+        
+        return true;
+    }
+    return false;
+};
+
+// Enhanced error handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript Error:', e.error);
+    // You could implement error reporting here
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled Promise Rejection:', e.reason);
+    // You could implement error reporting here
+});
+
+// Initialize when DOM is ready
+function initWhenReady() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeSystem);
+    } else {
+        initializeSystem();
+    }
 }
+
+// Start initialization
+initWhenReady();
+
+console.log('Scan Check-in Registration System Loaded - GitHub Pages Compatible');
         </script>
     </body>
     </html>
