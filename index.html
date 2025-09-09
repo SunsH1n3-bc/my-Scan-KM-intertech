@@ -3,10 +3,5858 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Page</title>
+    <title>Scan Check In - ระบบเช็คอินทันสมัย</title>
+    
+    <!-- Ionicons -->
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.js"></script>
+    
+    <!-- CSS -->
+    <style>
+        /* Modern White Theme UI/UX Design */
+
+/* Reset และ Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fafbfc;
+    color: #1a1a1a;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Header Styles - Modern Clean Design */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #e8eaed;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    height: 70px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 100%;
+}
+
+.logo-section .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: #4285f4;
+    transition: transform 0.3s ease;
+}
+
+.logo-icon:hover {
+    transform: scale(1.05);
+}
+
+.logo h1 {
+    font-size: 20px;
+    color: #1a1a1a;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: #e8f0fe;
+}
+
+.profile-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #1a1a1a;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.notification {
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-icon {
+    font-size: 20px;
+    color: #5f6368;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.notification-icon:hover {
+    background: #f1f3f4;
+    color: #4285f4;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #ea4335;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Modern Vertical Navigation */
+.vertical-nav {
+    position: fixed;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 72px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e8eaed;
+    z-index: 999;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vertical-nav:hover {
+    transform: translateY(-50%) scale(1.02);
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.nav-container {
+    padding: 16px 0;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #5f6368;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+}
+
+.nav-link:hover {
+    background: #f8f9fa;
+    color: #4285f4;
+    transform: scale(1.05);
+}
+
+.nav-link.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+}
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background: #4285f4;
+    border-radius: 2px;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+/* Modern Tooltip */
+.nav-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 76px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1a1a1a;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-item:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(8px);
+}
+
+/* Main Content Layout */
+.main-content {
+    margin-left: 120px;
+    margin-top: 70px;
+    padding: 32px;
+    min-height: calc(100vh - 70px);
+    max-width: 1200px;
+}
+
+/* Modern Welcome Section */
+.welcome-section {
+    margin-bottom: 32px;
+}
+
+.welcome-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e8eaed;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4285f4 0%, #1a73e8 100%);
+}
+
+.welcome-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-content h2 {
+    font-size: 32px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.welcome-content p {
+    color: #5f6368;
+    margin-bottom: 24px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.date-time {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.date-info,
+.time-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4285f4;
+    font-weight: 500;
+    font-size: 14px;
+    background: #f8f9fa;
+    padding: 8px 16px;
+    border-radius: 50px;
+}
+
+.date-info ion-icon,
+.time-info ion-icon {
+    font-size: 16px;
+}
+
+.welcome-illustration {
+    font-size: 64px;
+    color: #4285f4;
+    opacity: 0.8;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Modern Quick Actions */
+.quick-actions {
+    margin-bottom: 32px;
+}
+
+.quick-actions h3 {
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e8eaed;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* จัดให้เนื้อหาทั้งหมดรวมถึงปุ่มอยู่กลาง */
+    text-align: center;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #4285f4 0%, #1a73e8 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.action-card:hover::before {
+    transform: scaleX(1);
+}
+
+.action-btn {
+    /* CSS เดิมของปุ่ม */
+    align-self: center; /* บังคับให้ปุ่มอยู่กลางโดยเฉพาะ */
+    margin: 0 auto;     /* เผื่อไว้สำหรับกรณีที่ flex ไม่ทำงาน */
+}
+
+.action-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover .action-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.action-card h4 {
+    font-size: 18px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.action-card p {
+    color: #5f6368;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.action-btn {
+    background: #4285f4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+.action-btn:hover {
+    background: #1a73e8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+/* Modern Schedule Design */
+.today-schedule {
+    margin-bottom: 32px;
+}
+
+.today-schedule h3 {
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.schedule-container {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e8eaed;
+}
+
+.schedule-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f1f3f4;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    margin-bottom: 4px;
+}
+
+.schedule-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.schedule-item:hover {
+    background: #f8f9fa;
+    transform: translateX(4px);
+}
+
+.schedule-time {
+    min-width: 140px;
+    font-weight: 600;
+    color: #4285f4;
+    font-size: 14px;
+    background: #f8f9fa;
+    padding: 8px 16px;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.schedule-info {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.schedule-info h4 {
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.schedule-info p {
+    color: #5f6368;
+    font-size: 14px;
+}
+
+.schedule-status {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.schedule-status.completed {
+    background: #e8f5e8;
+    color: #137333;
+}
+
+.schedule-status.upcoming {
+    background: #fef7e0;
+    color: #b06000;
+}
+
+.schedule-status.pending {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+/* Modern Statistics */
+.statistics h3 {
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e8eaed;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 4px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+.stat-card:nth-child(1) .stat-icon {
+    background: linear-gradient(135deg, #34a853 0%, #137333 100%);
+}
+
+.stat-card:nth-child(1)::before {
+    background: #34a853;
+}
+
+.stat-card:nth-child(2) .stat-icon {
+    background: linear-gradient(135deg, #ea4335 0%, #d33b2c 100%);
+}
+
+.stat-card:nth-child(2)::before {
+    background: #ea4335;
+}
+
+.stat-card:nth-child(3) .stat-icon {
+    background: linear-gradient(135deg, #fbbc04 0%, #f9ab00 100%);
+}
+
+.stat-card:nth-child(3)::before {
+    background: #fbbc04;
+}
+
+.stat-card:nth-child(4) .stat-icon {
+    background: linear-gradient(135deg, #9334e6 0%, #7c3aed 100%);
+}
+
+.stat-card:nth-child(4)::before {
+    background: #9334e6;
+}
+
+.stat-info h4 {
+    font-size: 28px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.stat-info p {
+    color: #5f6368;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Modern Footer */
+.main-footer {
+    background: white;
+    border-top: 1px solid #e8eaed;
+    padding: 24px 0;
+    margin-top: 48px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-container p {
+    color: #5f6368;
+    font-size: 14px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.footer-links a {
+    color: #5f6368;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #4285f4;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 104px;
+        padding: 24px;
+    }
+    
+    .action-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .vertical-nav {
+        left: 16px;
+        width: 64px;
+    }
+    
+    .nav-link {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .main-content {
+        margin-left: 96px;
+        padding: 20px;
+    }
+    
+    .header-container {
+        padding: 0 20px;
+    }
+    
+    .logo h1 {
+        font-size: 18px;
+    }
+    
+    .user-name {
+        display: none;
+    }
+    
+    .welcome-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 32px;
+    }
+    
+    .welcome-content h2 {
+        font-size: 24px;
+    }
+    
+    .date-time {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .schedule-time {
+        min-width: auto;
+    }
+    
+    .schedule-info {
+        margin-left: 0;
+    }
+    
+    .footer-container {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+    
+    .footer-links {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vertical-nav {
+        left: 12px;
+        width: 56px;
+    }
+    
+    .nav-link {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .main-content {
+        margin-left: 80px;
+        padding: 16px;
+    }
+    
+    .welcome-card {
+        padding: 24px;
+    }
+    
+    .welcome-content h2 {
+        font-size: 20px;
+    }
+    
+    .action-card {
+        padding: 24px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-item::after {
+        display: none;
+    }
+}
+
+/* Focus States for Accessibility */
+.nav-link:focus,
+.action-btn:focus,
+.notification-icon:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f3f4;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #dadce0;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #bdc1c6;
+}
+
+
+/* ===== CSS เพิ่มเติม - ธีมสีขาว-ฟ้า ===== */
+
+/* Floating Background Elements */
+.floating-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.floating-element {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.1), rgba(26, 115, 232, 0.05));
+    animation: float-around 20s infinite ease-in-out;
+}
+
+.floating-element.element-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.floating-element.element-2 {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: 10%;
+    animation-delay: -5s;
+}
+
+.floating-element.element-3 {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    left: 20%;
+    animation-delay: -10s;
+}
+
+.floating-element.element-4 {
+    width: 80px;
+    height: 80px;
+    top: 30%;
+    right: 30%;
+    animation-delay: -15s;
+}
+
+.floating-element.element-5 {
+    width: 120px;
+    height: 120px;
+    bottom: 40%;
+    right: 50%;
+    animation-delay: -7s;
+}
+
+@keyframes float-around {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(30px) translateY(-20px) rotate(90deg); }
+    50% { transform: translateX(-15px) translateY(25px) rotate(180deg); }
+    75% { transform: translateX(20px) translateY(-10px) rotate(270deg); }
+}
+
+/* Enhanced Welcome Badge */
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%);
+    color: #1a73e8;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid rgba(66, 133, 244, 0.2);
+    animation: badge-glow 2s infinite alternate;
+}
+
+@keyframes badge-glow {
+    0% { box-shadow: 0 0 10px rgba(66, 133, 244, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(66, 133, 244, 0.4); }
+}
+
+/* Enhanced Weather Info */
+.weather-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #fff3e0 0%, #fef7e0 100%);
+    color: #e8710a;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 16px;
+    border: 1px solid rgba(232, 113, 10, 0.2);
+    width: fit-content;
+}
+
+/* Enhanced Welcome Illustration */
+.welcome-illustration {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-icons {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.illustration-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: #4285f4;
+    animation: main-icon-pulse 3s infinite;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 20px;
+    color: #1a73e8;
+    animation: icon-orbit 8s infinite linear;
+}
+
+.floating-icon.icon-1 {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-icon.icon-2 {
+    top: 10%;
+    right: 10%;
+    animation-delay: -2.7s;
+}
+
+.floating-icon.icon-3 {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: -5.4s;
+}
+
+@keyframes main-icon-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes icon-orbit {
+    0% { transform: rotate(0deg) translateX(40px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
+}
+
+/* Enhanced Status Cards */
+.status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.status-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e8eaed;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 4px;
+    transition: all 0.3s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.status-card.urgent::before {
+    background: linear-gradient(180deg, #ea4335 0%, #d33b2c 100%);
+}
+
+.status-card.success::before {
+    background: linear-gradient(180deg, #34a853 0%, #137333 100%);
+}
+
+.status-card.info::before {
+    background: linear-gradient(180deg, #4285f4 0%, #1a73e8 100%);
+}
+
+.status-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.status-card.urgent .status-icon {
+    background: linear-gradient(135deg, #ea4335 0%, #d33b2c 100%);
+}
+
+.status-card.success .status-icon {
+    background: linear-gradient(135deg, #34a853 0%, #137333 100%);
+}
+
+.status-card.info .status-icon {
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+}
+
+.status-card:hover .status-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.status-content h4 {
+    font-size: 16px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.status-content p {
+    color: #5f6368;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.status-time {
+    font-size: 12px;
+    color: #9aa0a6;
+    font-weight: 500;
+}
+
+/* Enhanced Section Headers */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.section-header h3 {
+    font-size: 24px;
+    color: #1a1a1a;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    position: relative;
+}
+
+.section-header h3::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #4285f4 0%, #1a73e8 100%);
+    border-radius: 2px;
+}
+
+.section-divider {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #e8eaed 50%, transparent 100%);
+    margin-left: 24px;
+}
+
+.view-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid #e8eaed;
+    color: #4285f4;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-all-btn:hover {
+    background: #f8f9fa;
+    border-color: #4285f4;
+    transform: translateX(4px);
+}
+
+/* Enhanced Action Button Variations */
+.action-btn.primary {
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn.secondary {
+    background: linear-gradient(135deg, #34a853 0%, #137333 100%);
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 8px;
+}
+
+.action-btn.tertiary {
+    background: linear-gradient(135deg, #ea4335 0%, #d33b2c 100%);
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    gap: 8px;
+}
+
+.btn-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Enhanced Schedule Items */
+.schedule-item.completed {
+    background: linear-gradient(135deg, rgba(52, 168, 83, 0.05) 0%, rgba(19, 115, 51, 0.02) 100%);
+    border-left: 4px solid #34a853;
+}
+
+.schedule-item.current {
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.05) 0%, rgba(26, 115, 232, 0.02) 100%);
+    border-left: 4px solid #4285f4;
+    animation: current-pulse 2s infinite;
+}
+
+.schedule-item.upcoming {
+    background: linear-gradient(135deg, rgba(251, 188, 4, 0.05) 0%, rgba(249, 171, 0, 0.02) 100%);
+    border-left: 4px solid #fbbc04;
+}
+
+@keyframes current-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
+}
+
+.schedule-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.schedule-details .room,
+.schedule-details .teacher {
+    font-size: 12px;
+    color: #5f6368;
+    background: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.schedule-progress {
+    width: 100%;
+    height: 4px;
+    background: #f1f3f4;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar.completed {
+    width: 100%;
+    background: linear-gradient(90deg, #34a853 0%, #137333 100%);
+}
+
+.progress-bar.current {
+    width: 60%;
+    background: linear-gradient(90deg, #4285f4 0%, #1a73e8 100%);
+    animation: progress-glow 2s infinite alternate;
+}
+
+.progress-bar.upcoming {
+    width: 0%;
+    background: linear-gradient(90deg, #fbbc04 0%, #f9ab00 100%);
+}
+
+@keyframes progress-glow {
+    0% { box-shadow: 0 0 5px rgba(66, 133, 244, 0.3); }
+    100% { box-shadow: 0 0 15px rgba(66, 133, 244, 0.6); }
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-badge.completed {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+    color: #137333;
+}
+
+.status-badge.current {
+    background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+    color: #1a73e8;
+}
+
+.status-badge.upcoming {
+    background: linear-gradient(135deg, #fef7e0 0%, #fffbf0 100%);
+    color: #b06000;
+}
+
+/* Enhanced Period Selector */
+.period-selector {
+    background: white;
+    border: 1px solid #e8eaed;
+    border-radius: 25px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #0266e1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.period-selector:hover {
+    border-color: #4285f4;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.1);
+}
+
+.period-selector:focus {
+    border-color: #4285f4;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+/* Enhanced Stat Trends */
+.stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.stat-trend.up {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+    color: #137333;
+}
+
+.stat-trend.down {
+    background: linear-gradient(135deg, #fce8e6 0%, #fef0f0 100%);
+    color: #d33b2c;
+}
+
+.stat-trend.neutral {
+    background: linear-gradient(135deg, #f1f3f4 0%, #f8f9fa 100%);
+    color: #5f6368;
+}
+
+.stat-progress {
+    width: 100%;
+    height: 4px;
+    background: #f1f3f4;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+    background: linear-gradient(90deg, #4285f4 0%, #1a73e8 100%);
+}
+
+/* Enhanced Recent Activities */
+.recent-activities {
+    margin-bottom: 32px;
+}
+
+.activities-timeline {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e8eaed;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f1f3f4;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 48px;
+    bottom: -16px;
+    width: 2px;
+    background: linear-gradient(180deg, #e8eaed 0%, transparent 100%);
+}
+
+.activity-item:last-child::before {
+    display: none;
+}
+
+.activity-item:hover {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 -16px;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.activity-icon.success {
+    background: linear-gradient(135deg, #34a853 0%, #137333 100%);
+}
+
+.activity-icon.info {
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+}
+
+.activity-icon.warning {
+    background: linear-gradient(135deg, #fbbc04 0%, #f9ab00 100%);
+}
+
+.activity-content h4 {
+    font-size: 14px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.activity-content p {
+    color: #5f6368;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.activity-time {
+    font-size: 12px;
+    color: #9aa0a6;
+    font-weight: 500;
+}
+
+/* Enhanced Footer */
+.footer-section {
+    margin-bottom: 16px;
+}
+
+.footer-section h4 {
+    font-size: 16px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.footer-section p {
+    color: #5f6368;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 32px;
+    margin-bottom: 24px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #e8eaed;
+    padding-top: 16px;
+    text-align: center;
+}
+
+/* Enhanced Ripple Effect */
+.nav-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(66, 133, 244, 0.3);
+    transform: scale(0);
+    pointer-events: none;
+}
+
+.nav-link:active .nav-ripple {
+    animation: nav-ripple 0.4s ease-out;
+}
+
+@keyframes nav-ripple {
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Glass Effect for Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading Animation */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e8eaed;
+    border-top: 2px solid #4285f4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced Mobile Responsive */
+@media (max-width: 640px) {
+    .floating-element {
+        opacity: 0.3;
+    }
+    
+    .status-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .activity-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .activity-item::before {
+        display: none;
+    }
+    
+    .schedule-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .vertical-nav,
+    .main-header,
+    .floating-bg {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        margin-top: 0;
+    }
+    
+    .action-card,
+    .stat-card,
+    .schedule-item {
+        break-inside: avoid;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .nav-link.active {
+        background: #000;
+        color: #fff;
+    }
+    
+    .action-btn {
+        background: #000;
+        color: #fff;
+        border: 2px solid #fff;
+    }
+    
+    .status-icon {
+        background: #000;
+        color: #fff;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .floating-element {
+        animation: none;
+    }
+    
+    .illustration-icon {
+        animation: none;
+    }
+    
+    .floating-icon {
+        animation: none;
+    }
+}
+
+
+.duration{
+    left: 10px;
+    position: relative;
+}
+
+    </style>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>เว็บไซต์ทำงานแล้ว!</p>
+    <!-- Floating Background Elements -->
+    <div class="floating-bg">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="floating-element element-3"></div>
+        <div class="floating-element element-4"></div>
+        <div class="floating-element element-5"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-icon-wrapper">
+                        <ion-icon name="school" class="logo-icon"></ion-icon>
+                    </div>
+                    <h1>Scan Check In</h1>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="profile-img">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="displayUserName">สมชาย ใจดี</span>
+                        <span class="user-status" id="displayUserRole">นักเรียน</span>
+                    </div>
+                </div>
+                <div class="notification">
+                    <ion-icon name="notifications" class="notification-icon"></ion-icon>
+                    <span class="notification-badge">3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Vertical Navigation Sidebar -->
+    <nav class="vertical-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item" data-tooltip="หน้าแรก">
+                    <a href="./index.html" class="nav-link active" aria-label="หน้าแรก">
+                        <ion-icon name="home" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="สแกน QR Code">
+                    <a href="./member.html" class="nav-link" aria-label="สแกน">
+                        <ion-icon name="qr-code" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <!-- เช็คอิน - จะซ่อนสำหรับนักเรียน -->
+                <li class="nav-item checkin-feature" data-tooltip="เช็คอิน">
+                    <a href="./studens.html" class="nav-link" aria-label="เช็คอิน">
+                        <ion-icon name="checkmark-circle" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="ตารางเรียน">
+                    <a href="./ClassRoom.html" class="nav-link" aria-label="ตารางเรียน">
+                        <ion-icon name="calendar" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="สถิติการเข้าเรียน">
+                    <a href="./Scan.html" class="nav-link" aria-label="รายงาน">
+                        <ion-icon name="bar-chart" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="โปรไฟล์">
+                    <a href="./Nav.html" class="nav-link" aria-label="โปรไฟล์">
+                        <ion-icon name="person" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="ติดต่อ">
+                    <a href="https://www.facebook.com/profile.php?id=100087243115176" class="nav-link" aria-label="ติดต่อ">
+                        <ion-icon name="help-circle" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-card">
+                <div class="welcome-content">
+                    <div class="welcome-badge">
+                        <ion-icon name="sparkles"></ion-icon>
+                        <span>ยินดีต้อนรับ</span>
+                    </div>
+                    <h2>ระบบเช็คอินเรียนออนไลน์</h2>
+                    <p>จัดการการเข้าเรียนของคุณได้อย่างง่ายดายและมีประสิทธิภาพ</p>
+                    <div class="date-time">
+                        <div class="date-info">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            <span id="current-date"></span>
+                        </div>
+                        <div class="time-info">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <span id="current-time"></span>
+                        </div>
+                    </div>
+                    <div class="weather-info">
+                        <ion-icon name="sunny"></ion-icon>
+                        <span>25°C - สดใส</span>
+                    </div>
+                </div>
+                <div class="welcome-illustration">
+                    <div class="floating-icons">
+                        <ion-icon name="school-outline" class="illustration-icon main-icon"></ion-icon>
+                        <ion-icon name="book-outline" class="floating-icon icon-1"></ion-icon>
+                        <ion-icon name="trophy-outline" class="floating-icon icon-2"></ion-icon>
+                        <ion-icon name="star-outline" class="floating-icon icon-3"></ion-icon>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Cards -->
+        <section class="status-cards">
+            <div class="status-card urgent">
+                <div class="status-icon">
+                    <ion-icon name="alert-circle"></ion-icon>
+                </div>
+                <div class="status-content">
+                    <h4>กำลังจะเริ่มเรียน</h4>
+                    <p>ภาษาอังกฤษ - ห้อง B-205</p>
+                    <span class="status-time">อีก 15 นาที</span>
+                </div>
+            </div>
+            
+            <!-- เช็คอินสำเร็จ - จะซ่อนสำหรับนักเรียน -->
+            <div class="status-card success checkin-feature">
+                <div class="status-icon">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                </div>
+                <div class="status-content">
+                    <h4>เข้าเรียนสำเร็จ</h4>
+                    <p>คณิตศาสตร์ - ห้อง A-101</p>
+                    <span class="status-time">08:00 น.</span>
+                </div>
+            </div>
+            
+            <div class="status-card info" onclick="window.location.href='/my-Scan-KM-intertech/new.html'">
+                <div class="status-icon">
+                    <ion-icon name="information-circle"></ion-icon>
+                </div>
+                <div class="status-content">
+                    <h4>ประกาศใหม่</h4>
+                    <p>ตารางสอบกลางภาค</p>
+                    <span class="status-time">เมื่อวาน</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <div class="section-header">
+                <h3>การดำเนินการด่วน</h3>
+                <div class="section-divider"></div>
+            </div>
+            <div class="action-grid">
+                <div class="action-card scan-card">
+                    <div class="action-icon">
+                        <ion-icon name="qr-code"></ion-icon>
+                    </div>
+                    <h4>สแกน QR Code</h4>
+                    <p>เช็คอินเข้าเรียนด้วย QR Code</p>
+                    <button class="action-btn primary" data-page="/my-Scan-KM-intertech/member.html">
+                        <ion-icon name="camera"></ion-icon>
+                        <span>เริ่มสแกน</span>
+                        <div class="btn-ripple"></div>
+                    </button>
+                </div>
+                
+                <div class="action-card schedule-card">
+                    <div class="action-icon">
+                        <ion-icon name="calendar"></ion-icon>
+                    </div>
+                    <h4>ตารางเรียนวันนี้</h4>
+                    <p>ดูตารางเรียนและกิจกรรมวันนี้</p>
+                    <button class="action-btn secondary" data-page="/my-Scan-KM-intertech/ClassRoom.html">
+                        <ion-icon name="time"></ion-icon>
+                        <span>ดูตาราง</span>
+                        <div class="btn-ripple"></div>
+                    </button>
+                </div>
+                
+                <!-- การเช็คอิน - จะซ่อนสำหรับนักเรียน -->
+                <div class="action-card report-card checkin-feature">
+                    <div class="action-icon">
+                        <ion-icon name="bar-chart"></ion-icon>
+                    </div>
+                    <h4>การเช็คอิน</h4>
+                    <p>ดูสถิติและการเข้าเรียน</p>
+                    <button class="action-btn tertiary" data-page="/my-Scan-KM-intertech/studens.html">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        <span>เช็คอิน</span>
+                        <div class="btn-ripple"></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Schedule -->
+        <section class="today-schedule">
+            <div class="section-header">
+                <h3>ตารางเรียนวันนี้</h3>
+                <button class="view-all-btn" onclick="window.location.href='/my-Scan-KM-intertech/ClassRoom.html'">
+                    <span>ดูทั้งหมด</span>
+                    <ion-icon name="arrow-forward"></ion-icon>
+                </button>
+            </div>
+            <div class="schedule-container">
+                <div class="schedule-item completed">
+                    <div class="schedule-time">
+                        <span class="time">08:00</span>
+                        <span class="duration">90 นาที</span>
+                    </div>
+                    <div class="schedule-info">
+                        <h4>คณิตศาสตร์</h4>
+                        <div class="schedule-details">
+                            <span class="room">ห้อง A-101</span>
+                            <span class="teacher">อ.สมศรี จันทร์เพ็ญ</span>
+                        </div>
+                        <div class="schedule-progress">
+                            <div class="progress-bar completed"></div>
+                        </div>
+                    </div>
+                    <div class="schedule-status">
+                        <span class="status-badge completed">เช็คอินแล้ว</span>
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                    </div>
+                </div>
+                
+                <div class="schedule-item current">
+                    <div class="schedule-time">
+                        <span class="time">09:45</span>
+                        <span class="duration">90 นาที</span>
+                    </div>
+                    <div class="schedule-info">
+                        <h4>ภาษาอังกฤษ</h4>
+                        <div class="schedule-details">
+                            <span class="room">ห้อง B-205</span>
+                            <span class="teacher">อ.วิภาวี สีใส</span>
+                        </div>
+                        <div class="schedule-progress">
+                            <div class="progress-bar current"></div>
+                        </div>
+                    </div>
+                    <div class="schedule-status">
+                        <span class="status-badge current">กำลังเรียน</span>
+                        <ion-icon name="play-circle"></ion-icon>
+                    </div>
+                </div>
+                
+                <div class="schedule-item upcoming">
+                    <div class="schedule-time">
+                        <span class="time">13:00</span>
+                        <span class="duration">90 นาที</span>
+                    </div>
+                    <div class="schedule-info">
+                        <h4>วิทยาการคอมพิวเตอร์</h4>
+                        <div class="schedule-details">
+                            <span class="room">ห้อง C-301</span>
+                            <span class="teacher">อ.ธนกฤต โค้ดดี</span>
+                        </div>
+                        <div class="schedule-progress">
+                            <div class="progress-bar upcoming"></div>
+                        </div>
+                    </div>
+                    <div class="schedule-status">
+                        <span class="status-badge upcoming">รอเช็คอิน</span>
+                        <ion-icon name="time"></ion-icon>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics - อัพเดทจาก Scan.html -->
+        <section class="statistics">
+            <div class="section-header">
+                <h3>สถิติการเข้าเรียน</h3>
+                <select class="period-selector">
+                    <option value="week">สัปดาห์นี้</option>
+                    <option value="month">เดือนนี้</option>
+                    <option value="semester">ภาคเรียนนี้</option>
+                </select>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card attendance">
+                    <div class="stat-icon">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="totalPresentDisplay">18</h4>
+                        <p>วันที่เข้าเรียน</p>
+                        <div class="stat-progress">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-trend up">
+                        <ion-icon name="trending-up"></ion-icon>
+                        <span>+5%</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card absence">
+                    <div class="stat-icon">
+                        <ion-icon name="close-circle"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="totalAbsentDisplay">2</h4>
+                        <p>วันที่ขาดเรียน</p>
+                        <div class="stat-progress">
+                            <div class="progress-fill" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-trend down">
+                        <ion-icon name="trending-down"></ion-icon>
+                        <span>-2%</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card late">
+                    <div class="stat-icon">
+                        <ion-icon name="time"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="totalLateDisplay">1</h4>
+                        <p>วันที่มาสาย</p>
+                        <div class="stat-progress">
+                            <div class="progress-fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-trend neutral">
+                        <ion-icon name="remove"></ion-icon>
+                        <span>0%</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card percentage">
+                    <div class="stat-icon">
+                        <ion-icon name="trophy"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="attendanceRateDisplay">90%</h4>
+                        <p>เปอร์เซ็นต์การเข้าเรียน</p>
+                        <div class="stat-progress">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-trend up">
+                        <ion-icon name="trending-up"></ion-icon>
+                        <span>+3%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activities -->
+        <section class="recent-activities">
+            <div class="section-header">
+                <h3>กิจกรรมล่าสุด</h3>
+                <button class="view-all-btn">
+                    <span>ดูทั้งหมด</span>
+                    <ion-icon name="arrow-forward"></ion-icon>
+                </button>
+            </div>
+            <div class="activities-timeline">
+                <!-- เช็คอินสำเร็จ - จะซ่อนสำหรับนักเรียน -->
+                <div class="activity-item checkin-feature">
+                    <div class="activity-icon success">
+                        <ion-icon name="checkmark"></ion-icon>
+                    </div>
+                    <div class="activity-content">
+                        <h4>เช็คอินเข้าเรียนสำเร็จ</h4>
+                        <p>คณิตศาสตร์ - ห้อง A-101</p>
+                        <span class="activity-time">10 นาทีที่แล้ว</span>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon info">
+                        <ion-icon name="document"></ion-icon>
+                    </div>
+                    <div class="activity-content">
+                        <h4>ได้รับใบงานใหม่</h4>
+                        <p>แบบฝึกหัดวิทยาการคอมพิวเตอร์</p>
+                        <span class="activity-time">1 ชั่วโมงที่แล้ว</span>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon warning">
+                        <ion-icon name="alert-circle"></ion-icon>
+                    </div>
+                    <div class="activity-content">
+                        <h4>แจ้งเตือนตารางเรียน</h4>
+                        <p>มีการเปลี่ยนแปลงตารางเรียนวันพรุ่งนี้</p>
+                        <span class="activity-time">3 ชั่วโมงที่แล้ว</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>เกี่ยวกับเรา</h4>
+                    <p>ระบบเช็คอินเรียนออนไลน์ที่ทันสมัยและใช้งานง่าย</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ติดต่อเรา</h4>
+                    <p>โทร: 061-060-7931</p>
+                    <p>อีเมล: Siributwicha015@Gmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ลิงก์ด่วน</h4>
+                    <div class="footer-links">
+                        <a href="/my-Scan-KM-intertech/about.html">เกี่ยวกับเรา</a>
+                        <a href="/my-Scan-KM-intertech/N.html">เงื่อนไขการใช้งาน</a>
+                        <a href="/my-Scan-KM-intertech/help.html">ช่วยเหลือ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ระบบเช็คอินเรียนออนไลน์. สงวนลิขสิทธิ์.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Statistics Update Notification -->
+    <div class="statistics-notification" id="statisticsNotification" style="display: none;">
+        <div class="notification-content">
+            <ion-icon name="bar-chart-outline"></ion-icon>
+            <span>สถิติการเข้าเรียนได้รับการอัพเดท</span>
+            <button class="close-notification" onclick="hideStatisticsNotification()">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script>
+        // Statistics Sync System - ระบบซิงค์ข้อมูลสถิติการเข้าเรียน
+// ไฟล์นี้จะจัดการการซิงค์ข้อมูลสถิติระหว่างหน้า index.html และ Scan.html
+
+// ตัวแปรสำหรับเก็บข้อมูลสถิติ
+let attendanceStatistics = {
+    totalPresent: 0,
+    totalAbsent: 0,
+    totalLate: 0,
+    totalLeave: 0,
+    attendanceRate: 0,
+    weeklyData: [],
+    monthlyData: [],
+    subjectStats: [],
+    lastUpdated: null
+};
+
+// ฟังก์ชันโหลดข้อมูลสถิติจาก localStorage
+function loadAttendanceStatistics() {
+    try {
+        // โหลดข้อมูลการเข้าเรียนจาก Scan.html
+        const savedAttendanceData = localStorage.getItem('studentAttendanceData');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        
+        if (savedAttendanceData) {
+            const attendanceData = JSON.parse(savedAttendanceData);
+            calculateStatistics(attendanceData, userData);
+        } else {
+            // ใช้ข้อมูลเริ่มต้นหากไม่มีข้อมูล
+            setDefaultStatistics(userData);
+        }
+        
+        console.log('Statistics loaded:', attendanceStatistics);
+        return attendanceStatistics;
+    } catch (error) {
+        console.error('Error loading attendance statistics:', error);
+        setDefaultStatistics();
+        return attendanceStatistics;
+    }
+}
+
+// ฟังก์ชันคำนวณสถิติจากข้อมูลที่มี
+function calculateStatistics(attendanceData, userData) {
+    let totalPresent = 0;
+    let totalAbsent = 0;
+    let totalLate = 0;
+    let totalLeave = 0;
+    let subjectStats = [];
+    
+    // รวบรวมข้อมูลจากทุกระดับชั้น
+    if (attendanceData.gradeData) {
+        Object.keys(attendanceData.gradeData).forEach(grade => {
+            attendanceData.gradeData[grade].forEach(student => {
+                if (student.status) {
+                    switch (student.status) {
+                        case 'present':
+                            totalPresent++;
+                            break;
+                        case 'absent':
+                            totalAbsent++;
+                            break;
+                        case 'late':
+                            totalLate++;
+                            break;
+                        case 'leave':
+                            totalLeave++;
+                            break;
+                    }
+                }
+            });
+        });
+    }
+    
+    // คำนวณเปอร์เซ็นต์การเข้าเรียน
+    const totalRecords = totalPresent + totalAbsent + totalLate + totalLeave;
+    const attendanceRate = totalRecords > 0 ? Math.round(((totalPresent + totalLate) / totalRecords) * 100) : 0;
+    
+    // อัพเดทข้อมูลสถิติ
+    attendanceStatistics = {
+        totalPresent,
+        totalAbsent,
+        totalLate,
+        totalLeave,
+        attendanceRate,
+        weeklyData: generateWeeklyData(totalPresent, totalAbsent, totalLate),
+        monthlyData: generateMonthlyData(totalPresent, totalAbsent),
+        subjectStats: calculateSubjectStats(attendanceData),
+        lastUpdated: new Date().toISOString()
+    };
+    
+    // บันทึกข้อมูลสถิติ
+    saveStatisticsToStorage();
+}
+
+// ฟังก์ชันสร้างข้อมูลสถิติรายสัปดาห์
+function generateWeeklyData(present, absent, late) {
+    const weeklyData = [];
+    const today = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        
+        // สร้างข้อมูลสุ่มตัวอย่างตามสัดส่วนที่มี
+        const total = present + absent + late;
+        const dailyPresent = total > 0 ? Math.floor((present / total) * (Math.random() * 5 + 3)) : Math.floor(Math.random() * 3);
+        const dailyAbsent = total > 0 ? Math.floor((absent / total) * (Math.random() * 2 + 1)) : 0;
+        const dailyRate = dailyPresent > 0 ? Math.round((dailyPresent / (dailyPresent + dailyAbsent)) * 100) : 0;
+        
+        weeklyData.push({
+            date: date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric' }),
+            present: dailyPresent,
+            absent: dailyAbsent,
+            rate: dailyRate
+        });
+    }
+    
+    return weeklyData;
+}
+
+// ฟังก์ชันสร้างข้อมูลสถิติรายเดือน
+function generateMonthlyData(present, absent) {
+    const monthlyData = [];
+    const currentMonth = new Date().getMonth();
+    
+    for (let i = 11; i >= 0; i--) {
+        const date = new Date();
+        date.setMonth(currentMonth - i);
+        
+        const monthPresent = Math.floor(present * (0.8 + Math.random() * 0.4));
+        const monthAbsent = Math.floor(absent * (0.5 + Math.random() * 1));
+        const monthRate = monthPresent > 0 ? Math.round((monthPresent / (monthPresent + monthAbsent)) * 100) : 0;
+        
+        monthlyData.push({
+            month: date.toLocaleDateString('th-TH', { month: 'short' }),
+            present: monthPresent,
+            absent: monthAbsent,
+            rate: monthRate
+        });
+    }
+    
+    return monthlyData;
+}
+
+// ฟังก์ชันคำนวณสถิติรายวิชา
+function calculateSubjectStats(attendanceData) {
+    const subjectStats = [];
+    
+    if (attendanceData.subjects) {
+        attendanceData.subjects.forEach(subject => {
+            let subjectPresent = 0;
+            let subjectAbsent = 0;
+            let subjectLate = 0;
+            
+            // นับข้อมูลการเข้าเรียนของรายวิชานี้
+            if (attendanceData.gradeData) {
+                Object.keys(attendanceData.gradeData).forEach(grade => {
+                    attendanceData.gradeData[grade].forEach(student => {
+                        if (student.subjectId === subject.id) {
+                            switch (student.status) {
+                                case 'present':
+                                    subjectPresent++;
+                                    break;
+                                case 'absent':
+                                    subjectAbsent++;
+                                    break;
+                                case 'late':
+                                    subjectLate++;
+                                    break;
+                            }
+                        }
+                    });
+                });
+            }
+            
+            const total = subjectPresent + subjectAbsent + subjectLate;
+            const rate = total > 0 ? Math.round(((subjectPresent + subjectLate) / total) * 100) : 0;
+            
+            if (total > 0) {
+                subjectStats.push({
+                    id: subject.id,
+                    name: subject.name,
+                    code: subject.code,
+                    present: subjectPresent,
+                    absent: subjectAbsent,
+                    late: subjectLate,
+                    rate: rate
+                });
+            }
+        });
+    }
+    
+    return subjectStats;
+}
+
+// ฟังก์ชันตั้งค่าสถิติเริ่มต้น
+function setDefaultStatistics(userData = {}) {
+    const defaultPresent = userData.attendedDays || 18;
+    const defaultAbsent = userData.absentDays || 2;
+    const defaultLate = userData.lateDays || 1;
+    const defaultRate = userData.attendanceRate || 90;
+    
+    attendanceStatistics = {
+        totalPresent: defaultPresent,
+        totalAbsent: defaultAbsent,
+        totalLate: defaultLate,
+        totalLeave: 0,
+        attendanceRate: defaultRate,
+        weeklyData: generateWeeklyData(defaultPresent, defaultAbsent, defaultLate),
+        monthlyData: generateMonthlyData(defaultPresent, defaultAbsent),
+        subjectStats: [],
+        lastUpdated: new Date().toISOString()
+    };
+    
+    saveStatisticsToStorage();
+}
+
+// ฟังก์ชันบันทึกสถิติไปยัง localStorage
+function saveStatisticsToStorage() {
+    try {
+        localStorage.setItem('attendanceStatistics', JSON.stringify(attendanceStatistics));
+        console.log('Statistics saved to storage');
+    } catch (error) {
+        console.error('Error saving statistics:', error);
+    }
+}
+
+// ฟังก์ชันอัพเดทสถิติในหน้า index.html
+function updateIndexStatistics() {
+    try {
+        // อัพเดทสถิติการเข้าเรียน
+        const presentElement = document.querySelector('.stat-card.attendance h4');
+        if (presentElement) {
+            presentElement.textContent = attendanceStatistics.totalPresent.toString();
+        }
+        
+        const absentElement = document.querySelector('.stat-card.absence h4');
+        if (absentElement) {
+            absentElement.textContent = attendanceStatistics.totalAbsent.toString();
+        }
+        
+        const lateElement = document.querySelector('.stat-card.late h4');
+        if (lateElement) {
+            lateElement.textContent = attendanceStatistics.totalLate.toString();
+        }
+        
+        const percentageElement = document.querySelector('.stat-card.percentage h4');
+        if (percentageElement) {
+            percentageElement.textContent = `${attendanceStatistics.attendanceRate}%`;
+        }
+        
+        // อัพเดท progress bars
+        updateProgressBars();
+        
+        // อัพเดทข้อมูลแนวโน้ม
+        updateTrendIndicators();
+        
+        console.log('Index statistics updated');
+        
+    } catch (error) {
+        console.error('Error updating index statistics:', error);
+    }
+}
+
+// ฟังก์ชันอัพเดท progress bars
+function updateProgressBars() {
+    const total = attendanceStatistics.totalPresent + attendanceStatistics.totalAbsent + 
+                  attendanceStatistics.totalLate + attendanceStatistics.totalLeave;
+    
+    if (total === 0) return;
+    
+    // คำนวณเปอร์เซ็นต์แต่ละประเภท
+    const presentPercentage = Math.round((attendanceStatistics.totalPresent / total) * 100);
+    const absentPercentage = Math.round((attendanceStatistics.totalAbsent / total) * 100);
+    const latePercentage = Math.round((attendanceStatistics.totalLate / total) * 100);
+    const attendancePercentage = attendanceStatistics.attendanceRate;
+    
+    // อัพเดท progress bars
+    const progressBars = document.querySelectorAll('.progress-fill');
+    if (progressBars.length >= 4) {
+        progressBars[0].style.width = `${attendancePercentage}%`; // เข้าเรียน
+        progressBars[1].style.width = `${absentPercentage}%`;     // ขาดเรียน
+        progressBars[2].style.width = `${latePercentage}%`;       // มาสาย
+        progressBars[3].style.width = `${attendancePercentage}%`; // เปอร์เซ็นต์รวม
+    }
+}
+
+// ฟังก์ชันอัพเดทตัวบ่งชี้แนวโน้ม
+function updateTrendIndicators() {
+    const trendElements = document.querySelectorAll('.stat-trend');
+    
+    trendElements.forEach((element, index) => {
+        const trendValue = element.querySelector('span');
+        if (trendValue) {
+            let trend = 0;
+            
+            switch (index) {
+                case 0: // เข้าเรียน
+                    trend = Math.floor(Math.random() * 10) - 2; // -2 to +7
+                    break;
+                case 1: // ขาดเรียน
+                    trend = Math.floor(Math.random() * 6) - 5; // -5 to 0
+                    break;
+                case 2: // มาสาย
+                    trend = Math.floor(Math.random() * 4) - 2; // -2 to +1
+                    break;
+                case 3: // เปอร์เซ็นต์
+                    trend = Math.floor(Math.random() * 8) + 1; // +1 to +8
+                    break;
+            }
+            
+            trendValue.textContent = `${trend >= 0 ? '+' : ''}${trend}%`;
+            
+            // อัพเดทคลาสแนวโน้ม
+            element.className = 'stat-trend';
+            if (trend > 0) {
+                element.classList.add('up');
+            } else if (trend < 0) {
+                element.classList.add('down');
+            } else {
+                element.classList.add('neutral');
+            }
+        }
+    });
+}
+
+// ฟังก์ชันตรวจสอบการเปลี่ยนแปลงข้อมูล
+function checkForDataUpdates() {
+    const savedData = localStorage.getItem('studentAttendanceData');
+    const currentStats = localStorage.getItem('attendanceStatistics');
+    
+    if (savedData) {
+        const attendanceData = JSON.parse(savedData);
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        
+        // สร้างสถิติใหม่จากข้อมูลปัจจุบัน
+        const tempStats = { ...attendanceStatistics };
+        calculateStatistics(attendanceData, userData);
+        
+        // เปรียบเทียบกับสถิติเดิม
+        if (JSON.stringify(tempStats) !== JSON.stringify(attendanceStatistics)) {
+            console.log('Data updated, refreshing statistics');
+            updateIndexStatistics();
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// ฟังก์ชันสำหรับการซิงค์ข้อมูลแบบ real-time
+function initializeStatisticsSync() {
+    // โหลดสถิติเริ่มต้น
+    loadAttendanceStatistics();
+    
+    // อัพเดทหน้า index ถ้าเป็นหน้า index
+    if (document.querySelector('.statistics')) {
+        updateIndexStatistics();
+    }
+    
+    // ตั้งค่าการตรวจสอบข้อมูลทุกๆ 10 วินาที
+    setInterval(() => {
+        if (checkForDataUpdates()) {
+            // ถ้ามีการเปลี่ยนแปลง ให้แสดงการแจ้งเตือน
+            if (typeof showNotification === 'function') {
+                showNotification('ข้อมูลสถิติได้รับการอัพเดท', 'info');
+            }
+        }
+    }, 10000);
+    
+    // ฟังการเปลี่ยนแปลงใน localStorage
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'studentAttendanceData') {
+            console.log('Storage changed, updating statistics');
+            loadAttendanceStatistics();
+            if (document.querySelector('.statistics')) {
+                updateIndexStatistics();
+            }
+        }
+    });
+}
+
+// ฟังก์ชันสำหรับการแจ้งเตือน (ถ้ามี)
+function showNotification(message, type = 'info') {
+    // สร้างการแจ้งเตือนแบบง่าย
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-size: 14px;
+        max-width: 300px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    notification.innerHTML = `
+        <ion-icon name="information-circle" style="margin-right: 8px;"></ion-icon>
+        ${message}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 4000);
+}
+
+// ฟังก์ชันสำหรับการส่งออกข้อมูลสถิติ
+function exportStatisticsData() {
+    const data = {
+        statistics: attendanceStatistics,
+        exportDate: new Date().toISOString(),
+        user: JSON.parse(localStorage.getItem('userData') || '{}')
+    };
+    
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `attendance_statistics_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+}
+
+// ฟังก์ชันสำหรับการนำเข้าข้อมูลสถิติ
+function importStatisticsData(file) {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.statistics) {
+                attendanceStatistics = data.statistics;
+                saveStatisticsToStorage();
+                updateIndexStatistics();
+                showNotification('นำเข้าข้อมูลสถิติสำเร็จ', 'success');
+            }
+        } catch (error) {
+            console.error('Error importing statistics:', error);
+            showNotification('เกิดข้อผิดพลาดในการนำเข้าข้อมูล', 'error');
+        }
+    };
+    
+    reader.readAsText(file);
+}
+
+// ฟังก์ชันรีเซ็ตสถิติ
+function resetStatistics() {
+    if (confirm('คุณแน่ใจหรือไม่ว่าต้องการรีเซ็ตข้อมูลสถิติทั้งหมด?')) {
+        localStorage.removeItem('attendanceStatistics');
+        setDefaultStatistics();
+        updateIndexStatistics();
+        showNotification('รีเซ็ตข้อมูลสถิติสำเร็จ', 'success');
+    }
+}
+
+// Export functions สำหรับใช้งานในไฟล์อื่น
+window.StatisticsSync = {
+    initialize: initializeStatisticsSync,
+    load: loadAttendanceStatistics,
+    update: updateIndexStatistics,
+    export: exportStatisticsData,
+    import: importStatisticsData,
+    reset: resetStatistics,
+    getStatistics: () => attendanceStatistics
+};
+
+// Auto-initialize เมื่อ DOM โหลดเสร็จ
+document.addEventListener('DOMContentLoaded', function() {
+    initializeStatisticsSync();
+});
+
+console.log('Statistics Sync System loaded successfully!');
+    </script>
+    <script>
+        // Enhanced JavaScript for Scan Check In System - UPDATED VERSION WITH STATISTICS SYNC
+
+// DOM Elements
+const currentDateElement = document.getElementById('current-date');
+const currentTimeElement = document.getElementById('current-time');
+const navLinks = document.querySelectorAll('.nav-link');
+const actionButtons = document.querySelectorAll('.action-btn');
+const periodSelector = document.querySelector('.period-selector');
+const notificationIcon = document.querySelector('.notification-icon');
+const notificationBadge = document.querySelector('.notification-badge');
+
+// State Management
+let currentNotifications = 3;
+let weatherData = null;
+let scheduleData = null;
+let currentUserRole = null;
+let statisticsUpdateInterval = null;
+
+// User Role Management
+function setUserRole(role) {
+    currentUserRole = role;
+    console.log('User role set to:', role);
+    
+    try {
+        localStorage.setItem('userRole', role);
+    } catch (e) {
+        console.warn('Cannot save to localStorage:', e);
+    }
+    
+    updateUIByRole(role);
+}
+
+function getUserRole() {
+    if (currentUserRole) {
+        return currentUserRole;
+    }
+    
+    try {
+        const savedRole = localStorage.getItem('userRole');
+        if (savedRole) {
+            currentUserRole = savedRole;
+            return savedRole;
+        }
+    } catch (e) {
+        console.warn('Cannot read from localStorage:', e);
+    }
+    
+    const userRoleElement = document.getElementById('displayUserRole');
+    if (userRoleElement) {
+        const roleText = userRoleElement.textContent.trim();
+        if (roleText === 'นักเรียน' || roleText === 'student') {
+            currentUserRole = 'student';
+            return 'student';
+        } else if (roleText === 'ครู' || roleText === 'teacher') {
+            currentUserRole = 'teacher';
+            return 'teacher';
+        } else if (roleText === 'แอดมิน' || roleText === 'admin') {
+            currentUserRole = 'admin';
+            return 'admin';
+        }
+    }
+    
+    return 'student';
+}
+
+function updateUIByRole(role) {
+    const checkinElements = document.querySelectorAll('.checkin-feature');
+    
+    if (role === 'student' || role === 'นักเรียน') {
+        checkinElements.forEach(element => {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.setAttribute('aria-hidden', 'true');
+        });
+        
+        document.body.classList.add('role-student');
+        document.body.classList.remove('role-teacher', 'role-admin');
+        
+        console.log('Hidden checkin features for student role');
+    } else {
+        checkinElements.forEach(element => {
+            element.style.display = '';
+            element.style.visibility = '';
+            element.removeAttribute('aria-hidden');
+        });
+        
+        document.body.classList.remove('role-student');
+        if (role === 'teacher' || role === 'ครู') {
+            document.body.classList.add('role-teacher');
+            document.body.classList.remove('role-admin');
+        } else if (role === 'admin' || role === 'แอดมิน') {
+            document.body.classList.add('role-admin');
+            document.body.classList.remove('role-teacher');
+        }
+        
+        console.log('Shown checkin features for role:', role);
+    }
+    
+    updateNavigationByRole(role);
+}
+
+function updateNavigationByRole(role) {
+    const checkinNavItem = document.querySelector('.nav-item.checkin-feature');
+    
+    if (role === 'student' || role === 'นักเรียน') {
+        if (checkinNavItem) {
+            checkinNavItem.style.display = 'none';
+        }
+    } else {
+        if (checkinNavItem) {
+            checkinNavItem.style.display = '';
+        }
+    }
+}
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Initializing app...');
+    initializeApp();
+});
+
+function initializeApp() {
+    updateDateTime();
+    setupEventListeners();
+    setActiveNavigation();
+    loadUserData();
+    setupFloatingAnimations();
+    initializeTooltips();
+    setupRippleEffects();
+    loadWeatherData();
+    setupScheduleUpdates();
+    setupNotifications();
+    setupProgressBars();
+    setupCardAnimations();
+    
+    // Initialize user role management
+    initializeUserRole();
+    
+    // Initialize statistics sync (ถ้ามี StatisticsSync)
+    if (typeof window.StatisticsSync !== 'undefined') {
+        initializeStatisticsSync();
+    }
+    
+    // Debug buttons after initialization
+    setTimeout(() => {
+        debugButtons();
+        testButtonClicks();
+    }, 1000);
+}
+
+function initializeUserRole() {
+    const role = getUserRole();
+    console.log('Detected user role:', role);
+    updateUIByRole(role);
+}
+
+// Statistics Integration - ฟังก์ชันสำหรับซิงค์สถิติ
+function initializeStatisticsSync() {
+    console.log('Initializing statistics sync...');
+    
+    // อัพเดทสถิติเริ่มต้น
+    updateStatisticsFromScanData();
+    
+    // ตั้งค่าการอัพเดทสถิติทุกๆ 15 วินาที
+    statisticsUpdateInterval = setInterval(() => {
+        updateStatisticsFromScanData();
+    }, 15000);
+    
+    // ฟังการเปลี่ยนแปลงใน localStorage
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'studentAttendanceData' || e.key === 'attendanceStatistics') {
+            console.log('Attendance data changed, updating statistics...');
+            updateStatisticsFromScanData();
+        }
+    });
+}
+
+// ฟังก์ชันอัพเดทสถิติจากข้อมูล Scan.html
+function updateStatisticsFromScanData() {
+    try {
+        // โหลดข้อมูลจาก localStorage
+        const attendanceData = JSON.parse(localStorage.getItem('studentAttendanceData') || '{}');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        
+        // คำนวณสถิติใหม่
+        const statistics = calculateStatisticsFromData(attendanceData, userData);
+        
+        // อัพเดท UI
+        updateStatisticsDisplay(statistics);
+        
+        // บันทึกสถิติที่คำนวณได้
+        localStorage.setItem('calculatedStatistics', JSON.stringify(statistics));
+        
+        console.log('Statistics updated:', statistics);
+        
+    } catch (error) {
+        console.error('Error updating statistics:', error);
+    }
+}
+
+// ฟังก์ชันคำนวณสถิติจากข้อมูล
+function calculateStatisticsFromData(attendanceData, userData) {
+    let totalPresent = 0;
+    let totalAbsent = 0;
+    let totalLate = 0;
+    let totalLeave = 0;
+    
+    // คำนวณจากข้อมูลการเข้าเรียน
+    if (attendanceData.gradeData) {
+        Object.keys(attendanceData.gradeData).forEach(grade => {
+            attendanceData.gradeData[grade].forEach(student => {
+                if (student.status) {
+                    switch (student.status) {
+                        case 'present':
+                            totalPresent++;
+                            break;
+                        case 'absent':
+                            totalAbsent++;
+                            break;
+                        case 'late':
+                            totalLate++;
+                            break;
+                        case 'leave':
+                            totalLeave++;
+                            break;
+                    }
+                }
+            });
+        });
+    }
+    
+    // ใช้ข้อมูลจาก userData เป็น fallback
+    const totalRecords = totalPresent + totalAbsent + totalLate + totalLeave;
+    
+    if (totalRecords === 0) {
+        // ใช้ข้อมูลเริ่มต้นจาก userData
+        totalPresent = userData.attendedDays || 18;
+        totalAbsent = userData.absentDays || 2;
+        totalLate = userData.lateDays || 1;
+        totalLeave = 0;
+    }
+    
+    // คำนวณเปอร์เซ็นต์การเข้าเรียน
+    const finalTotal = totalPresent + totalAbsent + totalLate + totalLeave;
+    const attendanceRate = finalTotal > 0 ? 
+        Math.round(((totalPresent + totalLate) / finalTotal) * 100) : 
+        (userData.attendanceRate || 90);
+    
+    return {
+        totalPresent,
+        totalAbsent,
+        totalLate,
+        totalLeave,
+        attendanceRate,
+        lastUpdated: new Date().toISOString()
+    };
+}
+
+// ฟังก์ชันอัพเดทการแสดงผลสถิติ
+function updateStatisticsDisplay(statistics) {
+    // อัพเดทตัวเลขสถิติ
+    const presentElement = document.querySelector('.stat-card.attendance h4');
+    if (presentElement) {
+        animateNumber(presentElement, parseInt(presentElement.textContent) || 0, statistics.totalPresent);
+    }
+    
+    const absentElement = document.querySelector('.stat-card.absence h4');
+    if (absentElement) {
+        animateNumber(absentElement, parseInt(absentElement.textContent) || 0, statistics.totalAbsent);
+    }
+    
+    const lateElement = document.querySelector('.stat-card.late h4');
+    if (lateElement) {
+        animateNumber(lateElement, parseInt(lateElement.textContent) || 0, statistics.totalLate);
+    }
+    
+    const percentageElement = document.querySelector('.stat-card.percentage h4');
+    if (percentageElement) {
+        const currentRate = parseInt(percentageElement.textContent.replace('%', '')) || 0;
+        animatePercentage(percentageElement, currentRate, statistics.attendanceRate);
+    }
+    
+    // อัพเดท progress bars
+    updateProgressBarsFromStatistics(statistics);
+    
+    // อัพเดทแนวโน้ม
+    updateTrendIndicators(statistics);
+}
+
+// ฟังก์ชันแอนิเมชันตัวเลข
+function animateNumber(element, fromValue, toValue) {
+    const duration = 1000; // 1 วินาที
+    const steps = 30;
+    const stepValue = (toValue - fromValue) / steps;
+    let currentStep = 0;
+    
+    const interval = setInterval(() => {
+        currentStep++;
+        const currentValue = Math.round(fromValue + (stepValue * currentStep));
+        element.textContent = currentValue;
+        
+        if (currentStep >= steps) {
+            clearInterval(interval);
+            element.textContent = toValue;
+        }
+    }, duration / steps);
+}
+
+// ฟังก์ชันแอนิเมชันเปอร์เซ็นต์
+function animatePercentage(element, fromValue, toValue) {
+    const duration = 1000;
+    const steps = 30;
+    const stepValue = (toValue - fromValue) / steps;
+    let currentStep = 0;
+    
+    const interval = setInterval(() => {
+        currentStep++;
+        const currentValue = Math.round(fromValue + (stepValue * currentStep));
+        element.textContent = `${currentValue}%`;
+        
+        if (currentStep >= steps) {
+            clearInterval(interval);
+            element.textContent = `${toValue}%`;
+        }
+    }, duration / steps);
+}
+
+// ฟังก์ชันอัพเดท progress bars จากสถิติ
+function updateProgressBarsFromStatistics(statistics) {
+    const total = statistics.totalPresent + statistics.totalAbsent + 
+                  statistics.totalLate + statistics.totalLeave;
+    
+    if (total === 0) return;
+    
+    const progressBars = document.querySelectorAll('.progress-fill');
+    if (progressBars.length >= 4) {
+        // คำนวณเปอร์เซ็นต์แต่ละประเภท
+        const presentPercentage = Math.round((statistics.totalPresent / total) * 100);
+        const absentPercentage = Math.round((statistics.totalAbsent / total) * 100);
+        const latePercentage = Math.round((statistics.totalLate / total) * 100);
+        
+        // แอนิเมชัน progress bars
+        animateProgressBar(progressBars[0], statistics.attendanceRate);
+        animateProgressBar(progressBars[1], absentPercentage);
+        animateProgressBar(progressBars[2], latePercentage);
+        animateProgressBar(progressBars[3], statistics.attendanceRate);
+    }
+}
+
+// ฟังก์ชันแอนิเมชัน progress bar
+function animateProgressBar(progressBar, targetPercentage) {
+    const currentWidth = parseInt(progressBar.style.width) || 0;
+    const duration = 1500;
+    const steps = 40;
+    const stepValue = (targetPercentage - currentWidth) / steps;
+    let currentStep = 0;
+    
+    const interval = setInterval(() => {
+        currentStep++;
+        const currentValue = Math.round(currentWidth + (stepValue * currentStep));
+        progressBar.style.width = `${Math.max(0, Math.min(100, currentValue))}%`;
+        
+        if (currentStep >= steps) {
+            clearInterval(interval);
+            progressBar.style.width = `${Math.max(0, Math.min(100, targetPercentage))}%`;
+        }
+    }, duration / steps);
+}
+
+// ฟังก์ชันอัพเดทตัวบ่งชี้แนวโน้ม
+function updateTrendIndicators(statistics) {
+    const trendElements = document.querySelectorAll('.stat-trend');
+    
+    // โหลดสถิติก่อนหน้า
+    const previousStats = JSON.parse(localStorage.getItem('previousStatistics') || '{}');
+    
+    trendElements.forEach((element, index) => {
+        const trendValue = element.querySelector('span');
+        if (trendValue) {
+            let trend = 0;
+            let currentValue = 0;
+            let previousValue = 0;
+            
+            switch (index) {
+                case 0: // เข้าเรียน
+                    currentValue = statistics.totalPresent;
+                    previousValue = previousStats.totalPresent || 0;
+                    break;
+                case 1: // ขาดเรียน
+                    currentValue = statistics.totalAbsent;
+                    previousValue = previousStats.totalAbsent || 0;
+                    break;
+                case 2: // มาสาย
+                    currentValue = statistics.totalLate;
+                    previousValue = previousStats.totalLate || 0;
+                    break;
+                case 3: // เปอร์เซ็นต์
+                    currentValue = statistics.attendanceRate;
+                    previousValue = previousStats.attendanceRate || 90;
+                    break;
+            }
+            
+            // คำนวณแนวโน้ม
+            if (previousValue > 0) {
+                trend = Math.round(((currentValue - previousValue) / previousValue) * 100);
+            } else {
+                trend = currentValue > 0 ? 5 : 0; // ค่าเริ่มต้น
+            }
+            
+            // จำกัดค่าแนวโน้ม
+            trend = Math.max(-99, Math.min(99, trend));
+            
+            trendValue.textContent = `${trend >= 0 ? '+' : ''}${trend}%`;
+            
+            // อัพเดทคลาสแนวโน้ม
+            element.className = 'stat-trend';
+            if (trend > 0) {
+                element.classList.add('up');
+            } else if (trend < 0) {
+                element.classList.add('down');
+            } else {
+                element.classList.add('neutral');
+            }
+        }
+    });
+    
+    // บันทึกสถิติปัจจุบันเป็นสถิติก่อนหน้าสำหรับครั้งถัดไป
+    localStorage.setItem('previousStatistics', JSON.stringify(statistics));
+}
+
+// Event Listeners Setup
+function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
+    // Navigation links
+    navLinks.forEach(link => {
+        link.addEventListener('click', handleNavClick);
+        link.addEventListener('mouseenter', showTooltip);
+        link.addEventListener('mouseleave', hideTooltip);
+    });
+
+    // Action buttons
+    actionButtons.forEach((btn, index) => {
+        console.log(`Setting up button ${index + 1}:`, btn);
+        
+        btn.addEventListener('click', handleActionClick);
+        btn.onclick = function(e) {
+            handleActionClick.call(this, e);
+        };
+        btn.setAttribute('onclick', 'handleDirectClick(this)');
+        
+        btn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleActionClick.call(this, e);
+            }
+        });
+    });
+
+    // Period selector
+    if (periodSelector) {
+        periodSelector.addEventListener('change', handlePeriodChange);
+    }
+
+    // Notification icon
+    if (notificationIcon) {
+        notificationIcon.addEventListener('click', handleNotificationClick);
+    }
+
+    // Window resize
+    window.addEventListener('resize', handleWindowResize);
+    
+    // Visibility change
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+// Action Button Click Handler
+function handleActionClick(e) {
+    console.log('Button clicked!', this);
+    
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    const button = this;
+    const targetPage = button.getAttribute('data-page');
+    
+    console.log('Target page:', targetPage);
+    
+    if (!targetPage) {
+        console.error('No data-page attribute found on button');
+        showErrorMessage('ไม่พบลิงก์ที่ต้องการ');
+        return;
+    }
+    
+    // Check user role for checkin features
+    const userRole = getUserRole();
+    if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
+        console.log('Blocking checkin feature for student role');
+        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        return;
+    }
+    
+    // Disable button to prevent multiple clicks
+    button.disabled = true;
+    
+    // Animation effect
+    button.style.transform = 'scale(0.95)';
+    button.style.transition = 'transform 0.1s ease';
+    
+    const originalContent = button.innerHTML;
+    
+    button.innerHTML = `
+        <ion-icon name="hourglass"></ion-icon>
+        <span>กำลังโหลด...</span>
+        <div class="btn-ripple"></div>
+    `;
+    
+    createRipple(button);
+    
+    setTimeout(() => {
+        try {
+            console.log('Attempting navigation to:', targetPage);
+            window.location.href = targetPage;
+        } catch (error) {
+            console.error('Navigation error:', error);
+            showErrorMessage('ไม่สามารถเปิดหน้านี้ได้ กรุณาลองใหม่อีกครั้ง');
+            
+            button.style.transform = 'scale(1)';
+            button.innerHTML = originalContent;
+            button.disabled = false;
+        }
+    }, 800);
+}
+
+// Helper functions
+function isCheckinFeature(targetPage) {
+    const checkinPages = [
+        '/HTML/studens.html',
+        '/HTML/students.html',
+        '/HTML/checkin.html'
+    ];
+    return checkinPages.includes(targetPage);
+}
+
+// Navigation Click Handler
+function handleNavClick(e) {
+    e.preventDefault();
+    
+    const href = this.getAttribute('href');
+    const userRole = getUserRole();
+    
+    if (isCheckinFeature(href) && (userRole === 'student' || userRole === 'นักเรียน')) {
+        console.log('Blocking navigation to checkin feature for student role');
+        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
+        return;
+    }
+    
+    navLinks.forEach(navLink => navLink.classList.remove('active'));
+    this.classList.add('active');
+    createRipple(this);
+    
+    setTimeout(() => {
+        if (href && href !== '#') {
+            window.location.href = href;
+        }
+    }, 200);
+}
+
+// Global function for direct onclick
+function handleDirectClick(button) {
+    console.log('Direct click function called');
+    const targetPage = button.getAttribute('data-page');
+    
+    if (!targetPage) {
+        console.error('No data-page attribute found');
+        return;
+    }
+    
+    const userRole = getUserRole();
+    if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
+        console.log('Blocking direct click to checkin feature for student role');
+        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        return;
+    }
+    
+    console.log('Direct navigation to:', targetPage);
+    window.location.href = targetPage;
+}
+
+// Make functions globally available
+window.handleDirectClick = handleDirectClick;
+window.setUserRole = setUserRole;
+window.getUserRole = getUserRole;
+
+// Test and Debug functions
+function testButtonClicks() {
+    console.log('=== Testing Button Clicks ===');
+    
+    actionButtons.forEach((btn, index) => {
+        const dataPage = btn.getAttribute('data-page');
+        console.log(`Button ${index + 1}:`, {
+            element: btn,
+            dataPage: dataPage,
+            hasClickListener: btn.onclick !== null,
+            hasEventListener: btn.addEventListener !== undefined
+        });
+        
+        btn.addEventListener('mousedown', function() {
+            console.log(`Button ${index + 1} mousedown detected`);
+        });
+    });
+}
+
+function createRipple(element) {
+    const ripple = element.querySelector('.nav-ripple, .btn-ripple');
+    if (ripple) {
+        ripple.classList.remove('active');
+        ripple.offsetHeight;
+        ripple.classList.add('active');
+        
+        setTimeout(() => {
+            ripple.classList.remove('active');
+        }, 600);
+    }
+}
+
+function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff4757;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 9999;
+        font-size: 14px;
+        max-width: 300px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    errorDiv.innerHTML = `
+        <ion-icon name="alert-circle" style="margin-right: 8px;"></ion-icon>
+        ${message}
+    `;
+    
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        errorDiv.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        errorDiv.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 300);
+    }, 4000);
+}
+
+function debugButtons() {
+    console.log('=== Button Debug Info ===');
+    console.log('Total action buttons found:', actionButtons.length);
+    console.log('Current user role:', getUserRole());
+    
+    actionButtons.forEach((btn, index) => {
+        const dataPage = btn.getAttribute('data-page');
+        console.log(`Button ${index + 1}:`, {
+            element: btn,
+            dataPage: dataPage,
+            hasOnclick: btn.onclick !== null,
+            classList: btn.classList.toString(),
+            innerHTML: btn.innerHTML.substring(0, 50) + '...'
+        });
+    });
+    
+    const scanButton = document.querySelector('[data-page="/HTML/ScanQRCode.html"]');
+    if (scanButton) {
+        console.log('Scan button found:', scanButton);
+    } else {
+        console.log('Scan button NOT found!');
+    }
+}
+
+// Date and Time Management
+function updateDateTime() {
+    const now = new Date();
+    const dateOptions = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const timeOptions = { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+    };
+    
+    if (currentDateElement) {
+        currentDateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
+    }
+    if (currentTimeElement) {
+        currentTimeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
+    }
+}
+
+// Placeholder functions
+function setActiveNavigation() {}
+function loadUserData() {}
+function setupFloatingAnimations() {}
+function initializeTooltips() {}
+function setupRippleEffects() {}
+function loadWeatherData() {}
+function setupScheduleUpdates() {}
+function setupNotifications() {}
+function setupProgressBars() {}
+function setupCardAnimations() {}
+function showTooltip() {}
+function hideTooltip() {}
+function handlePeriodChange() {}
+function handleNotificationClick() {}
+function handleWindowResize() {}
+function handleVisibilityChange() {}
+
+// Update time every second
+setInterval(updateDateTime, 1000);
+
+// Export functions for external use
+window.CheckInSystem = {
+    updateDateTime,
+    debugButtons,
+    handleActionClick,
+    handleDirectClick,
+    testButtonClicks,
+    setUserRole,
+    getUserRole,
+    updateUIByRole,
+    initializeUserRole,
+    updateStatisticsFromScanData,
+    calculateStatisticsFromData,
+    updateStatisticsDisplay
+};
+
+// Cleanup function
+function cleanup() {
+    if (statisticsUpdateInterval) {
+        clearInterval(statisticsUpdateInterval);
+    }
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', cleanup);
+
+console.log('Enhanced Script with Statistics Sync loaded successfully!');
+
+// User Management System - ระบบจัดการข้อมูลผู้ใช้และการซิงค์ข้อมูล
+
+// ตัวแปรสำหรับเก็บข้อมูลผู้ใช้
+let currentUserData = null;
+let userRole = null;
+let userStatistics = null;
+
+// ฟังก์ชันตรวจสอบการล็อกอิน
+function checkUserLogin() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userData = localStorage.getItem('userData');
+    
+    if (isLoggedIn !== 'true' || !userData) {
+        console.log('User not logged in, redirecting to login page');
+        window.location.href = '/HTML/Profile.html';
+        return false;
+    }
+    
+    try {
+        currentUserData = JSON.parse(userData);
+        userRole = currentUserData.role || localStorage.getItem('userRole') || 'student';
+        console.log('User login verified:', currentUserData.username, 'Role:', userRole);
+        return true;
+    } catch (error) {
+        console.error('Error parsing user data:', error);
+        window.location.href = '/HTML/Profile.html';
+        return false;
+    }
+}
+
+// ฟังก์ชันอัพเดทการแสดงชื่อผู้ใช้
+function updateUserDisplay() {
+    if (!currentUserData) return;
+    
+    try {
+        // อัพเดทชื่อผู้ใช้
+        const userNameElement = document.getElementById('displayUserName');
+        if (userNameElement && currentUserData.firstName && currentUserData.lastName) {
+            userNameElement.textContent = `${currentUserData.firstName} ${currentUserData.lastName}`;
+        }
+        
+        // อัพเดทบทบาท
+        const userRoleElement = document.getElementById('displayUserRole');
+        if (userRoleElement) {
+            const roleDisplay = getRoleDisplayName(userRole);
+            userRoleElement.textContent = roleDisplay;
+        }
+        
+        // อัพเดทข้อมูลเพิ่มเติม
+        updateAdditionalUserInfo();
+        
+        console.log('User display updated successfully');
+        
+    } catch (error) {
+        console.error('Error updating user display:', error);
+    }
+}
+
+// ฟังก์ชันแปลงชื่อบทบาทเป็นภาษาไทย
+function getRoleDisplayName(role) {
+    const roleNames = {
+        'student': 'นักเรียน',
+        'teacher': 'ครู',
+        'admin': 'ผู้ดูแลระบบ'
+    };
+    return roleNames[role] || currentUserData.roleDisplay || role || 'ผู้ใช้งาน';
+}
+
+// ฟังก์ชันอัพเดทข้อมูลผู้ใช้เพิ่มเติม
+function updateAdditionalUserInfo() {
+    // อัพเดทข้อมูลในส่วนต่างๆ ของหน้า
+    const welcomeElements = document.querySelectorAll('.welcome-user-name');
+    welcomeElements.forEach(element => {
+        if (currentUserData.firstName) {
+            element.textContent = currentUserData.firstName;
+        }
+    });
+    
+    // อัพเดทรหัสนักเรียน/ครู
+    const idElements = document.querySelectorAll('.user-id');
+    idElements.forEach(element => {
+        if (currentUserData.studentId || currentUserData.teacherId) {
+            element.textContent = currentUserData.studentId || currentUserData.teacherId || 'ไม่ระบุ';
+        }
+    });
+    
+    // อัพเดทชั้นเรียน
+    const classElements = document.querySelectorAll('.user-class');
+    classElements.forEach(element => {
+        if (currentUserData.class) {
+            element.textContent = currentUserData.class;
+        }
+    });
+}
+
+// ฟังก์ชันตั้งค่าสิทธิ์ตามบทบาท
+function setupRoleBasedFeatures() {
+    if (!userRole) return;
+    
+    console.log('Setting up role-based features for:', userRole);
+    
+    const checkinElements = document.querySelectorAll('.checkin-feature');
+    
+    if (userRole === 'student' || userRole === 'นักเรียน') {
+        // ซ่อนฟีเจอร์เช็คอินสำหรับนักเรียน
+        checkinElements.forEach(element => {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.setAttribute('aria-hidden', 'true');
+        });
+        
+        document.body.classList.add('role-student');
+        document.body.classList.remove('role-teacher', 'role-admin');
+        
+        console.log('Hidden checkin features for student');
+        
+    } else if (userRole === 'teacher' || userRole === 'ครู') {
+        // แสดงฟีเจอร์เช็คอินสำหรับครู
+        checkinElements.forEach(element => {
+            element.style.display = '';
+            element.style.visibility = '';
+            element.removeAttribute('aria-hidden');
+        });
+        
+        document.body.classList.add('role-teacher');
+        document.body.classList.remove('role-student', 'role-admin');
+        
+        console.log('Shown checkin features for teacher');
+        
+    } else if (userRole === 'admin' || userRole === 'ผู้ดูแลระบบ') {
+        // แสดงฟีเจอร์ทั้งหมดสำหรับแอดมิน
+        checkinElements.forEach(element => {
+            element.style.display = '';
+            element.style.visibility = '';
+            element.removeAttribute('aria-hidden');
+        });
+        
+        document.body.classList.add('role-admin');
+        document.body.classList.remove('role-student', 'role-teacher');
+        
+        console.log('Shown all features for admin');
+    }
+    
+    // อัพเดท navigation menu
+    updateNavigationByRole();
+    
+    // ตั้งค่า user role ใน global scope
+    if (typeof setUserRole === 'function') {
+        setUserRole(userRole);
+    }
+}
+
+// ฟังก์ชันอัพเดท navigation ตามบทบาท
+function updateNavigationByRole() {
+    const checkinNavItems = document.querySelectorAll('.nav-item.checkin-feature');
+    
+    if (userRole === 'student' || userRole === 'นักเรียน') {
+        checkinNavItems.forEach(item => {
+            item.style.display = 'none';
+        });
+    } else {
+        checkinNavItems.forEach(item => {
+            item.style.display = '';
+        });
+    }
+}
+
+// ฟังก์ชันโหลดและซิงค์สถิติผู้ใช้
+function loadAndSyncUserStatistics() {
+    if (!currentUserData) return;
+    
+    try {
+        // โหลดสถิติจาก localStorage
+        const savedStats = localStorage.getItem('attendanceStatistics');
+        const attendanceData = localStorage.getItem('studentAttendanceData');
+        
+        if (savedStats) {
+            userStatistics = JSON.parse(savedStats);
+        }
+        
+        // คำนวณสถิติจากข้อมูลการเข้าเรียนล่าสุด
+        if (attendanceData) {
+            const newStats = calculateUserStatistics(JSON.parse(attendanceData));
+            if (newStats) {
+                userStatistics = newStats;
+                updateStatisticsInUserData();
+            }
+        }
+        
+        // ใช้ข้อมูลเริ่มต้นถ้าไม่มีสถิติ
+        if (!userStatistics) {
+            userStatistics = getDefaultUserStatistics();
+        }
+        
+        console.log('User statistics loaded:', userStatistics);
+        
+    } catch (error) {
+        console.error('Error loading user statistics:', error);
+        userStatistics = getDefaultUserStatistics();
+    }
+}
+
+// ฟังก์ชันคำนวณสถิติผู้ใช้
+function calculateUserStatistics(attendanceData) {
+    let totalPresent = 0;
+    let totalAbsent = 0;
+    let totalLate = 0;
+    let totalLeave = 0;
+    
+    // รวบรวมข้อมูลจากทุกระดับชั้น
+    if (attendanceData.gradeData) {
+        Object.keys(attendanceData.gradeData).forEach(grade => {
+            attendanceData.gradeData[grade].forEach(student => {
+                // กรองเฉพาะข้อมูลของผู้ใช้ปัจจุบัน (ถ้ามี)
+                if (student.username === currentUserData.username || !student.username) {
+                    if (student.status) {
+                        switch (student.status) {
+                            case 'present':
+                                totalPresent++;
+                                break;
+                            case 'absent':
+                                totalAbsent++;
+                                break;
+                            case 'late':
+                                totalLate++;
+                                break;
+                            case 'leave':
+                                totalLeave++;
+                                break;
+                        }
+                    }
+                }
+            });
+        });
+    }
+    
+    // คำนวณเปอร์เซ็นต์การเข้าเรียน
+    const total = totalPresent + totalAbsent + totalLate + totalLeave;
+    const attendanceRate = total > 0 ? 
+        Math.round(((totalPresent + totalLate) / total) * 100) : 0;
+    
+    return {
+        totalPresent,
+        totalAbsent,
+        totalLate,
+        totalLeave,
+        attendanceRate,
+        lastUpdated: new Date().toISOString()
+    };
+}
+
+// ฟังก์ชันได้รับสถิติเริ่มต้น
+function getDefaultUserStatistics() {
+    return {
+        totalPresent: currentUserData.attendedDays || 18,
+        totalAbsent: currentUserData.absentDays || 2,
+        totalLate: currentUserData.lateDays || 1,
+        totalLeave: 0,
+        attendanceRate: currentUserData.attendanceRate || 90,
+        lastUpdated: new Date().toISOString()
+    };
+}
+
+// ฟังก์ชันอัพเดทสถิติใน userData
+function updateStatisticsInUserData() {
+    if (!userStatistics || !currentUserData) return;
+    
+    currentUserData.attendedDays = userStatistics.totalPresent;
+    currentUserData.absentDays = userStatistics.totalAbsent;
+    currentUserData.lateDays = userStatistics.totalLate;
+    currentUserData.attendanceRate = userStatistics.attendanceRate;
+    
+    // บันทึกกลับไปยัง localStorage
+    try {
+        localStorage.setItem('userData', JSON.stringify(currentUserData));
+        console.log('User statistics updated in userData');
+    } catch (error) {
+        console.error('Error saving updated userData:', error);
+    }
+}
+
+// ฟังก์ชันปรับแต่งข้อความต้อนรับ
+function personalizeWelcomeMessage() {
+    if (!currentUserData.firstName) return;
+    
+    // อัพเดทข้อความต้อนรับ
+    const welcomeTitle = document.querySelector('.welcome-section h2');
+    if (welcomeTitle) {
+        welcomeTitle.textContent = `ยินดีต้อนรับ คุณ${currentUserData.firstName}`;
+    }
+    
+    // อัพเดทข้อความรอง
+    const welcomeSubtitle = document.querySelector('.welcome-section p');
+    if (welcomeSubtitle) {
+        const greetingTime = getGreetingTime();
+        welcomeSubtitle.textContent = `${greetingTime} วันนี้เป็นอย่างไรบ้าง? จัดการการเข้าเรียนของคุณได้อย่างง่ายดาย`;
+    }
+}
+
+// ฟังก์ชันกำหนดคำทักทายตามเวลา
+function getGreetingTime() {
+    const hour = new Date().getHours();
+    
+    if (hour < 12) {
+        return 'สวัสดีตอนเช้า';
+    } else if (hour < 17) {
+        return 'สวัสดีตอนบ่าย';
+    } else {
+        return 'สวัสดีตอนเย็น';
+    }
+}
+
+// ฟังก์ชันแสดงข้อมูลเฉพาะบทบาท
+function displayRoleSpecificContent() {
+    if (!userRole || !currentUserData) return;
+    
+    switch (userRole) {
+        case 'student':
+        case 'นักเรียน':
+            displayStudentContent();
+            break;
+        case 'teacher':
+        case 'ครู':
+            displayTeacherContent();
+            break;
+        case 'admin':
+        case 'ผู้ดูแลระบบ':
+            displayAdminContent();
+            break;
+    }
+}
+
+// ฟังก์ชันแสดงเนื้อหาสำหรับนักเรียน
+function displayStudentContent() {
+    // อัพเดทรหัสนักเรียน
+    const studentIdElements = document.querySelectorAll('.student-id');
+    studentIdElements.forEach(element => {
+        element.textContent = currentUserData.studentId || 'ไม่ระบุ';
+    });
+    
+    // อัพเดทชั้นเรียน
+    const classElements = document.querySelectorAll('.student-class');
+    classElements.forEach(element => {
+        element.textContent = currentUserData.class || 'ไม่ระบุ';
+    });
+    
+    // ปรับแต่งเมนูสำหรับนักเรียน
+    customizeStudentMenu();
+}
+
+// ฟังก์ชันแสดงเนื้อหาสำหรับครู
+function displayTeacherContent() {
+    // อัพเดทรหัสครู
+    const teacherIdElements = document.querySelectorAll('.teacher-id');
+    teacherIdElements.forEach(element => {
+        element.textContent = currentUserData.teacherId || currentUserData.studentId || 'ไม่ระบุ';
+    });
+    
+    // แสดงข้อมูลวิชาที่สอน
+    const subjectElements = document.querySelectorAll('.teacher-subjects');
+    subjectElements.forEach(element => {
+        element.textContent = currentUserData.subjects || 'ไม่ระบุ';
+    });
+}
+
+// ฟังก์ชันแสดงเนื้อหาสำหรับแอดมิน
+function displayAdminContent() {
+    console.log('Admin content displayed for:', currentUserData.firstName);
+    
+    // เพิ่มตัวเลือกพิเศษสำหรับแอดมิน
+    addAdminControls();
+}
+
+// ฟังก์ชันปรับแต่งเมนูสำหรับนักเรียน
+function customizeStudentMenu() {
+    // เปลี่ยนข้อความในปุ่มต่างๆ ให้เหมาะสมกับนักเรียน
+    const actionButtons = document.querySelectorAll('.action-btn');
+    actionButtons.forEach(button => {
+        const span = button.querySelector('span');
+        if (span && span.textContent === 'เช็คอิน') {
+            span.textContent = 'ดูสถิติ';
+            button.setAttribute('data-page', '/HTML/Scan.html');
+        }
+    });
+}
+
+// ฟังก์ชันเพิ่มตัวควบคุมสำหรับแอดมิน
+function addAdminControls() {
+    // เพิ่มปุ่มจัดการระบบสำหรับแอดมิน
+    const userSection = document.querySelector('.user-section');
+    if (userSection && !userSection.querySelector('.admin-controls')) {
+        const adminControls = document.createElement('div');
+        adminControls.className = 'admin-controls';
+        adminControls.innerHTML = `
+            <button class="admin-btn" onclick="openSystemSettings()" title="ตั้งค่าระบบ">
+                <ion-icon name="settings-outline"></ion-icon>
+            </button>
+        `;
+        userSection.appendChild(adminControls);
+    }
+}
+
+// ฟังก์ชันออกจากระบบ
+function logout() {
+    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+        try {
+            // ลบข้อมูลการล็อกอิน
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('attendanceStatistics');
+            
+            // รีเซ็ตตัวแปร
+            currentUserData = null;
+            userRole = null;
+            userStatistics = null;
+            
+            console.log('User logged out successfully');
+            
+            // กลับไปหน้าล็อกอิน
+            window.location.href = '/HTML/Profile.html';
+            
+        } catch (error) {
+            console.error('Error during logout:', error);
+            alert('เกิดข้อผิดพลาดในการออกจากระบบ');
+        }
+    }
+}
+
+// ฟังก์ชันเพิ่มปุ่มออกจากระบบ
+function addLogoutButton() {
+    const userSection = document.querySelector('.user-section');
+    if (userSection && !userSection.querySelector('.logout-btn')) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.innerHTML = '<ion-icon name="log-out-outline"></ion-icon>';
+        logoutBtn.className = 'logout-btn';
+        logoutBtn.onclick = logout;
+        logoutBtn.title = 'ออกจากระบบ';
+        logoutBtn.style.cssText = `
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            margin-left: 10px;
+            transition: all 0.2s ease;
+        `;
+        
+        // Add hover effect
+        logoutBtn.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f1f5f9';
+            this.style.color = '#ef4444';
+        });
+        
+        logoutBtn.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+            this.style.color = '#64748b';
+        });
+        
+        userSection.appendChild(logoutBtn);
+    }
+}
+
+// ฟังก์ชันการนำทางที่มีการตรวจสอบสิทธิ์
+function navigateWithAuth(page) {
+    if (!userRole) {
+        console.warn('User role not set, cannot navigate');
+        return;
+    }
+    
+    // ตรวจสอบสิทธิ์สำหรับหน้าต่างๆ
+    const restrictedPages = ['/HTML/studens.html', '/HTML/students.html', '/HTML/checkin.html'];
+    
+    if (restrictedPages.some(p => page.includes(p)) && 
+        (userRole === 'student' || userRole === 'นักเรียน')) {
+        
+        showAccessDeniedMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
+        return;
+    }
+    
+    // Navigation ปกติ
+    window.location.href = page;
+}
+
+// ฟังก์ชันแสดงข้อความไม่มีสิทธิ์เข้าถึง
+function showAccessDeniedMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'access-denied-alert';
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 2px solid #ef4444;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        z-index: 10000;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    `;
+    
+    alertDiv.innerHTML = `
+        <div style="color: #ef4444; font-size: 48px; margin-bottom: 16px;">
+            <ion-icon name="lock-closed"></ion-icon>
+        </div>
+        <h3 style="color: #ef4444; margin-bottom: 12px;">ไม่มีสิทธิ์เข้าถึง</h3>
+        <p style="color: #64748b; margin-bottom: 20px;">${message}</p>
+        <button onclick="closeAccessDeniedAlert()" style="
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        ">ตกลง</button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto close after 5 seconds
+    setTimeout(() => {
+        closeAccessDeniedAlert();
+    }, 5000);
+}
+
+// ฟังก์ชันปิด alert
+function closeAccessDeniedAlert() {
+    const alert = document.querySelector('.access-denied-alert');
+    if (alert) {
+        alert.remove();
+    }
+}
+
+// ฟังก์ชันสำหรับตั้งค่าระบบ (สำหรับแอดมิน)
+function openSystemSettings() {
+    if (userRole !== 'admin' && userRole !== 'ผู้ดูแลระบบ') {
+        showAccessDeniedMessage('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถเข้าถึงการตั้งค่าได้');
+        return;
+    }
+    
+    // เปิดหน้าตั้งค่าระบบ
+    window.location.href = '/HTML/admin-settings.html';
+}
+
+// ฟังก์ชันติดตามการเปลี่ยนแปลงข้อมูลผู้ใช้
+function watchUserDataChanges() {
+    // ฟังการเปลี่ยนแปลงใน localStorage
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'userData') {
+            console.log('User data changed, reloading...');
+            
+            try {
+                const newUserData = JSON.parse(e.newValue || '{}');
+                if (newUserData.username !== currentUserData?.username) {
+                    // ผู้ใช้เปลี่ยน - รีโหลดหน้า
+                    window.location.reload();
+                } else {
+                    // อัพเดทข้อมูลเดิม
+                    currentUserData = newUserData;
+                    updateUserDisplay();
+                }
+            } catch (error) {
+                console.error('Error handling user data change:', error);
+            }
+        } else if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
+            // ถูกล็อกเอาท์จากที่อื่น
+            window.location.href = '/HTML/Profile.html';
+        }
+    });
+}
+
+// ฟังก์ชันเริ่มต้นระบบจัดการผู้ใช้
+function initializeUserManagement() {
+    console.log('Initializing user management system...');
+    
+    // ตรวจสอบการล็อกอิน
+    if (!checkUserLogin()) {
+        return false;
+    }
+    
+    // อัพเดทการแสดงผล
+    updateUserDisplay();
+    
+    // ตั้งค่าสิทธิ์ตามบทบาท
+    setupRoleBasedFeatures();
+    
+    // โหลดและซิงค์สถิติ
+    loadAndSyncUserStatistics();
+    
+    // ปรับแต่งข้อความต้อนรับ
+    personalizeWelcomeMessage();
+    
+    // แสดงเนื้อหาเฉพาะบทบาท
+    displayRoleSpecificContent();
+    
+    // เพิ่มปุ่มออกจากระบบ
+    addLogoutButton();
+    
+    // ติดตามการเปลี่ยนแปลงข้อมูล
+    watchUserDataChanges();
+    
+    console.log('User management system initialized successfully');
+    return true;
+}
+
+// ฟังก์ชันเพิ่ม event listener สำหรับปุ่มที่มีการตรวจสอบสิทธิ์
+function setupAuthenticatedEventListeners() {
+    // เพิ่ม event listener สำหรับปุ่มที่มี data-page
+    document.addEventListener('click', function(e) {
+        const element = e.target.closest('[data-page]');
+        if (element) {
+            e.preventDefault();
+            const page = element.getAttribute('data-page');
+            navigateWithAuth(page);
+        }
+    });
+    
+    // เพิ่ม event listener สำหรับ navigation links
+    document.addEventListener('click', function(e) {
+        const navLink = e.target.closest('.nav-link[href]');
+        if (navLink) {
+            const href = navLink.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                e.preventDefault();
+                navigateWithAuth(href);
+            }
+        }
+    });
+}
+
+// Export functions for global use
+window.UserManagement = {
+    initialize: initializeUserManagement,
+    checkLogin: checkUserLogin,
+    updateDisplay: updateUserDisplay,
+    logout: logout,
+    getCurrentUser: () => currentUserData,
+    getUserRole: () => userRole,
+    getUserStatistics: () => userStatistics,
+    navigateWithAuth: navigateWithAuth
+};
+
+// Make functions globally available
+window.logout = logout;
+window.navigateWithAuth = navigateWithAuth;
+window.closeAccessDeniedAlert = closeAccessDeniedAlert;
+window.openSystemSettings = openSystemSettings;
+
+// Auto-initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    if (initializeUserManagement()) {
+        setupAuthenticatedEventListeners();
+    }
+});
+
+console.log('User Management System loaded successfully!');
+
+// Enhanced Multi-User System for Scan Check In
+// ระบบสนับสนุนผู้ใช้หลายคนพร้อมกัน
+
+// ===== 1. MULTI-USER DATA STRUCTURE =====
+const MultiUserSystem = {
+    currentSession: null,
+    activeSessions: new Map(),
+    sessionTimeout: 30 * 60 * 1000, // 30 minutes
+    maxConcurrentUsers: 50, // จำกัดผู้ใช้พร้อมกัน
+    
+    // สร้าง Session ID เฉพาะ
+    generateSessionId() {
+        return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    },
+    
+    // สร้าง User Session
+    createUserSession(userData) {
+        const sessionId = this.generateSessionId();
+        const session = {
+            sessionId: sessionId,
+            userData: userData,
+            role: userData.role || 'student',
+            loginTime: new Date().toISOString(),
+            lastActivity: new Date().toISOString(),
+            isActive: true,
+            statistics: null,
+            preferences: {}
+        };
+        
+        this.activeSessions.set(sessionId, session);
+        this.currentSession = session;
+        
+        // บันทึกใน localStorage พร้อม session ID
+        this.saveSessionToStorage(session);
+        
+        console.log('User session created:', sessionId, 'for user:', userData.username);
+        return session;
+    },
+    
+    // บันทึก Session ลง localStorage
+    saveSessionToStorage(session) {
+        const sessionData = {
+            sessionId: session.sessionId,
+            userData: session.userData,
+            role: session.role,
+            loginTime: session.loginTime,
+            lastActivity: session.lastActivity,
+            statistics: session.statistics,
+            preferences: session.preferences
+        };
+        
+        // บันทึกข้อมูล session ปัจจุบัน
+        localStorage.setItem('currentSession', JSON.stringify(sessionData));
+        
+        // บันทึกรายการ session ทั้งหมด
+        const allSessions = this.getAllSessionsFromStorage();
+        allSessions[session.sessionId] = sessionData;
+        localStorage.setItem('allUserSessions', JSON.stringify(allSessions));
+        
+        // เก็บข้อมูลสถิติแยกตาม user
+        const userStatsKey = `userStats_${session.userData.username}`;
+        if (session.statistics) {
+            localStorage.setItem(userStatsKey, JSON.stringify(session.statistics));
+        }
+    },
+    
+    // ดึงข้อมูล Session ทั้งหมดจาก localStorage
+    getAllSessionsFromStorage() {
+        try {
+            return JSON.parse(localStorage.getItem('allUserSessions') || '{}');
+        } catch (error) {
+            console.error('Error loading sessions:', error);
+            return {};
+        }
+    },
+    
+    // โหลด Session ปัจจุบัน
+    loadCurrentSession() {
+        try {
+            const sessionData = localStorage.getItem('currentSession');
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                
+                // ตรวจสอบว่า session ยังไม่หมดอายุ
+                const sessionAge = Date.now() - new Date(session.loginTime).getTime();
+                if (sessionAge < this.sessionTimeout) {
+                    this.currentSession = session;
+                    this.activeSessions.set(session.sessionId, session);
+                    return session;
+                }
+            }
+            return null;
+        } catch (error) {
+            console.error('Error loading current session:', error);
+            return null;
+        }
+    },
+    
+    // อัปเดตกิจกรรมล่าสุด
+    updateLastActivity(sessionId = null) {
+        const targetSessionId = sessionId || this.currentSession?.sessionId;
+        if (!targetSessionId) return;
+        
+        const session = this.activeSessions.get(targetSessionId);
+        if (session) {
+            session.lastActivity = new Date().toISOString();
+            this.saveSessionToStorage(session);
+        }
+    },
+    
+    // ตรวจสอบและล้าง Session ที่หมดอายุ
+    cleanExpiredSessions() {
+        const now = Date.now();
+        const expiredSessions = [];
+        
+        this.activeSessions.forEach((session, sessionId) => {
+            const lastActivity = new Date(session.lastActivity).getTime();
+            if (now - lastActivity > this.sessionTimeout) {
+                expiredSessions.push(sessionId);
+            }
+        });
+        
+        // ลบ Session ที่หมดอายุ
+        expiredSessions.forEach(sessionId => {
+            this.activeSessions.delete(sessionId);
+            console.log('Expired session removed:', sessionId);
+        });
+        
+        // อัปเดต localStorage
+        this.updateStorageAfterCleanup();
+        
+        return expiredSessions.length;
+    },
+    
+    // อัปเดต Storage หลังจากลบ Session ที่หมดอายุ
+    updateStorageAfterCleanup() {
+        const activeSessions = {};
+        this.activeSessions.forEach((session, sessionId) => {
+            activeSessions[sessionId] = {
+                sessionId: session.sessionId,
+                userData: session.userData,
+                role: session.role,
+                loginTime: session.loginTime,
+                lastActivity: session.lastActivity,
+                statistics: session.statistics,
+                preferences: session.preferences
+            };
+        });
+        localStorage.setItem('allUserSessions', JSON.stringify(activeSessions));
+    },
+    
+    // ล็อกเอาต์ Session ปัจจุบัน
+    logoutCurrentSession() {
+        if (!this.currentSession) return;
+        
+        const sessionId = this.currentSession.sessionId;
+        
+        // ลบจาก activeSessions
+        this.activeSessions.delete(sessionId);
+        
+        // ลบจาก localStorage
+        localStorage.removeItem('currentSession');
+        const allSessions = this.getAllSessionsFromStorage();
+        delete allSessions[sessionId];
+        localStorage.setItem('allUserSessions', JSON.stringify(allSessions));
+        
+        // รีเซ็ต current session
+        this.currentSession = null;
+        
+        console.log('Session logged out:', sessionId);
+    },
+    
+    // ได้รับข้อมูลผู้ใช้ทั้งหมดที่ออนไลน์
+    getOnlineUsers() {
+        this.cleanExpiredSessions(); // ล้าง session หมดอายุก่อน
+        
+        const onlineUsers = [];
+        this.activeSessions.forEach(session => {
+            if (session.isActive) {
+                onlineUsers.push({
+                    username: session.userData.username,
+                    firstName: session.userData.firstName,
+                    lastName: session.userData.lastName,
+                    role: session.role,
+                    loginTime: session.loginTime,
+                    lastActivity: session.lastActivity
+                });
+            }
+        });
+        
+        return onlineUsers;
+    }
+};
+
+// ===== 2. ENHANCED USER MANAGEMENT =====
+const EnhancedUserManager = {
+    currentUser: null,
+    userSessions: new Map(),
+    
+    // ล็อกอินผู้ใช้ใหม่
+    async loginUser(loginData) {
+        try {
+            // ตรวจสอบจำนวนผู้ใช้ออนไลน์
+            if (MultiUserSystem.activeSessions.size >= MultiUserSystem.maxConcurrentUsers) {
+                throw new Error('ระบบเต็ม กรุณาลองใหม่ในภายหลัง');
+            }
+            
+            // สร้าง session ใหม่
+            const session = MultiUserSystem.createUserSession(loginData);
+            this.currentUser = session;
+            
+            // โหลดสถิติเฉพาะของผู้ใช้
+            await this.loadUserSpecificData(session);
+            
+            // อัปเดต UI
+            this.updateUserInterface(session);
+            
+            // เริ่มต้น activity tracking
+            this.startActivityTracking();
+            
+            return session;
+            
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error;
+        }
+    },
+    
+    // โหลดข้อมูลเฉพาะของผู้ใช้
+    async loadUserSpecificData(session) {
+        const username = session.userData.username;
+        
+        // โหลดสถิติเฉพาะของผู้ใช้
+        const userStatsKey = `userStats_${username}`;
+        const userStats = localStorage.getItem(userStatsKey);
+        if (userStats) {
+            session.statistics = JSON.parse(userStats);
+        } else {
+            // สร้างสถิติเริ่มต้น
+            session.statistics = this.createDefaultStats(session.userData);
+            localStorage.setItem(userStatsKey, JSON.stringify(session.statistics));
+        }
+        
+        // โหลดการตั้งค่าเฉพาะของผู้ใช้
+        const userPrefsKey = `userPrefs_${username}`;
+        const userPrefs = localStorage.getItem(userPrefsKey);
+        if (userPrefs) {
+            session.preferences = JSON.parse(userPrefs);
+        } else {
+            session.preferences = this.createDefaultPreferences();
+            localStorage.setItem(userPrefsKey, JSON.stringify(session.preferences));
+        }
+        
+        // โหลดข้อมูลการเข้าเรียนเฉพาะของผู้ใช้
+        await this.loadUserAttendanceData(session);
+    },
+    
+    // โหลดข้อมูลการเข้าเรียนเฉพาะของผู้ใช้
+    async loadUserAttendanceData(session) {
+        const username = session.userData.username;
+        const attendanceKey = `attendance_${username}`;
+        
+        const attendanceData = localStorage.getItem(attendanceKey);
+        if (attendanceData) {
+            session.attendanceData = JSON.parse(attendanceData);
+        } else {
+            session.attendanceData = this.createDefaultAttendanceData();
+            localStorage.setItem(attendanceKey, JSON.stringify(session.attendanceData));
+        }
+    },
+    
+    // สร้างสถิติเริ่มต้น
+    createDefaultStats(userData) {
+        return {
+            totalPresent: userData.attendedDays || 0,
+            totalAbsent: userData.absentDays || 0,
+            totalLate: userData.lateDays || 0,
+            totalLeave: 0,
+            attendanceRate: userData.attendanceRate || 0,
+            lastUpdated: new Date().toISOString()
+        };
+    },
+    
+    // สร้างการตั้งค่าเริ่มต้น
+    createDefaultPreferences() {
+        return {
+            theme: 'light',
+            language: 'th',
+            notifications: true,
+            autoLogout: 30,
+            dashboard: {
+                showStatistics: true,
+                showSchedule: true,
+                showActivities: true
+            }
+        };
+    },
+    
+    // สร้างข้อมูลการเข้าเรียนเริ่มต้น
+    createDefaultAttendanceData() {
+        return {
+            records: [],
+            summary: {
+                present: 0,
+                absent: 0,
+                late: 0,
+                leave: 0
+            },
+            lastUpdated: new Date().toISOString()
+        };
+    },
+    
+    // อัปเดต UI สำหรับผู้ใช้
+    updateUserInterface(session) {
+        const userData = session.userData;
+        
+        // อัปเดตชื่อผู้ใช้
+        const userNameElement = document.getElementById('displayUserName');
+        if (userNameElement && userData.firstName && userData.lastName) {
+            userNameElement.textContent = `${userData.firstName} ${userData.lastName}`;
+        }
+        
+        // อัปเดตบทบาท
+        const userRoleElement = document.getElementById('displayUserRole');
+        if (userRoleElement) {
+            userRoleElement.textContent = this.getRoleDisplayName(session.role);
+        }
+        
+        // อัปเดตสถิติ
+        if (session.statistics) {
+            this.updateStatisticsDisplay(session.statistics);
+        }
+        
+        // ตั้งค่าสิทธิ์ตามบทบาท
+        this.setupRoleBasedAccess(session.role);
+        
+        // แสดงข้อมูลออนไลน์
+        this.displayOnlineStatus();
+    },
+    
+    // แสดงสถานะออนไลน์
+    displayOnlineStatus() {
+        const onlineUsers = MultiUserSystem.getOnlineUsers();
+        
+        // สร้าง indicator สำหรับผู้ใช้ออนไลน์
+        let onlineIndicator = document.querySelector('.online-users-indicator');
+        if (!onlineIndicator) {
+            onlineIndicator = document.createElement('div');
+            onlineIndicator.className = 'online-users-indicator';
+            onlineIndicator.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1000;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            `;
+            document.body.appendChild(onlineIndicator);
+            
+            // เพิ่ม hover effect
+            onlineIndicator.addEventListener('mouseenter', () => {
+                onlineIndicator.style.transform = 'scale(1.05)';
+            });
+            onlineIndicator.addEventListener('mouseleave', () => {
+                onlineIndicator.style.transform = 'scale(1)';
+            });
+        }
+        
+        onlineIndicator.innerHTML = `
+            <ion-icon name="people" style="margin-right: 6px;"></ion-icon>
+            ${onlineUsers.length} คนออนไลน์
+        `;
+        
+        // เพิ่ม tooltip แสดงรายชื่อ
+        onlineIndicator.title = onlineUsers.map(user => 
+            `${user.firstName} ${user.lastName} (${this.getRoleDisplayName(user.role)})`
+        ).join('\n');
+    },
+    
+    // ได้รับชื่อบทบาทภาษาไทย
+    getRoleDisplayName(role) {
+        const roleNames = {
+            'student': 'นักเรียน',
+            'teacher': 'ครู', 
+            'admin': 'ผู้ดูแลระบบ'
+        };
+        return roleNames[role] || role;
+    },
+    
+    // ตั้งค่าสิทธิ์ตามบทบาท
+    setupRoleBasedAccess(role) {
+        const checkinElements = document.querySelectorAll('.checkin-feature');
+        
+        if (role === 'student') {
+            checkinElements.forEach(element => {
+                element.style.display = 'none';
+            });
+        } else {
+            checkinElements.forEach(element => {
+                element.style.display = '';
+            });
+        }
+    },
+    
+    // อัปเดตการแสดงสถิติ
+    updateStatisticsDisplay(statistics) {
+        // อัปเดตตัวเลขสถิติ
+        const elements = {
+            present: document.querySelector('.stat-card.attendance h4'),
+            absent: document.querySelector('.stat-card.absence h4'),
+            late: document.querySelector('.stat-card.late h4'),
+            percentage: document.querySelector('.stat-card.percentage h4')
+        };
+        
+        if (elements.present) {
+            this.animateNumber(elements.present, statistics.totalPresent);
+        }
+        if (elements.absent) {
+            this.animateNumber(elements.absent, statistics.totalAbsent);
+        }
+        if (elements.late) {
+            this.animateNumber(elements.late, statistics.totalLate);
+        }
+        if (elements.percentage) {
+            elements.percentage.textContent = `${statistics.attendanceRate}%`;
+        }
+    },
+    
+    // แอนิเมชันตัวเลข
+    animateNumber(element, targetValue) {
+        const currentValue = parseInt(element.textContent) || 0;
+        const duration = 1000;
+        const steps = 30;
+        const stepValue = (targetValue - currentValue) / steps;
+        let currentStep = 0;
+        
+        const interval = setInterval(() => {
+            currentStep++;
+            const value = Math.round(currentValue + (stepValue * currentStep));
+            element.textContent = value;
+            
+            if (currentStep >= steps) {
+                clearInterval(interval);
+                element.textContent = targetValue;
+            }
+        }, duration / steps);
+    },
+    
+    // เริ่มต้นการติดตามกิจกรรม
+    startActivityTracking() {
+        // อัปเดตกิจกรรมทุกๆ 30 วินาที
+        setInterval(() => {
+            MultiUserSystem.updateLastActivity();
+        }, 30000);
+        
+        // ล้าง session หมดอายุทุกๆ 5 นาที
+        setInterval(() => {
+            const cleaned = MultiUserSystem.cleanExpiredSessions();
+            if (cleaned > 0) {
+                this.displayOnlineStatus(); // อัปเดตจำนวนผู้ใช้ออนไลน์
+            }
+        }, 300000);
+        
+        // ติดตามการเคลื่อนไหวของเมาส์และคีย์บอร์ด
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+            document.addEventListener(event, () => {
+                MultiUserSystem.updateLastActivity();
+            }, { passive: true });
+        });
+    },
+    
+    // บันทึกข้อมูลผู้ใช้
+    saveUserData(sessionId = null) {
+        const session = sessionId ? 
+            MultiUserSystem.activeSessions.get(sessionId) : 
+            this.currentUser;
+            
+        if (!session) return;
+        
+        const username = session.userData.username;
+        
+        // บันทึกสถิติ
+        if (session.statistics) {
+            localStorage.setItem(`userStats_${username}`, JSON.stringify(session.statistics));
+        }
+        
+        // บันทึกการตั้งค่า
+        if (session.preferences) {
+            localStorage.setItem(`userPrefs_${username}`, JSON.stringify(session.preferences));
+        }
+        
+        // บันทึกข้อมูลการเข้าเรียน
+        if (session.attendanceData) {
+            localStorage.setItem(`attendance_${username}`, JSON.stringify(session.attendanceData));
+        }
+        
+        // อัปเดต session
+        MultiUserSystem.saveSessionToStorage(session);
+    },
+    
+    // ล็อกเอาต์
+    async logout() {
+        if (!this.currentUser) return;
+        
+        // บันทึกข้อมูลก่อนล็อกเอาต์
+        this.saveUserData();
+        
+        // ลบ online indicator
+        const onlineIndicator = document.querySelector('.online-users-indicator');
+        if (onlineIndicator) {
+            onlineIndicator.remove();
+        }
+        
+        // ล็อกเอาต์ session
+        MultiUserSystem.logoutCurrentSession();
+        
+        // รีเซ็ตตัวแปร
+        this.currentUser = null;
+        
+        // กลับไปหน้าล็อกอิน
+        window.location.href = '/HTML/Profile.html';
+    }
+};
+
+// ===== 3. CONCURRENT DATA MANAGEMENT =====
+const ConcurrentDataManager = {
+    syncQueue: new Map(),
+    isSyncing: false,
+    
+    // อัปเดตข้อมูลพร้อมกัน
+    async updateUserData(username, dataType, newData) {
+        const updateKey = `${username}_${dataType}_${Date.now()}`;
+        
+        this.syncQueue.set(updateKey, {
+            username,
+            dataType,
+            data: newData,
+            timestamp: Date.now()
+        });
+        
+        if (!this.isSyncing) {
+            await this.processSyncQueue();
+        }
+    },
+    
+    // ประมวลผลคิวการซิงค์
+    async processSyncQueue() {
+        if (this.isSyncing) return;
+        this.isSyncing = true;
+        
+        try {
+            for (const [key, update] of this.syncQueue) {
+                await this.processUpdate(update);
+                this.syncQueue.delete(key);
+            }
+        } catch (error) {
+            console.error('Sync error:', error);
+        } finally {
+            this.isSyncing = false;
+        }
+    },
+    
+    // ประมวลผลการอัปเดต
+    async processUpdate(update) {
+        const { username, dataType, data } = update;
+        const storageKey = `${dataType}_${username}`;
+        
+        try {
+            // อัปเดตข้อมูลใน localStorage
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            
+            // ส่งสัญญาณการอัปเดตให้ผู้ใช้อื่น
+            this.broadcastUpdate(username, dataType, data);
+            
+        } catch (error) {
+            console.error('Update processing error:', error);
+        }
+    },
+    
+    // ส่งสัญญาณการอัปเดต
+    broadcastUpdate(username, dataType, data) {
+        const updateEvent = new CustomEvent('userDataUpdate', {
+            detail: {
+                username,
+                dataType,
+                data,
+                timestamp: Date.now()
+            }
+        });
+        
+        window.dispatchEvent(updateEvent);
+    }
+};
+
+// ===== 4. REAL-TIME SYNCHRONIZATION =====
+const RealTimeSync = {
+    updateInterval: null,
+    syncInterval: 15000, // 15 seconds
+    
+    // เริ่มต้นการซิงค์แบบเรียลไทม์
+    start() {
+        // ซิงค์ข้อมูลทุกๆ 15 วินาที
+        this.updateInterval = setInterval(() => {
+            this.syncAllUsers();
+        }, this.syncInterval);
+        
+        // ฟังการเปลี่ยนแปลงข้อมูล
+        window.addEventListener('userDataUpdate', (event) => {
+            this.handleUserDataUpdate(event.detail);
+        });
+        
+        console.log('Real-time sync started');
+    },
+    
+    // หยุดการซิงค์
+    stop() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+        
+        console.log('Real-time sync stopped');
+    },
+    
+    // ซิงค์ข้อมูลผู้ใช้ทั้งหมด
+    async syncAllUsers() {
+        const onlineUsers = MultiUserSystem.getOnlineUsers();
+        
+        for (const user of onlineUsers) {
+            await this.syncUserSpecificData(user.username);
+        }
+        
+        // อัปเดตสถานะออนไลน์
+        EnhancedUserManager.displayOnlineStatus();
+    },
+    
+    // ซิงค์ข้อมูลเฉพาะของผู้ใช้
+    async syncUserSpecificData(username) {
+        try {
+            // ซิงค์สถิติ
+            const statsKey = `userStats_${username}`;
+            const stats = localStorage.getItem(statsKey);
+            if (stats) {
+                const parsedStats = JSON.parse(stats);
+                this.updateUserStats(username, parsedStats);
+            }
+            
+            // ซิงค์ข้อมูลการเข้าเรียน
+            const attendanceKey = `attendance_${username}`;
+            const attendance = localStorage.getItem(attendanceKey);
+            if (attendance) {
+                const parsedAttendance = JSON.parse(attendance);
+                this.updateUserAttendance(username, parsedAttendance);
+            }
+            
+        } catch (error) {
+            console.error('Sync error for user:', username, error);
+        }
+    },
+    
+    // อัปเดตสถิติผู้ใช้
+    updateUserStats(username, stats) {
+        // อัปเดตสถิติในหน้าจอของผู้ใช้ปัจจุบัน
+        if (EnhancedUserManager.currentUser?.userData.username === username) {
+            EnhancedUserManager.currentUser.statistics = stats;
+            EnhancedUserManager.updateStatisticsDisplay(stats);
+        }
+    },
+    
+    // อัปเดตข้อมูลการเข้าเรียนผู้ใช้
+    updateUserAttendance(username, attendance) {
+        // อัปเดตข้อมูลการเข้าเรียนในหน้าจอของผู้ใช้ปัจจุบัน
+        if (EnhancedUserManager.currentUser?.userData.username === username) {
+            EnhancedUserManager.currentUser.attendanceData = attendance;
+        }
+    },
+    
+    // จัดการการอัปเดตข้อมูลผู้ใช้
+    handleUserDataUpdate(detail) {
+        const { username, dataType, data } = detail;
+        
+        // อัปเดตข้อมูลในระบบ
+        const session = Array.from(MultiUserSystem.activeSessions.values())
+            .find(s => s.userData.username === username);
+            
+        if (session) {
+            switch (dataType) {
+                case 'userStats':
+                    session.statistics = data;
+                    break;
+                case 'attendance':
+                    session.attendanceData = data;
+                    break;
+                case 'userPrefs':
+                    session.preferences = data;
+                    break;
+            }
+        }
+    }
+};
+
+// ===== 5. INITIALIZATION AND CLEANUP =====
+const MultiUserInitializer = {
+    // เริ่มต้นระบบ
+    async initialize() {
+        console.log('Initializing multi-user system...');
+        
+        try {
+            // โหลด session ปัจจุบัน
+            const currentSession = MultiUserSystem.loadCurrentSession();
+            
+            if (currentSession) {
+                // มี session อยู่แล้ว
+                EnhancedUserManager.currentUser = currentSession;
+                await EnhancedUserManager.loadUserSpecificData(currentSession);
+                EnhancedUserManager.updateUserInterface(currentSession);
+                EnhancedUserManager.startActivityTracking();
+                
+                console.log('Existing session restored:', currentSession.userData.username);
+            } else {
+                // ไม่มี session - ต้องล็อกอิน
+                console.log('No valid session found');
+                return false;
+            }
+            
+            // เริ่มต้นการซิงค์แบบเรียลไทม์
+            RealTimeSync.start();
+            
+            // ติดตั้งการทำความสะอาดอัตโนมัติ
+            this.setupAutoCleanup();
+            
+            console.log('Multi-user system initialized successfully');
+            return true;
+            
+        } catch (error) {
+            console.error('Multi-user system initialization failed:', error);
+            return false;
+        }
+    },
+    
+    // ติดตั้งการทำความสะอาดอัตโนมัติ
+    setupAutoCleanup() {
+        // ทำความสะอาดทุกๆ 10 นาที
+        setInterval(() => {
+            MultiUserSystem.cleanExpiredSessions();
+            this.cleanupOldData();
+        }, 600000);
+        
+        // ทำความสะอาดเมื่อปิดหน้าต่าง
+        window.addEventListener('beforeunload', () => {
+            this.cleanup();
+        });
+        
+        // ทำความสะอาดเมื่อหน้าต่างไม่ active
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                EnhancedUserManager.saveUserData();
+            } else {
+                MultiUserSystem.updateLastActivity();
+            }
+        });
+    },
+    
+    // ทำความสะอาดข้อมูลเก่า
+    cleanupOldData() {
+        const now = Date.now();
+        const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+        
+        // ตรวจสอบข้อมูลใน localStorage
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.startsWith('userStats_') || 
+                       key.startsWith('attendance_') || 
+                       key.startsWith('userPrefs_'))) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key) || '{}');
+                    const lastUpdated = new Date(data.lastUpdated || 0).getTime();
+                    
+                    if (now - lastUpdated > maxAge) {
+                        localStorage.removeItem(key);
+                        console.log('Cleaned old data:', key);
+                    }
+                } catch (error) {
+                    console.error('Error cleaning data:', key, error);
+                }
+            }
+        }
+    },
+    
+    // ทำความสะอาดเมื่อปิดระบบ
+    cleanup() {
+        console.log('Cleaning up multi-user system...');
+        
+        // หยุดการซิงค์
+        RealTimeSync.stop();
+        
+        // บันทึกข้อมูลผู้ใช้ปัจจุบัน
+        if (EnhancedUserManager.currentUser) {
+            EnhancedUserManager.saveUserData();
+        }
+        
+        // อัปเดตเวลากิจกรรมล่าสุด
+        MultiUserSystem.updateLastActivity();
+    }
+};
+
+// ===== 6. GLOBAL INTEGRATION FUNCTIONS =====
+
+// ฟังก์ชันล็อกอินสำหรับหลายผู้ใช้
+async function multiUserLogin(loginData) {
+    try {
+        const session = await EnhancedUserManager.loginUser(loginData);
+        
+        // เริ่มต้นการซิงค์
+        RealTimeSync.start();
+        
+        return {
+            success: true,
+            session: session,
+            message: 'เข้าสู่ระบบสำเร็จ'
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            message: 'ไม่สามารถเข้าสู่ระบบได้'
+        };
+    }
+}
+
+// ฟังก์ชันล็อกเอาต์สำหรับหลายผู้ใช้
+async function multiUserLogout() {
+    try {
+        await EnhancedUserManager.logout();
+        RealTimeSync.stop();
+        
+        return {
+            success: true,
+            message: 'ออกจากระบบสำเร็จ'
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            message: 'เกิดข้อผิดพลาดในการออกจากระบบ'
+        };
+    }
+}
+
+// ฟังก์ชันอัปเดตสถิติแบบหลายผู้ใช้
+async function updateMultiUserStatistics(newStats) {
+    if (!EnhancedUserManager.currentUser) return;
+    
+    const username = EnhancedUserManager.currentUser.userData.username;
+    
+    // อัปเดตใน session ปัจจุบัน
+    EnhancedUserManager.currentUser.statistics = newStats;
+    
+    // บันทึกลง localStorage
+    await ConcurrentDataManager.updateUserData(username, 'userStats', newStats);
+    
+    // อัปเดต UI
+    EnhancedUserManager.updateStatisticsDisplay(newStats);
+}
+
+// ฟังก์ชันอัปเดตข้อมูลการเข้าเรียนแบบหลายผู้ใช้
+async function updateMultiUserAttendance(attendanceData) {
+    if (!EnhancedUserManager.currentUser) return;
+    
+    const username = EnhancedUserManager.currentUser.userData.username;
+    
+    // อัปเดตใน session ปัจจุบัน
+    EnhancedUserManager.currentUser.attendanceData = attendanceData;
+    
+    // บันทึกลง localStorage
+    await ConcurrentDataManager.updateUserData(username, 'attendance', attendanceData);
+    
+    // คำนวณสถิติใหม่
+    const newStats = calculateStatsFromAttendance(attendanceData);
+    await updateMultiUserStatistics(newStats);
+}
+
+// ฟังก์ชันคำนวณสถิติจากข้อมูลการเข้าเรียน
+function calculateStatsFromAttendance(attendanceData) {
+    const summary = attendanceData.summary || { present: 0, absent: 0, late: 0, leave: 0 };
+    const total = summary.present + summary.absent + summary.late + summary.leave;
+    const attendanceRate = total > 0 ? Math.round(((summary.present + summary.late) / total) * 100) : 0;
+    
+    return {
+        totalPresent: summary.present,
+        totalAbsent: summary.absent,
+        totalLate: summary.late,
+        totalLeave: summary.leave,
+        attendanceRate: attendanceRate,
+        lastUpdated: new Date().toISOString()
+    };
+}
+
+// ฟังก์ชันดูผู้ใช้ออนไลน์
+function getOnlineUsers() {
+    return MultiUserSystem.getOnlineUsers();
+}
+
+// ฟังก์ชันเช็คสถานะการล็อกอิน
+function isUserLoggedIn() {
+    return EnhancedUserManager.currentUser !== null;
+}
+
+// ฟังก์ชันดึงข้อมูลผู้ใช้ปัจจุบัน
+function getCurrentUser() {
+    return EnhancedUserManager.currentUser;
+}
+
+// ===== 7. EVENT HANDLERS FOR EXISTING SYSTEM =====
+
+// เชื่อมต่อกับระบบเดิม
+function integrateWithExistingSystem() {
+    // แทนที่ฟังก์ชันเดิม
+    if (typeof window.checkUserLogin === 'function') {
+        window.originalCheckUserLogin = window.checkUserLogin;
+        window.checkUserLogin = function() {
+            const session = MultiUserSystem.loadCurrentSession();
+            if (session) {
+                // อัปเดตตัวแปรเดิมให้เข้ากับระบบใหม่
+                window.currentUserData = session.userData;
+                window.userRole = session.role;
+                return true;
+            }
+            return false;
+        };
+    }
+    
+    // แทนที่ฟังก์ชันอัปเดตสถิติเดิม
+    if (typeof window.updateStatisticsFromScanData === 'function') {
+        window.originalUpdateStatisticsFromScanData = window.updateStatisticsFromScanData;
+        window.updateStatisticsFromScanData = async function() {
+            if (EnhancedUserManager.currentUser) {
+                // ใช้ระบบใหม่
+                const attendanceKey = `attendance_${EnhancedUserManager.currentUser.userData.username}`;
+                const attendanceData = JSON.parse(localStorage.getItem(attendanceKey) || '{}');
+                
+                if (attendanceData.records) {
+                    const newStats = calculateStatsFromAttendance(attendanceData);
+                    await updateMultiUserStatistics(newStats);
+                }
+            } else {
+                // ใช้ระบบเดิม
+                window.originalUpdateStatisticsFromScanData();
+            }
+        };
+    }
+    
+    // แทนที่ฟังก์ชันล็อกเอาต์เดิม
+    if (typeof window.logout === 'function') {
+        window.originalLogout = window.logout;
+        window.logout = async function() {
+            if (isUserLoggedIn()) {
+                await multiUserLogout();
+            } else {
+                window.originalLogout();
+            }
+        };
+    }
+}
+
+// ===== 8. ENHANCED UI COMPONENTS =====
+
+// สร้าง UI สำหรับการจัดการผู้ใช้หลายคน
+function createMultiUserUI() {
+    // สร้าง User Switcher (สำหรับแอดมิน)
+    if (EnhancedUserManager.currentUser?.role === 'admin') {
+        createUserSwitcher();
+    }
+    
+    // สร้าง Activity Monitor
+    createActivityMonitor();
+    
+    // สร้าง Session Timer
+    createSessionTimer();
+}
+
+// สร้าง User Switcher สำหรับแอดมิน
+function createUserSwitcher() {
+    const userSwitcher = document.createElement('div');
+    userSwitcher.className = 'user-switcher';
+    userSwitcher.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 1000;
+        max-height: 200px;
+        overflow-y: auto;
+        min-width: 200px;
+    `;
+    
+    const title = document.createElement('h4');
+    title.textContent = 'ผู้ใช้ออนไลน์';
+    title.style.cssText = 'margin: 0 0 12px 0; font-size: 14px; color: #334155;';
+    userSwitcher.appendChild(title);
+    
+    const userList = document.createElement('div');
+    userList.className = 'online-user-list';
+    userSwitcher.appendChild(userList);
+    
+    updateUserSwitcher(userList);
+    document.body.appendChild(userSwitcher);
+    
+    // อัปเดตทุกๆ 30 วินาที
+    setInterval(() => updateUserSwitcher(userList), 30000);
+}
+
+// อัปเดต User Switcher
+function updateUserSwitcher(userList) {
+    const onlineUsers = getOnlineUsers();
+    
+    userList.innerHTML = '';
+    
+    onlineUsers.forEach(user => {
+        const userItem = document.createElement('div');
+        userItem.className = 'user-item';
+        userItem.style.cssText = `
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #f8fafc;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        `;
+        
+        userItem.innerHTML = `
+            <div style="font-weight: 500; color: #334155;">
+                ${user.firstName} ${user.lastName}
+            </div>
+            <div style="font-size: 11px; color: #64748b;">
+                ${user.role} • ${getTimeAgo(user.lastActivity)}
+            </div>
+        `;
+        
+        userItem.addEventListener('mouseenter', () => {
+            userItem.style.backgroundColor = '#e2e8f0';
+        });
+        
+        userItem.addEventListener('mouseleave', () => {
+            userItem.style.backgroundColor = '#f8fafc';
+        });
+        
+        userList.appendChild(userItem);
+    });
+}
+
+// สร้าง Activity Monitor
+function createActivityMonitor() {
+    const monitor = document.createElement('div');
+    monitor.className = 'activity-monitor';
+    monitor.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 1000;
+        font-size: 12px;
+        color: #64748b;
+    `;
+    
+    monitor.innerHTML = `
+        <div id="session-info">
+            <div>เซสชัน: ${EnhancedUserManager.currentUser?.sessionId.split('_')[2] || 'Unknown'}</div>
+            <div>เข้าสู่ระบบ: ${formatTime(EnhancedUserManager.currentUser?.loginTime)}</div>
+            <div id="activity-time">กิจกรรมล่าสุด: เมื่อสักครู่</div>
+        </div>
+    `;
+    
+    document.body.appendChild(monitor);
+    
+    // อัปเดตเวลากิจกรรมทุกวินาที
+    setInterval(() => {
+        const activityTime = document.getElementById('activity-time');
+        if (activityTime && EnhancedUserManager.currentUser) {
+            const lastActivity = EnhancedUserManager.currentUser.lastActivity;
+            activityTime.textContent = `กิจกรรมล่าสุด: ${getTimeAgo(lastActivity)}`;
+        }
+    }, 1000);
+}
+
+// สร้าง Session Timer
+function createSessionTimer() {
+    const timer = document.createElement('div');
+    timer.className = 'session-timer';
+    timer.style.cssText = `
+        position: fixed;
+        top: 50%;
+        right: -180px;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px 0 0 12px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: right 0.3s ease;
+        cursor: pointer;
+        z-index: 999;
+    `;
+    
+    timer.innerHTML = `
+        <div>เซสชัน</div>
+        <div id="session-duration">00:00:00</div>
+    `;
+    
+    // แสดงเมื่อ hover
+    timer.addEventListener('mouseenter', () => {
+        timer.style.right = '0px';
+    });
+    
+    timer.addEventListener('mouseleave', () => {
+        timer.style.right = '-180px';
+    });
+    
+    document.body.appendChild(timer);
+    
+    // อัปเดตเวลาเซสชัน
+    setInterval(() => {
+        const durationElement = document.getElementById('session-duration');
+        if (durationElement && EnhancedUserManager.currentUser) {
+            const loginTime = new Date(EnhancedUserManager.currentUser.loginTime);
+            const now = new Date();
+            const duration = now - loginTime;
+            durationElement.textContent = formatDuration(duration);
+        }
+    }, 1000);
+}
+
+// ===== 9. UTILITY FUNCTIONS =====
+
+// แปลงเวลาเป็นข้อความ
+function getTimeAgo(timestamp) {
+    const now = Date.now();
+    const time = new Date(timestamp).getTime();
+    const diff = now - time;
+    
+    if (diff < 60000) return 'เมื่อสักครู่';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)} นาทีที่แล้ว`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)} ชั่วโมงที่แล้ว`;
+    return `${Math.floor(diff / 86400000)} วันที่แล้ว`;
+}
+
+// จัดรูปแบบเวลา
+function formatTime(timestamp) {
+    return new Date(timestamp).toLocaleTimeString('th-TH', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// จัดรูปแบบระยะเวลา
+function formatDuration(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    
+    return `${String(hours).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+// ===== 10. INITIALIZATION AND EXPORT =====
+
+// เริ่มต้นระบบเมื่อ DOM โหลดเสร็จ
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Initializing enhanced multi-user system...');
+    
+    // เริ่มต้นระบบหลายผู้ใช้
+    const initialized = await MultiUserInitializer.initialize();
+    
+    if (initialized) {
+        // เชื่อมต่อกับระบบเดิม
+        integrateWithExistingSystem();
+        
+        // สร้าง UI เพิ่มเติม
+        createMultiUserUI();
+        
+        console.log('Enhanced multi-user system ready!');
+    } else {
+        console.log('Multi-user system initialization failed - using fallback');
+        
+        // ใช้ระบบเดิมแทน
+        if (typeof window.initializeUserManagement === 'function') {
+            window.initializeUserManagement();
+        }
+    }
+});
+
+// Export ฟังก์ชันสำคัญ
+window.MultiUserSystem = {
+    // Core functions
+    login: multiUserLogin,
+    logout: multiUserLogout,
+    getCurrentUser: getCurrentUser,
+    getOnlineUsers: getOnlineUsers,
+    isLoggedIn: isUserLoggedIn,
+    
+    // Data management
+    updateStatistics: updateMultiUserStatistics,
+    updateAttendance: updateMultiUserAttendance,
+    
+    // System management
+    cleanExpiredSessions: () => MultiUserSystem.cleanExpiredSessions(),
+    getSessionInfo: () => EnhancedUserManager.currentUser,
+    
+    // Advanced features
+    ConcurrentDataManager,
+    RealTimeSync,
+    EnhancedUserManager
+};
+
+console.log('Enhanced Multi-User System loaded successfully!');
+    </script>
+    
+<script>
+    // ระบบควบคุมการแจ้งเตือน - ป้องกันการซ้ำอย่างเข้มงวด
+    const NotificationManager = {
+        // ตัวแปรสำหรับควบคุม
+        isNotificationShowing: false,
+        lastNotificationTime: 0,
+        lastDataHash: null,
+        notificationTimeout: null,
+        shownMessages: new Set(), // เก็บข้อความที่แสดงแล้ว
+        lastUserAction: null, // เก็บการกระทำล่าสุดของผู้ใช้
+        isInitialLoad: true, // ป้องกันการแจ้งเตือนตอนโหลดครั้งแรก
+        
+        // คำนวณ hash ของข้อมูลสถิติ
+        calculateDataHash: function() {
+            try {
+                const attendanceData = JSON.parse(localStorage.getItem('attendanceData') || '[]');
+                const dataString = JSON.stringify(attendanceData);
+                let hash = 0;
+                for (let i = 0; i < dataString.length; i++) {
+                    const char = dataString.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString();
+            } catch (error) {
+                console.error('Error calculating data hash:', error);
+                return Math.random().toString();
+            }
+        },
+        
+        // สร้าง unique key สำหรับข้อความ
+        createMessageKey: function(message, source) {
+            const timestamp = Math.floor(Date.now() / 30000); // Group ทุก 30 วินาที
+            return `${source}-${message}-${timestamp}`;
+        },
+        
+        // ตรวจสอบว่าข้อมูลเปลี่ยนแปลงจริงหรือไม่
+        hasDataChanged: function() {
+            const currentHash = this.calculateDataHash();
+            const changed = this.lastDataHash !== null && currentHash !== this.lastDataHash;
+            
+            if (changed) {
+                console.log('Data hash changed:', this.lastDataHash, '->', currentHash);
+            }
+            
+            this.lastDataHash = currentHash;
+            return changed;
+        },
+        
+        // แสดงการแจ้งเตือน (เข้มงวดมาก)
+        show: function(message, source = 'system') {
+            const now = Date.now();
+            const timeSinceLastNotification = now - this.lastNotificationTime;
+            const messageKey = this.createMessageKey(message, source);
+            
+            console.log('Notification request:', {
+                message,
+                source,
+                messageKey,
+                isShowing: this.isNotificationShowing,
+                timeSince: timeSinceLastNotification,
+                isInitialLoad: this.isInitialLoad,
+                shownBefore: this.shownMessages.has(messageKey)
+            });
+            
+            // ป้องกันการโหลดครั้งแรก
+            if (this.isInitialLoad && source !== 'period_change') {
+                console.log('Notification blocked - initial load');
+                return false;
+            }
+            
+            // ป้องกันการแสดงซ้ำ
+            if (this.isNotificationShowing) {
+                console.log('Notification blocked - already showing');
+                return false;
+            }
+            
+            // ป้องกันการแสดงเร็วเกินไป (น้อยกว่า 10 วินาที)
+            if (timeSinceLastNotification < 10000) {
+                console.log('Notification blocked - too soon since last notification');
+                return false;
+            }
+            
+            // ป้องกันข้อความที่แสดงแล้วใน 30 วินาทีที่ผ่านมา
+            if (this.shownMessages.has(messageKey)) {
+                console.log('Notification blocked - message shown recently');
+                return false;
+            }
+            
+            // สำหรับการแจ้งเตือนจากการเปลี่ยนแปลงข้อมูล
+            if (source === 'data_change') {
+                if (!this.hasDataChanged()) {
+                    console.log('Notification blocked - no actual data change');
+                    return false;
+                }
+            }
+            
+            // สำหรับการเปลี่ยน period selector (อนุญาตเฉพาะเมื่อผู้ใช้คลิกจริง)
+            if (source === 'period_change') {
+                const timeSinceLastAction = now - (this.lastUserAction || 0);
+                if (timeSinceLastAction > 1000) { // ต้องมีการคลิกใน 1 วินาที
+                    console.log('Notification blocked - no recent user action for period change');
+                    return false;
+                }
+            }
+            
+            // บันทึกข้อความที่แสดงแล้ว
+            this.shownMessages.add(messageKey);
+            
+            // ล้างข้อความเก่าออกทุก 60 วินาที
+            setTimeout(() => {
+                this.shownMessages.delete(messageKey);
+            }, 60000);
+            
+            return this.displayNotification(message);
+        },
+        
+        // แสดงการแจ้งเตือนจริง
+        displayNotification: function(message) {
+            this.isNotificationShowing = true;
+            this.lastNotificationTime = Date.now();
+            
+            console.log('Displaying notification:', message);
+            
+            const notification = document.getElementById('statisticsNotification');
+            const messageSpan = notification.querySelector('span');
+            
+            if (messageSpan) {
+                messageSpan.textContent = message;
+            }
+            
+            // Clear existing timeout
+            if (this.notificationTimeout) {
+                clearTimeout(this.notificationTimeout);
+            }
+            
+            notification.style.display = 'flex';
+            notification.style.transform = 'translateY(-100%)';
+            notification.style.transition = 'transform 0.3s ease';
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Hide after 4 seconds
+            this.notificationTimeout = setTimeout(() => {
+                this.hide();
+            }, 4000);
+            
+            return true;
+        },
+        
+        // ซ่อนการแจ้งเตือน
+        hide: function() {
+            console.log('Hiding notification');
+            
+            const notification = document.getElementById('statisticsNotification');
+            notification.style.transform = 'translateY(-100%)';
+            
+            if (this.notificationTimeout) {
+                clearTimeout(this.notificationTimeout);
+                this.notificationTimeout = null;
+            }
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+                this.isNotificationShowing = false;
+            }, 300);
+        },
+        
+        // บันทึกการกระทำของผู้ใช้
+        recordUserAction: function() {
+            this.lastUserAction = Date.now();
+            console.log('User action recorded:', this.lastUserAction);
+        },
+        
+        // เริ่มต้นระบบ
+        initialize: function() {
+            // คำนวณ hash เริ่มต้น
+            this.lastDataHash = this.calculateDataHash();
+            
+            // ตั้งค่าให้พร้อมใช้งานหลังจาก 3 วินาที
+            setTimeout(() => {
+                this.isInitialLoad = false;
+                console.log('NotificationManager ready for notifications');
+            }, 3000);
+            
+            console.log('NotificationManager initialized with hash:', this.lastDataHash);
+        },
+        
+        // Reset การตั้งค่า (สำหรับการดีบัก)
+        reset: function() {
+            this.shownMessages.clear();
+            this.isNotificationShowing = false;
+            this.lastNotificationTime = 0;
+            this.lastUserAction = null;
+            if (this.notificationTimeout) {
+                clearTimeout(this.notificationTimeout);
+                this.notificationTimeout = null;
+            }
+            console.log('NotificationManager reset');
+        }
+    };
+    
+    // Global function สำหรับซ่อนแจ้งเตือน
+    function hideStatisticsNotification() {
+        NotificationManager.hide();
+    }
+    
+    // Function สำหรับแสดงแจ้งเตือน (ใช้แทน showStatisticsNotification เดิม)
+    function showStatisticsNotification(message, source = 'system') {
+        return NotificationManager.show(message, source);
+    }
+    
+    // Handle period change - เข้มงวดมากขึ้น
+    function handlePeriodChange(event) {
+        // บันทึกการกระทำของผู้ใช้
+        NotificationManager.recordUserAction();
+        
+        const periodSelector = document.querySelector('.period-selector');
+        if (periodSelector) {
+            const period = periodSelector.value;
+            console.log('Period changed to:', period);
+            
+            // อัพเดทสถิติตามช่วงเวลาที่เลือก
+            if (typeof window.StatisticsSync !== 'undefined') {
+                window.StatisticsSync.load();
+            }
+            
+            // แจ้งเตือนสำหรับการเปลี่ยน period (หน่วงเวลาเล็กน้อย)
+            setTimeout(() => {
+                const periodName = getThaiPeriodName(period);
+                showStatisticsNotification(`เปลี่ยนการแสดงสถิติเป็น${periodName}`, 'period_change');
+            }, 200);
+        }
+    }
+    
+    // Function to get Thai period name
+    function getThaiPeriodName(period) {
+        const periodNames = {
+            'week': 'สัปดาห์นี้',
+            'month': 'เดือนนี้',
+            'semester': 'ภาคเรียนนี้'
+        };
+        return periodNames[period] || 'ช่วงเวลาที่เลือก';
+    }
+    
+    // Load user data and statistics - ไม่แจ้งเตือน
+    function loadUserDataWithStatistics() {
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        
+        if (isLoggedIn === 'true' && userData.username) {
+            // อัพเดทข้อมูลผู้ใช้
+            if (userData.firstName && userData.lastName) {
+                const userNameElement = document.getElementById('displayUserName');
+                if (userNameElement) {
+                    userNameElement.textContent = `${userData.firstName} ${userData.lastName}`;
+                }
+                
+                const userRoleElement = document.getElementById('displayUserRole');
+                if (userRoleElement) {
+                    userRoleElement.textContent = userData.roleDisplay || userData.role || 'ผู้ใช้งาน';
+                }
+            }
+            
+            // ตั้งค่า user role
+            if (typeof setUserRole === 'function') {
+                setUserRole(userData.role || localStorage.getItem('userRole') || 'student');
+            }
+            
+            // โหลดสถิติแบบเงียบๆ (ไม่แจ้งเตือน)
+            if (typeof window.StatisticsSync !== 'undefined') {
+                window.StatisticsSync.initialize();
+            }
+        } else {
+            window.location.href = '/HTML/Profile.html';
+        }
+    }
+    
+    // Enhanced event listeners - ป้องกันการซ้ำ
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded - Initializing STRICT notification system');
+        
+        // เริ่มต้น NotificationManager
+        NotificationManager.initialize();
+        
+        // Setup period selector with strict controls
+        const periodSelector = document.querySelector('.period-selector');
+        if (periodSelector) {
+            // ลบ event listener เก่าออกทั้งหมด
+            const newPeriodSelector = periodSelector.cloneNode(true);
+            periodSelector.parentNode.replaceChild(newPeriodSelector, periodSelector);
+            
+            // เพิ่ม event listener เดียว
+            newPeriodSelector.addEventListener('change', handlePeriodChange);
+            console.log('Period selector event listener added (single instance)');
+        }
+        
+        // Load user data and statistics
+        loadUserDataWithStatistics();
+        
+        // อัพเดท current date และ time
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        console.log('STRICT notification system initialized - NO DUPLICATE NOTIFICATIONS!');
+    });
+    
+    // Storage event listener - เข้มงวดมากขึ้น
+    let storageEventCount = 0;
+    const maxStorageEventsPerMinute = 2; // จำกัดแจ้งเตือนสูงสุด 2 ครั้งต่อนาที
+    
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'attendanceData' || e.key === 'statisticsUpdated') {
+            storageEventCount++;
+            console.log('Storage event detected:', e.key, 'Count:', storageEventCount);
+            
+            // จำกัดจำนวนการแจ้งเตือนจาก storage events
+            if (storageEventCount > maxStorageEventsPerMinute) {
+                console.log('Storage event limit reached - notification blocked');
+                return;
+            }
+            
+            // Reset counter ทุกนาที
+            setTimeout(() => {
+                storageEventCount = Math.max(0, storageEventCount - 1);
+            }, 60000);
+            
+            // โหลดข้อมูลใหม่
+            if (typeof window.StatisticsSync !== 'undefined') {
+                window.StatisticsSync.load();
+            }
+            
+            // แจ้งเตือนเฉพาะเมื่อข้อมูลเปลี่ยนแปลงจริง (หน่วงเวลา)
+            setTimeout(() => {
+                showStatisticsNotification('ข้อมูลสถิติได้รับการอัพเดทจากหน้าอื่น', 'data_change');
+            }, 500);
+        }
+    });
+    
+    // Page visibility change handler - ลดการแจ้งเตือน
+    let visibilityChangeCount = 0;
+    
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            console.log('Page hidden - pausing notifications');
+        } else {
+            visibilityChangeCount++;
+            console.log('Page visible - checking for data changes. Count:', visibilityChangeCount);
+            
+            // จำกัดการแจ้งเตือนจาก visibility change
+            if (visibilityChangeCount <= 2) { // แจ้งเตือนได้สูงสุด 2 ครั้ง
+                if (typeof window.StatisticsSync !== 'undefined') {
+                    window.StatisticsSync.load();
+                    
+                    // แจ้งเตือนเฉพาะเมื่อข้อมูลเปลี่ยนแปลงจริง
+                    setTimeout(() => {
+                        if (NotificationManager.hasDataChanged()) {
+                            showStatisticsNotification('ข้อมูลสถิติได้รับการอัพเดท', 'data_change');
+                        }
+                    }, 1000);
+                }
+            } else {
+                console.log('Visibility change limit reached - notification blocked');
+            }
+            
+            // Reset counter ทุก 5 นาที
+            setTimeout(() => {
+                visibilityChangeCount = 0;
+            }, 300000);
+        }
+    });
+    
+    // Update date and time function
+    function updateDateTime() {
+        const now = new Date();
+        const dateOptions = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            weekday: 'long'
+        };
+        const timeOptions = { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        };
+        
+        const dateElement = document.getElementById('current-date');
+        const timeElement = document.getElementById('current-time');
+        
+        if (dateElement) {
+            dateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
+        }
+        
+        if (timeElement) {
+            timeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
+        }
+    }
+    
+    // Quick action buttons handler
+    document.querySelectorAll('[data-page]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            if (page) {
+                window.location.href = page;
+            }
+        });
+    });
+    
+    // Ripple effect for buttons
+    document.querySelectorAll('.action-btn, .nav-link').forEach(element => {
+        element.addEventListener('click', function(e) {
+            const ripple = this.querySelector('.btn-ripple, .nav-ripple');
+            if (ripple) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.classList.add('active');
+                
+                setTimeout(() => {
+                    ripple.classList.remove('active');
+                }, 600);
+            }
+        });
+    });
+    
+    // Statistics notification styles
+    const statisticsNotificationStyles = document.createElement('style');
+    statisticsNotificationStyles.textContent = `
+        .statistics-notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            max-width: 320px;
+            font-size: 14px;
+            font-weight: 500;
+            transform: translateY(-100%);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .statistics-notification::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        .statistics-notification ion-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .statistics-notification span {
+            flex: 1;
+            line-height: 1.4;
+        }
+        
+        .close-notification {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .close-notification:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .close-notification ion-icon {
+            font-size: 16px;
+        }
+        
+        .statistics-notification.show {
+            transform: translateY(0);
+            animation: notificationSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes notificationSlideIn {
+            0% {
+                transform: translateY(-100%) scale(0.8);
+                opacity: 0;
+            }
+            60% {
+                transform: translateY(10px) scale(1.05);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .statistics-notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                top: 70px;
+            }
+        }
+        
+        /* Ripple effect styles */
+        .btn-ripple, .nav-ripple {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .btn-ripple.active, .nav-ripple.active {
+            animation: rippleEffect 0.6s linear;
+        }
+        
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .action-btn, .nav-link {
+            position: relative;
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(statisticsNotificationStyles);
+    
+    console.log('Fixed notification system loaded - แจ้งเตือนครั้งเดียวต่อการอัพเดท');
+</script>
 </body>
 </html>
