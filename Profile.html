@@ -1729,8 +1729,8 @@ select.form-input:focus {
         </footer>
 
         <script>
-           // GitHub Pages Compatible Authentication System
-// Uses in-memory storage instead of localStorage
+// GitHub Pages Compatible Authentication System - แก้ไขแล้ว
+// ใช้ localStorage สำหรับบันทึกข้อมูลถาวรและแก้เส้นทางไฟล์
 
 // Extended user database with birth dates
 let userDatabase = {
@@ -1804,6 +1804,33 @@ let rememberLogin = false;
 // Global variable to store user data for password reset
 let resetUserData = null;
 
+// Load user database from localStorage on initialization
+function loadUserDatabase() {
+    try {
+        const savedDatabase = localStorage.getItem('scanCheckinUserDatabase');
+        if (savedDatabase) {
+            const parsedDatabase = JSON.parse(savedDatabase);
+            // Merge with default users, keeping any new users
+            userDatabase = { ...userDatabase, ...parsedDatabase };
+            console.log('User database loaded from localStorage');
+        }
+    } catch (e) {
+        console.warn('Could not load user database from localStorage:', e);
+    }
+}
+
+// Save user database to localStorage
+function saveUserDatabase() {
+    try {
+        localStorage.setItem('scanCheckinUserDatabase', JSON.stringify(userDatabase));
+        console.log('User database saved to localStorage');
+        return true;
+    } catch (e) {
+        console.warn('Could not save user database to localStorage:', e);
+        return false;
+    }
+}
+
 // Helper function to detect GitHub Pages environment and construct proper paths
 function getBasePath() {
     const currentPath = window.location.pathname;
@@ -1826,24 +1853,41 @@ function getBasePath() {
 // Helper function to navigate to pages with proper GitHub Pages support
 function navigateToPage(pageName) {
     const basePath = getBasePath();
-    const fullPath = basePath + '/HTML/' + pageName;
     
-    // Store user data in sessionStorage for GitHub Pages compatibility
+    // แก้ไขเส้นทางสำหรับ GitHub Pages
+    // ถ้าไฟล์อยู่ในโฟลเดอร์เดียวกัน ไม่ต้องใส่ HTML/
+    let fullPath;
+    
+    if (hostname.includes('github.io') || window.location.pathname.includes('/HTML/')) {
+        // สำหรับ GitHub Pages หรือถ้าอยู่ในโฟลเดอร์ HTML แล้ว
+        fullPath = basePath + '/' + pageName;
+    } else {
+        // สำหรับการพัฒนาในเครื่องหรือไฟล์อยู่ในโฟลเดอร์เดียวกัน
+        fullPath = pageName;
+    }
+    
+    // Store user data in both localStorage and sessionStorage
     if (currentUser && isLoggedIn) {
         try {
+            localStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
+            localStorage.setItem('scanCheckinLoggedIn', 'true');
+            localStorage.setItem('scanCheckinRemember', rememberLogin.toString());
+            
             sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
             sessionStorage.setItem('scanCheckinLoggedIn', 'true');
             sessionStorage.setItem('scanCheckinRemember', rememberLogin.toString());
         } catch (e) {
-            console.warn('SessionStorage not available, user data will not persist');
+            console.warn('Storage not available, user data will not persist');
         }
     }
     
+    console.log('Navigating to:', fullPath);
     window.location.href = fullPath;
 }
 
 // Initialize the system
 function initializeSystem() {
+    loadUserDatabase(); // โหลดฐานข้อมูลผู้ใช้จาก localStorage
     setupEventListeners();
     setupPasswordToggles();
     setupValidation();
@@ -1851,12 +1895,20 @@ function initializeSystem() {
     restoreUserSession();
 }
 
-// Restore user session from sessionStorage (for GitHub Pages)
+// Restore user session from localStorage/sessionStorage
 function restoreUserSession() {
     try {
-        const savedUser = sessionStorage.getItem('scanCheckinUser');
-        const savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
-        const savedRemember = sessionStorage.getItem('scanCheckinRemember');
+        // Try localStorage first (persistent)
+        let savedUser = localStorage.getItem('scanCheckinUser');
+        let savedLoggedIn = localStorage.getItem('scanCheckinLoggedIn');
+        let savedRemember = localStorage.getItem('scanCheckinRemember');
+        
+        // Fall back to sessionStorage if localStorage is empty
+        if (!savedUser || !savedLoggedIn) {
+            savedUser = sessionStorage.getItem('scanCheckinUser');
+            savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+            savedRemember = sessionStorage.getItem('scanCheckinRemember');
+        }
         
         if (savedUser && savedLoggedIn === 'true') {
             currentUser = JSON.parse(savedUser);
@@ -2312,9 +2364,14 @@ function handleLogin(e) {
             isLoggedIn = true;
             rememberLogin = remember;
             
-            // Store in sessionStorage for GitHub Pages
+            // Store in both localStorage and sessionStorage
             try {
-                sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
+                const userDataStr = JSON.stringify(currentUser);
+                localStorage.setItem('scanCheckinUser', userDataStr);
+                localStorage.setItem('scanCheckinLoggedIn', 'true');
+                localStorage.setItem('scanCheckinRemember', remember.toString());
+                
+                sessionStorage.setItem('scanCheckinUser', userDataStr);
                 sessionStorage.setItem('scanCheckinLoggedIn', 'true');
                 sessionStorage.setItem('scanCheckinRemember', remember.toString());
             } catch (e) {
@@ -2332,7 +2389,7 @@ function handleLogin(e) {
     }, 2000);
 }
 
-// Handle register form submission
+// Handle register form submission - แก้ไขให้บันทึกข้อมูลถาวร
 function handleRegister(e) {
     e.preventDefault();
     
@@ -2387,11 +2444,19 @@ function handleRegister(e) {
         // Add to database
         userDatabase[formData.username] = newUser;
         
-        showSuccessModal(
-            'สมัครสมาชิกสำเร็จ!',
-            `ยินดีต้อนรับ ${formData.firstName} ${formData.lastName} เข้าสู่ระบบ Scan Check-in`,
-            'register'
-        );
+        // บันทึกฐานข้อมูลผู้ใช้ลง localStorage
+        const saved = saveUserDatabase();
+        
+        if (saved) {
+            console.log('New user registered and saved:', formData.username);
+            showSuccessModal(
+                'สมัครสมาชิกสำเร็จ!',
+                `ยินดีต้อนรับ ${formData.firstName} ${formData.lastName} เข้าสู่ระบบ Scan Check-in`,
+                'register'
+            );
+        } else {
+            showErrorModal('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง');
+        }
     }, 2500);
 }
 
@@ -2470,7 +2535,7 @@ function handleForgotPassword(e) {
     }, 2000);
 }
 
-// Handle reset password form submission
+// Handle reset password form submission - แก้ไขให้บันทึกรหัสผ่านใหม่ถาวร
 function handleResetPassword(e) {
     e.preventDefault();
     
@@ -2517,14 +2582,22 @@ function handleResetPassword(e) {
         // Update password in database
         userDatabase[resetUserData.username].password = newPassword;
         
-        // Clear reset data
-        resetUserData = null;
+        // บันทึกฐานข้อมูลที่อัพเดทแล้วลง localStorage
+        const saved = saveUserDatabase();
         
-        showSuccessModal(
-            'เปลี่ยนรหัสผ่านสำเร็จ!',
-            'คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว',
-            'reset'
-        );
+        if (saved) {
+            console.log('Password updated for user:', resetUserData.username);
+            // Clear reset data
+            resetUserData = null;
+            
+            showSuccessModal(
+                'เปลี่ยนรหัสผ่านสำเร็จ!',
+                'คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว',
+                'reset'
+            );
+        } else {
+            showErrorModal('เกิดข้อผิดพลาดในการบันทึกรหัสผ่านใหม่ กรุณาลองใหม่อีกครั้ง');
+        }
     }, 2000);
 }
 
@@ -2724,18 +2797,37 @@ function showErrorModal(message) {
     }
 }
 
-// Enhanced redirect functions for GitHub Pages
+// Enhanced redirect functions for GitHub Pages - แก้ไขเส้นทางไฟล์
 function redirectToHome() {
     showLoading('กำลังไปยังหน้าหลัก');
     setTimeout(() => {
-        navigateToPage('index.html');
+        // แก้ไขเส้นทางให้ถูกต้องตามโครงสร้างไฟล์ของคุณ
+        const currentPath = window.location.pathname;
+        const hostname = window.location.hostname;
+        
+        if (hostname.includes('github.io')) {
+            // สำหรับ GitHub Pages - ไปยัง index.html ในโฟลเดอร์เดียวกัน
+            window.location.href = './index.html';
+        } else {
+            // สำหรับการพัฒนาในเครื่อง
+            window.location.href = 'index.html';
+        }
     }, 1000);
 }
 
 function redirectToProfile() {
     showLoading('กำลังไปยังหน้าโปรไฟล์');
     setTimeout(() => {
-        navigateToPage('Profile.html');
+        // แก้ไขเส้นทางให้ถูกต้องตามโครงสร้างไฟล์ของคุณ
+        const hostname = window.location.hostname;
+        
+        if (hostname.includes('github.io')) {
+            // สำหรับ GitHub Pages - ไปยัง Profile.html ในโฟลเดอร์เดียวกัน
+            window.location.href = './Profile.html';
+        } else {
+            // สำหรับการพัฒนาในเครื่อง
+            window.location.href = 'Profile.html';
+        }
     }, 1000);
 }
 
@@ -2785,8 +2877,14 @@ function resetForms() {
 function checkAutoRedirect() {
     // Check for existing session on page load
     try {
-        const savedUser = sessionStorage.getItem('scanCheckinUser');
-        const savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        let savedUser = localStorage.getItem('scanCheckinUser');
+        let savedLoggedIn = localStorage.getItem('scanCheckinLoggedIn');
+        
+        // Fall back to sessionStorage if localStorage is empty
+        if (!savedUser || !savedLoggedIn) {
+            savedUser = sessionStorage.getItem('scanCheckinUser');
+            savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        }
         
         if (savedUser && savedLoggedIn === 'true') {
             console.log('Found existing session, user already logged in');
@@ -2804,15 +2902,18 @@ function checkAutoRedirect() {
     }
 }
 
-// Public API for accessing user data (GitHub Pages compatible)
+// Public API for accessing user data (แก้ไขให้รองรับทั้ง localStorage และ sessionStorage)
 window.getUserData = function() {
     if (currentUser) {
         return currentUser;
     }
     
-    // Try to restore from sessionStorage
+    // Try to restore from localStorage first, then sessionStorage
     try {
-        const savedUser = sessionStorage.getItem('scanCheckinUser');
+        let savedUser = localStorage.getItem('scanCheckinUser');
+        if (!savedUser) {
+            savedUser = sessionStorage.getItem('scanCheckinUser');
+        }
         if (savedUser) {
             return JSON.parse(savedUser);
         }
@@ -2828,9 +2929,13 @@ window.isUserLoggedIn = function() {
         return true;
     }
     
-    // Try to check sessionStorage
+    // Try to check localStorage first, then sessionStorage
     try {
-        return sessionStorage.getItem('scanCheckinLoggedIn') === 'true';
+        let loggedIn = localStorage.getItem('scanCheckinLoggedIn');
+        if (!loggedIn) {
+            loggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        }
+        return loggedIn === 'true';
     } catch (e) {
         return false;
     }
@@ -2842,13 +2947,17 @@ window.logoutUser = function() {
     rememberLogin = false;
     resetUserData = null;
     
-    // Clear sessionStorage
+    // Clear both localStorage and sessionStorage
     try {
+        localStorage.removeItem('scanCheckinUser');
+        localStorage.removeItem('scanCheckinLoggedIn');
+        localStorage.removeItem('scanCheckinRemember');
+        
         sessionStorage.removeItem('scanCheckinUser');
         sessionStorage.removeItem('scanCheckinLoggedIn');
         sessionStorage.removeItem('scanCheckinRemember');
     } catch (e) {
-        console.warn('Could not clear session storage');
+        console.warn('Could not clear storage');
     }
     
     console.log('User logged out successfully');
@@ -2865,7 +2974,9 @@ window.updateUserData = function(updatedData) {
         currentUser = { ...currentUser, ...updatedData };
         
         try {
-            sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
+            const userDataStr = JSON.stringify(currentUser);
+            localStorage.setItem('scanCheckinUser', userDataStr);
+            sessionStorage.setItem('scanCheckinUser', userDataStr);
         } catch (e) {
             console.warn('Could not update user session');
         }
@@ -2875,15 +2986,45 @@ window.updateUserData = function(updatedData) {
     return false;
 };
 
+// Function to get all registered users (for admin purposes)
+window.getAllUsers = function() {
+    return userDatabase;
+};
+
+// Function to clear all user data (for testing/reset purposes)
+window.clearAllUserData = function() {
+    try {
+        localStorage.removeItem('scanCheckinUserDatabase');
+        localStorage.removeItem('scanCheckinUser');
+        localStorage.removeItem('scanCheckinLoggedIn');
+        localStorage.removeItem('scanCheckinRemember');
+        
+        sessionStorage.removeItem('scanCheckinUser');
+        sessionStorage.removeItem('scanCheckinLoggedIn');
+        sessionStorage.removeItem('scanCheckinRemember');
+        
+        // Reset to default database
+        userDatabase = {
+            'student001': userDatabase['student001'],
+            'teacher001': userDatabase['teacher001'],
+            'admin': userDatabase['admin']
+        };
+        
+        console.log('All user data cleared');
+        return true;
+    } catch (e) {
+        console.warn('Could not clear all user data');
+        return false;
+    }
+};
+
 // Enhanced error handling
 window.addEventListener('error', function(e) {
     console.error('JavaScript Error:', e.error);
-    // You could implement error reporting here
 });
 
 window.addEventListener('unhandledrejection', function(e) {
     console.error('Unhandled Promise Rejection:', e.reason);
-    // You could implement error reporting here
 });
 
 // Initialize when DOM is ready
@@ -2898,7 +3039,7 @@ function initWhenReady() {
 // Start initialization
 initWhenReady();
 
-console.log('Scan Check-in Registration System Loaded - GitHub Pages Compatible');
+console.log('Scan Check-in Registration System Loaded - Fixed for GitHub Pages with Persistent Storage');
         </script>
     </body>
     </html>
