@@ -1729,7 +1729,7 @@ select.form-input:focus {
         </footer>
 
         <script>
-// GitHub Pages Compatible Authentication System - แก้ไขปัญหา 404
+// GitHub Pages Compatible Authentication System - แก้ไขปัญหา 404 และการทำงานของระบบ Login
 // แก้ไขเส้นทางไฟล์และการนำทางสำหรับ GitHub Pages
 
 // Extended user database with birth dates
@@ -1882,7 +1882,7 @@ async function checkFileExists(url) {
         return response.ok;
     } catch (error) {
         console.warn('Cannot check file existence:', error);
-        return false; // ถ้าไม่สามารถเช็คได้ ให้ถือว่าไฟล์มีอยู่
+        return true; // ถ้าไม่สามารถเช็คได้ ให้ถือว่าไฟล์มีอยู่
     }
 }
 
@@ -1890,20 +1890,22 @@ async function checkFileExists(url) {
 async function safeNavigate(pageName, fallbackPage = null) {
     const primaryURL = createPageURL(pageName);
     
-    // ลองเช็คไฟล์ก่อนนำทาง (อาจไม่ทำงานใน production)
-    const fileExists = await checkFileExists(primaryURL);
+    console.log(`Attempting to navigate to: ${primaryURL}`);
     
-    if (fileExists) {
-        console.log(`Navigating to: ${primaryURL}`);
+    try {
+        // พยายาม navigate โดยตรงก่อน
         window.location.href = primaryURL;
-    } else if (fallbackPage) {
-        const fallbackURL = createPageURL(fallbackPage);
-        console.log(`Primary file not found, trying fallback: ${fallbackURL}`);
-        window.location.href = fallbackURL;
-    } else {
-        // ถ้าไม่มี fallback ให้แสดงข้อความแทน
-        console.error(`File not found: ${primaryURL}`);
-        showErrorModal(`ไม่พบไฟล์ ${pageName} กรุณาตรวจสอบว่าไฟล์มีอยู่จริง`);
+    } catch (error) {
+        console.error('Navigation error:', error);
+        if (fallbackPage) {
+            const fallbackURL = createPageURL(fallbackPage);
+            console.log(`Primary navigation failed, trying fallback: ${fallbackURL}`);
+            window.location.href = fallbackURL;
+        } else {
+            console.error(`Navigation failed: ${primaryURL}`);
+            hideLoading();
+            showErrorModal(`ไม่สามารถไปยังหน้า ${pageName} ได้ กรุณาตรวจสอบว่าไฟล์มีอยู่จริง`);
+        }
     }
 }
 
@@ -1962,6 +1964,587 @@ function toggleForm(formType) {
             container.style.opacity = '0';
             container.style.transform = 'translateY(20px)';
             setTimeout(() => {
+                container.style.display = 'none';
+            }, 200);
+        }
+    });
+    
+    // Show selected container with animation
+    setTimeout(() => {
+        let targetContainer;
+        switch(formType) {
+            case 'register':
+                targetContainer = registerContainer;
+                break;
+            case 'forgot':
+                targetContainer = forgotContainer;
+                break;
+            case 'reset':
+                targetContainer = resetContainer;
+                break;
+            default:
+                targetContainer = loginContainer;
+        }
+        
+        if (targetContainer) {
+            targetContainer.style.display = 'block';
+            setTimeout(() => {
+                targetContainer.style.opacity = '1';
+                targetContainer.style.transform = 'translateY(0)';
+            }, 50);
+        }
+        
+        resetForms();
+    }, 200);
+}
+
+// Password toggle functionality
+function setupPasswordToggle(passwordId, toggleId, iconId) {
+    const toggleButton = document.getElementById(toggleId);
+    if (toggleButton) {
+        toggleButton.addEventListener('click', function() {
+            const passwordInput = document.getElementById(passwordId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (passwordInput && toggleIcon) {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.name = 'eye-off-outline';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.name = 'eye-outline';
+                }
+            }
+        });
+    }
+}
+
+// Setup all password toggles
+function setupPasswordToggles() {
+    setupPasswordToggle('password', 'passwordToggle', 'toggleIcon');
+    setupPasswordToggle('regPassword', 'regPasswordToggle', 'regToggleIcon');
+    setupPasswordToggle('confirmPassword', 'confirmPasswordToggle', 'confirmToggleIcon');
+    setupPasswordToggle('newPassword', 'newPasswordToggle', 'newToggleIcon');
+    setupPasswordToggle('confirmNewPassword', 'confirmNewPasswordToggle', 'confirmNewToggleIcon');
+}
+
+// Setup validation with enhanced feedback
+function setupValidation() {
+    // Username validation
+    const regUsernameField = document.getElementById('regUsername');
+    if (regUsernameField) {
+        regUsernameField.addEventListener('input', function() {
+            const username = this.value;
+            const hint = document.getElementById('usernameHint');
+            
+            if (!hint) return;
+            
+            if (username.length === 0) {
+                hint.textContent = '';
+                hint.style.color = '';
+                this.classList.remove('valid', 'invalid');
+                return;
+            }
+            
+            if (username.length < 4) {
+                hint.textContent = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            } else if (userDatabase[username]) {
+                hint.textContent = 'ชื่อผู้ใช้นี้ถูกใช้แล้ว';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            } else {
+                hint.textContent = 'ชื่อผู้ใช้พร้อมใช้งาน';
+                hint.style.color = '#10b981';
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            }
+        });
+    }
+
+    // Password validation
+    const regPasswordField = document.getElementById('regPassword');
+    if (regPasswordField) {
+        regPasswordField.addEventListener('input', function() {
+            const password = this.value;
+            const hint = document.getElementById('passwordHint');
+            
+            if (!hint) return;
+            
+            if (password.length === 0) {
+                hint.textContent = '';
+                hint.style.color = '';
+                this.classList.remove('valid', 'invalid');
+                return;
+            }
+            
+            if (password.length < 6) {
+                hint.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            } else {
+                hint.textContent = 'รหัสผ่านแข็งแรง';
+                hint.style.color = '#10b981';
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            }
+            
+            // Check confirm password if filled
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            if (confirmPasswordField && confirmPasswordField.value) {
+                checkConfirmPassword();
+            }
+        });
+    }
+
+    // Confirm password validation
+    const confirmPasswordField = document.getElementById('confirmPassword');
+    if (confirmPasswordField) {
+        confirmPasswordField.addEventListener('input', checkConfirmPassword);
+    }
+
+    // New password validation for reset form
+    const newPasswordField = document.getElementById('newPassword');
+    if (newPasswordField) {
+        newPasswordField.addEventListener('input', function() {
+            const password = this.value;
+            const hint = document.getElementById('newPasswordHint');
+            
+            if (!hint) return;
+            
+            if (password.length === 0) {
+                hint.textContent = '';
+                hint.style.color = '';
+                this.classList.remove('valid', 'invalid');
+                return;
+            }
+            
+            if (password.length < 6) {
+                hint.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+                hint.style.color = '#ef4444';
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            } else {
+                hint.textContent = 'รหัสผ่านแข็งแรง';
+                hint.style.color = '#10b981';
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            }
+            
+            // Check confirm password if filled
+            const confirmNewPasswordField = document.getElementById('confirmNewPassword');
+            if (confirmNewPasswordField && confirmNewPasswordField.value) {
+                checkConfirmNewPassword();
+            }
+        });
+    }
+
+    // Confirm new password validation
+    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
+    if (confirmNewPasswordField) {
+        confirmNewPasswordField.addEventListener('input', checkConfirmNewPassword);
+    }
+
+    // Role change handler
+    const roleField = document.getElementById('role');
+    if (roleField) {
+        roleField.addEventListener('change', function() {
+            const role = this.value;
+            const studentIdField = document.getElementById('studentId');
+            const studentIdLabel = studentIdField ? studentIdField.parentElement.previousElementSibling : null;
+            
+            if (studentIdLabel && studentIdField) {
+                if (role === 'student') {
+                    studentIdLabel.textContent = 'รหัสนักเรียน';
+                    studentIdField.placeholder = 'เช่น 67010001';
+                } else if (role === 'teacher') {
+                    studentIdLabel.textContent = 'รหัสครู';
+                    studentIdField.placeholder = 'เช่น T001';
+                } else {
+                    studentIdLabel.textContent = 'รหัสประจำตัว';
+                    studentIdField.placeholder = 'กรอกรหัสประจำตัว';
+                }
+            }
+        });
+    }
+
+    // Real-time email validation
+    const emailField = document.getElementById('email');
+    if (emailField) {
+        emailField.addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.length === 0) {
+                this.classList.remove('valid', 'invalid');
+            } else if (emailRegex.test(email)) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            } else {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            }
+        });
+    }
+
+    // Real-time phone validation
+    const phoneField = document.getElementById('phone');
+    if (phoneField) {
+        phoneField.addEventListener('input', function() {
+            let phone = this.value.replace(/[-\s]/g, '');
+            const phoneRegex = /^[0-9]{10}$/;
+            
+            if (phone.length === 0) {
+                this.classList.remove('valid', 'invalid');
+            } else if (phoneRegex.test(phone)) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            } else {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            }
+        });
+    }
+}
+
+// Confirm password validation function
+function checkConfirmPassword() {
+    const passwordField = document.getElementById('regPassword');
+    const confirmPasswordField = document.getElementById('confirmPassword');
+    const hint = document.getElementById('confirmPasswordHint');
+    
+    if (!passwordField || !confirmPasswordField || !hint) return;
+    
+    const password = passwordField.value;
+    const confirmPassword = confirmPasswordField.value;
+    
+    if (confirmPassword.length === 0) {
+        hint.textContent = '';
+        hint.style.color = '';
+        confirmPasswordField.classList.remove('valid', 'invalid');
+        return;
+    }
+    
+    if (password === confirmPassword) {
+        hint.textContent = 'รหัสผ่านตรงกัน';
+        hint.style.color = '#10b981';
+        confirmPasswordField.classList.add('valid');
+        confirmPasswordField.classList.remove('invalid');
+    } else {
+        hint.textContent = 'รหัสผ่านไม่ตรงกัน';
+        hint.style.color = '#ef4444';
+        confirmPasswordField.classList.add('invalid');
+        confirmPasswordField.classList.remove('valid');
+    }
+}
+
+// Confirm new password validation function
+function checkConfirmNewPassword() {
+    const newPasswordField = document.getElementById('newPassword');
+    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
+    const hint = document.getElementById('confirmNewPasswordHint');
+    
+    if (!newPasswordField || !confirmNewPasswordField || !hint) return;
+    
+    const newPassword = newPasswordField.value;
+    const confirmNewPassword = confirmNewPasswordField.value;
+    
+    if (confirmNewPassword.length === 0) {
+        hint.textContent = '';
+        hint.style.color = '';
+        confirmNewPasswordField.classList.remove('valid', 'invalid');
+        return;
+    }
+    
+    if (newPassword === confirmNewPassword) {
+        hint.textContent = 'รหัสผ่านตรงกัน';
+        hint.style.color = '#10b981';
+        confirmNewPasswordField.classList.add('valid');
+        confirmNewPasswordField.classList.remove('invalid');
+    } else {
+        hint.textContent = 'รหัสผ่านไม่ตรงกัน';
+        hint.style.color = '#ef4444';
+        confirmNewPasswordField.classList.add('invalid');
+        confirmNewPasswordField.classList.remove('valid');
+    }
+}
+
+// Setup event listeners
+function setupEventListeners() {
+    // Login form submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+
+    // Register form submission
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
+
+    // Forgot password form submission
+    const forgotForm = document.getElementById('forgotForm');
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', handleForgotPassword);
+    }
+
+    // Reset password form submission
+    const resetForm = document.getElementById('resetForm');
+    if (resetForm) {
+        resetForm.addEventListener('submit', handleResetPassword);
+    }
+
+    // Modal action buttons
+    const tryAgainBtn = document.getElementById('tryAgain');
+    if (tryAgainBtn) {
+        tryAgainBtn.addEventListener('click', function() {
+            const errorModal = document.getElementById('errorModal');
+            if (errorModal) errorModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    }
+
+    // Quick login buttons
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', handleQuickLogin);
+    });
+
+    // Input focus animations
+    document.querySelectorAll('.form-input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+    });
+
+    // Close modals when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('success-modal') || e.target.classList.contains('error-modal')) {
+            e.target.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Enhanced keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // Close modals with Escape key
+            document.querySelectorAll('.success-modal.active, .error-modal.active').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
+// Handle login form submission
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const usernameField = document.getElementById('username');
+    const passwordField = document.getElementById('password');
+    const rememberField = document.getElementById('remember');
+    const submitBtn = e.target.querySelector('.login-btn');
+    
+    if (!usernameField || !passwordField) return;
+    
+    const username = usernameField.value.trim();
+    const password = passwordField.value;
+    const remember = rememberField ? rememberField.checked : false;
+    
+    if (!username || !password) {
+        showErrorModal('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+        return;
+    }
+    
+    // Disable submit button and show loading state
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
+    showLoading('กำลังเข้าสู่ระบบ');
+    
+    setTimeout(() => {
+        hideLoading();
+        
+        // Re-enable submit button
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
+        
+        const user = userDatabase[username];
+        if (user && user.password === password) {
+            // Set session data
+            currentUser = { ...user };
+            delete currentUser.password;
+            currentUser.loginTime = new Date().toISOString();
+            currentUser.rememberMe = remember;
+            
+            isLoggedIn = true;
+            rememberLogin = remember;
+            
+            // Store in both localStorage and sessionStorage
+            try {
+                const userDataStr = JSON.stringify(currentUser);
+                localStorage.setItem('scanCheckinUser', userDataStr);
+                localStorage.setItem('scanCheckinLoggedIn', 'true');
+                localStorage.setItem('scanCheckinRemember', remember.toString());
+                
+                sessionStorage.setItem('scanCheckinUser', userDataStr);
+                sessionStorage.setItem('scanCheckinLoggedIn', 'true');
+                sessionStorage.setItem('scanCheckinRemember', remember.toString());
+            } catch (e) {
+                console.warn('Could not store user session');
+            }
+            
+            showSuccessModal(
+                'เข้าสู่ระบบสำเร็จ!',
+                `ยินดีต้อนรับ ${user.firstName} ${user.lastName}`,
+                'login'
+            );
+        } else {
+            showErrorModal('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        }
+    }, 2000);
+}
+
+// Handle register form submission - แก้ไขให้บันทึกข้อมูลถาวร
+function handleRegister(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = getRegistrationFormData();
+    if (!formData) return;
+    
+    // Validation
+    if (!validateRegistrationForm(formData)) {
+        return;
+    }
+    
+    const submitBtn = e.target.querySelector('.login-btn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
+    showLoading('กำลังสมัครสมาชิก');
+    
+    setTimeout(() => {
+        hideLoading();
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
+        
+        // Create new user
+        const newUser = {
+            username: formData.username,
+            password: formData.password,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            studentId: formData.studentId,
+            class: formData.class,
+            role: formData.role,
+            birthDate: formData.birthDate,
+            roleDisplay: formData.role === 'student' ? 'นักเรียน' : 'ครู',
+            address: '',
+            attendanceRate: 0,
+            attendedDays: 0,
+            absentDays: 0,
+            showOnlineStatus: true,
+            emailNotifications: true,
+            browserNotifications: false,
+            registrationDate: new Date().toISOString()
+        };
+        
+        // Add to database
+        userDatabase[formData.username] = newUser;
+        
+        // บันทึกฐานข้อมูลผู้ใช้ลง localStorage
+        const saved = saveUserDatabase();
+        
+        if (saved) {
+            console.log('New user registered and saved:', formData.username);
+            showSuccessModal(
+                'สมัครสมาชิกสำเร็จ!',
+                `ยินดีต้อนรับ ${formData.firstName} ${formData.lastName} เข้าสู่ระบบ Scan Check-in`,
+                'register'
+            );
+        } else {
+            showErrorModal('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง');
+        }
+    }, 2500);
+}
+
+// Get registration form data
+function getRegistrationFormData() {
+    const fields = {
+        username: document.getElementById('regUsername'),
+        password: document.getElementById('regPassword'),
+        confirmPassword: document.getElementById('confirmPassword'),
+        firstName: document.getElementById('firstName'),
+        lastName: document.getElementById('lastName'),
+        email: document.getElementById('email'),
+        phone: document.getElementById('phone'),
+        studentId: document.getElementById('studentId'),
+        class: document.getElementById('class'),
+        role: document.getElementById('role'),
+        birthDate: document.getElementById('birthDate'),
+        acceptTerms: document.getElementById('acceptTerms')
+    };
+    
+    const formData = {};
+    for (const [key, field] of Object.entries(fields)) {
+        if (!field) return null;
+        formData[key] = field.type === 'checkbox' ? field.checked : field.value.trim();
+    }
+    
+    return formData;
+}
+
+// Handle forgot password form submission
+function handleForgotPassword(e) {
+    e.preventDefault();
+    
+    const usernameField = document.getElementById('forgotUsername');
+    const studentIdField = document.getElementById('forgotStudentId');
+    const birthDateField = document.getElementById('forgotBirthDate');
+    const submitBtn = e.target.querySelector('.login-btn');
+    
+    if (!usernameField || !studentIdField || !birthDateField) return;
+    
+    const username = usernameField.value.trim();
+    const studentId = studentIdField.value.trim();
+    const birthDate = birthDateField.value;
+    
+    if (!username || !studentId || !birthDate) {
+        showErrorModal('กรุณากรอกข้อมูลให้ครบถ้วน');
+        return;
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
+    showLoading('กำลังตรวจสอบข้อมูล');
+    
+    setTimeout(() => {
         hideLoading();
         
         if (submitBtn) {
@@ -2489,6 +3072,11 @@ window.debugGitHubPages = function() {
     console.log('- Home page:', createPageURL('index'));
     console.log('- Profile page:', createPageURL('Profile'));
     console.log('- Help page:', createPageURL('help'));
+    console.log('');
+    console.log('Available users for testing:');
+    console.log('- Username: student001, Password: password123');
+    console.log('- Username: teacher001, Password: teacher123');
+    console.log('- Username: admin, Password: admin123');
     console.log('=====================================');
     return config;
 };
@@ -2520,585 +3108,7 @@ function initWhenReady() {
 // Start initialization
 initWhenReady();
 
-console.log('Scan Check-in Registration System Loaded - GitHub Pages Compatible v2.0');
-                container.style.display = 'none';
-            }, 200);
-        }
-    });
-    
-    // Show selected container with animation
-    setTimeout(() => {
-        let targetContainer;
-        switch(formType) {
-            case 'register':
-                targetContainer = registerContainer;
-                break;
-            case 'forgot':
-                targetContainer = forgotContainer;
-                break;
-            case 'reset':
-                targetContainer = resetContainer;
-                break;
-            default:
-                targetContainer = loginContainer;
-        }
-        
-        if (targetContainer) {
-            targetContainer.style.display = 'block';
-            setTimeout(() => {
-                targetContainer.style.opacity = '1';
-                targetContainer.style.transform = 'translateY(0)';
-            }, 50);
-        }
-        
-        resetForms();
-    }, 200);
-}
-
-// Password toggle functionality
-function setupPasswordToggle(passwordId, toggleId, iconId) {
-    const toggleButton = document.getElementById(toggleId);
-    if (toggleButton) {
-        toggleButton.addEventListener('click', function() {
-            const passwordInput = document.getElementById(passwordId);
-            const toggleIcon = document.getElementById(iconId);
-            
-            if (passwordInput && toggleIcon) {
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    toggleIcon.name = 'eye-off-outline';
-                } else {
-                    passwordInput.type = 'password';
-                    toggleIcon.name = 'eye-outline';
-                }
-            }
-        });
-    }
-}
-
-// Setup all password toggles
-function setupPasswordToggles() {
-    setupPasswordToggle('password', 'passwordToggle', 'toggleIcon');
-    setupPasswordToggle('regPassword', 'regPasswordToggle', 'regToggleIcon');
-    setupPasswordToggle('confirmPassword', 'confirmPasswordToggle', 'confirmToggleIcon');
-    setupPasswordToggle('newPassword', 'newPasswordToggle', 'newToggleIcon');
-    setupPasswordToggle('confirmNewPassword', 'confirmNewPasswordToggle', 'confirmNewToggleIcon');
-}
-
-// Setup validation with enhanced feedback
-function setupValidation() {
-    // Username validation
-    const regUsernameField = document.getElementById('regUsername');
-    if (regUsernameField) {
-        regUsernameField.addEventListener('input', function() {
-            const username = this.value;
-            const hint = document.getElementById('usernameHint');
-            
-            if (!hint) return;
-            
-            if (username.length === 0) {
-                hint.textContent = '';
-                hint.style.color = '';
-                this.classList.remove('valid', 'invalid');
-                return;
-            }
-            
-            if (username.length < 4) {
-                hint.textContent = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร';
-                hint.style.color = '#ef4444';
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-            } else if (userDatabase[username]) {
-                hint.textContent = 'ชื่อผู้ใช้นี้ถูกใช้แล้ว';
-                hint.style.color = '#ef4444';
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-            } else {
-                hint.textContent = 'ชื่อผู้ใช้พร้อมใช้งาน';
-                hint.style.color = '#10b981';
-                this.classList.add('valid');
-                this.classList.remove('invalid');
-            }
-        });
-    }
-
-    // Password validation
-    const regPasswordField = document.getElementById('regPassword');
-    if (regPasswordField) {
-        regPasswordField.addEventListener('input', function() {
-            const password = this.value;
-            const hint = document.getElementById('passwordHint');
-            
-            if (!hint) return;
-            
-            if (password.length === 0) {
-                hint.textContent = '';
-                hint.style.color = '';
-                this.classList.remove('valid', 'invalid');
-                return;
-            }
-            
-            if (password.length < 6) {
-                hint.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-                hint.style.color = '#ef4444';
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-            } else {
-                hint.textContent = 'รหัสผ่านแข็งแรง';
-                hint.style.color = '#10b981';
-                this.classList.add('valid');
-                this.classList.remove('invalid');
-            }
-            
-            // Check confirm password if filled
-            const confirmPasswordField = document.getElementById('confirmPassword');
-            if (confirmPasswordField && confirmPasswordField.value) {
-                checkConfirmPassword();
-            }
-        });
-    }
-
-    // Confirm password validation
-    const confirmPasswordField = document.getElementById('confirmPassword');
-    if (confirmPasswordField) {
-        confirmPasswordField.addEventListener('input', checkConfirmPassword);
-    }
-
-    // New password validation for reset form
-    const newPasswordField = document.getElementById('newPassword');
-    if (newPasswordField) {
-        newPasswordField.addEventListener('input', function() {
-            const password = this.value;
-            const hint = document.getElementById('newPasswordHint');
-            
-            if (!hint) return;
-            
-            if (password.length === 0) {
-                hint.textContent = '';
-                hint.style.color = '';
-                this.classList.remove('valid', 'invalid');
-                return;
-            }
-            
-            if (password.length < 6) {
-                hint.textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-                hint.style.color = '#ef4444';
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-            } else {
-                hint.textContent = 'รหัสผ่านแข็งแรง';
-                hint.style.color = '#10b981';
-                this.classList.add('valid');
-                this.classList.remove('invalid');
-            }
-            
-            // Check confirm password if filled
-            const confirmNewPasswordField = document.getElementById('confirmNewPassword');
-            if (confirmNewPasswordField && confirmNewPasswordField.value) {
-                checkConfirmNewPassword();
-            }
-        });
-    }
-
-    // Confirm new password validation
-    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
-    if (confirmNewPasswordField) {
-        confirmNewPasswordField.addEventListener('input', checkConfirmNewPassword);
-    }
-
-    // Role change handler
-    const roleField = document.getElementById('role');
-    if (roleField) {
-        roleField.addEventListener('change', function() {
-            const role = this.value;
-            const studentIdField = document.getElementById('studentId');
-            const studentIdLabel = studentIdField ? studentIdField.parentElement.previousElementSibling : null;
-            
-            if (studentIdLabel && studentIdField) {
-                if (role === 'student') {
-                    studentIdLabel.textContent = 'รหัสนักเรียน';
-                    studentIdField.placeholder = 'เช่น 67010001';
-                } else if (role === 'teacher') {
-                    studentIdLabel.textContent = 'รหัสครู';
-                    studentIdField.placeholder = 'เช่น T001';
-                } else {
-                    studentIdLabel.textContent = 'รหัสประจำตัว';
-                    studentIdField.placeholder = 'กรอกรหัสประจำตัว';
-                }
-            }
-        });
-    }
-
-    // Real-time email validation
-    const emailField = document.getElementById('email');
-    if (emailField) {
-        emailField.addEventListener('input', function() {
-            const email = this.value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (email.length === 0) {
-                this.classList.remove('valid', 'invalid');
-            } else if (emailRegex.test(email)) {
-                this.classList.add('valid');
-                this.classList.remove('invalid');
-            } else {
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-            }
-        });
-    }
-
-    // Real-time phone validation
-    const phoneField = document.getElementById('phone');
-    if (phoneField) {
-        phoneField.addEventListener('input', function() {
-            let phone = this.value.replace(/[-\s]/g, '');
-            const phoneRegex = /^[0-9]{10}$/;
-            
-            if (phone.length === 0) {
-                this.classList.remove('valid', 'invalid');
-            } else if (phoneRegex.test(phone)) {
-                this.classList.add('valid');
-                this.classList.remove('invalid');
-            } else {
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-            }
-        });
-    }
-}
-
-// Confirm password validation function
-function checkConfirmPassword() {
-    const passwordField = document.getElementById('regPassword');
-    const confirmPasswordField = document.getElementById('confirmPassword');
-    const hint = document.getElementById('confirmPasswordHint');
-    
-    if (!passwordField || !confirmPasswordField || !hint) return;
-    
-    const password = passwordField.value;
-    const confirmPassword = confirmPasswordField.value;
-    
-    if (confirmPassword.length === 0) {
-        hint.textContent = '';
-        hint.style.color = '';
-        confirmPasswordField.classList.remove('valid', 'invalid');
-        return;
-    }
-    
-    if (password === confirmPassword) {
-        hint.textContent = 'รหัสผ่านตรงกัน';
-        hint.style.color = '#10b981';
-        confirmPasswordField.classList.add('valid');
-        confirmPasswordField.classList.remove('invalid');
-    } else {
-        hint.textContent = 'รหัสผ่านไม่ตรงกัน';
-        hint.style.color = '#ef4444';
-        confirmPasswordField.classList.add('invalid');
-        confirmPasswordField.classList.remove('valid');
-    }
-}
-
-// Confirm new password validation function
-function checkConfirmNewPassword() {
-    const newPasswordField = document.getElementById('newPassword');
-    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
-    const hint = document.getElementById('confirmNewPasswordHint');
-    
-    if (!newPasswordField || !confirmNewPasswordField || !hint) return;
-    
-    const newPassword = newPasswordField.value;
-    const confirmNewPassword = confirmNewPasswordField.value;
-    
-    if (confirmNewPassword.length === 0) {
-        hint.textContent = '';
-        hint.style.color = '';
-        confirmNewPasswordField.classList.remove('valid', 'invalid');
-        return;
-    }
-    
-    if (newPassword === confirmNewPassword) {
-        hint.textContent = 'รหัสผ่านตรงกัน';
-        hint.style.color = '#10b981';
-        confirmNewPasswordField.classList.add('valid');
-        confirmNewPasswordField.classList.remove('invalid');
-    } else {
-        hint.textContent = 'รหัสผ่านไม่ตรงกัน';
-        hint.style.color = '#ef4444';
-        confirmNewPasswordField.classList.add('invalid');
-        confirmNewPasswordField.classList.remove('valid');
-    }
-}
-
-// Setup event listeners
-function setupEventListeners() {
-    // Login form submission
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-
-    // Register form submission
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
-    }
-
-    // Forgot password form submission
-    const forgotForm = document.getElementById('forgotForm');
-    if (forgotForm) {
-        forgotForm.addEventListener('submit', handleForgotPassword);
-    }
-
-    // Reset password form submission
-    const resetForm = document.getElementById('resetForm');
-    if (resetForm) {
-        resetForm.addEventListener('submit', handleResetPassword);
-    }
-
-    // Modal action buttons
-    const tryAgainBtn = document.getElementById('tryAgain');
-    if (tryAgainBtn) {
-        tryAgainBtn.addEventListener('click', function() {
-            const errorModal = document.getElementById('errorModal');
-            if (errorModal) errorModal.classList.remove('active');
-        });
-    }
-
-    // Quick login buttons
-    document.querySelectorAll('.quick-btn').forEach(btn => {
-        btn.addEventListener('click', handleQuickLogin);
-    });
-
-    // Input focus animations
-    document.querySelectorAll('.form-input').forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-        });
-        
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                this.parentElement.classList.remove('focused');
-            }
-        });
-    });
-
-    // Close modals when clicking outside
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('success-modal') || e.target.classList.contains('error-modal')) {
-            e.target.classList.remove('active');
-        }
-    });
-
-    // Enhanced keyboard navigation
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            // Close modals with Escape key
-            document.querySelectorAll('.success-modal.active, .error-modal.active').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-    });
-}
-
-// Handle login form submission
-function handleLogin(e) {
-    e.preventDefault();
-    
-    const usernameField = document.getElementById('username');
-    const passwordField = document.getElementById('password');
-    const rememberField = document.getElementById('remember');
-    const submitBtn = e.target.querySelector('.login-btn');
-    
-    if (!usernameField || !passwordField) return;
-    
-    const username = usernameField.value.trim();
-    const password = passwordField.value;
-    const remember = rememberField ? rememberField.checked : false;
-    
-    if (!username || !password) {
-        showErrorModal('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
-        return;
-    }
-    
-    // Disable submit button and show loading state
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-    }
-    
-    showLoading('กำลังเข้าสู่ระบบ');
-    
-    setTimeout(() => {
-        hideLoading();
-        
-        // Re-enable submit button
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        }
-        
-        const user = userDatabase[username];
-        if (user && user.password === password) {
-            // Set session data
-            currentUser = { ...user };
-            delete currentUser.password;
-            currentUser.loginTime = new Date().toISOString();
-            currentUser.rememberMe = remember;
-            
-            isLoggedIn = true;
-            rememberLogin = remember;
-            
-            // Store in both localStorage and sessionStorage
-            try {
-                const userDataStr = JSON.stringify(currentUser);
-                localStorage.setItem('scanCheckinUser', userDataStr);
-                localStorage.setItem('scanCheckinLoggedIn', 'true');
-                localStorage.setItem('scanCheckinRemember', remember.toString());
-                
-                sessionStorage.setItem('scanCheckinUser', userDataStr);
-                sessionStorage.setItem('scanCheckinLoggedIn', 'true');
-                sessionStorage.setItem('scanCheckinRemember', remember.toString());
-            } catch (e) {
-                console.warn('Could not store user session');
-            }
-            
-            showSuccessModal(
-                'เข้าสู่ระบบสำเร็จ!',
-                `ยินดีต้อนรับ ${user.firstName} ${user.lastName}`,
-                'login'
-            );
-        } else {
-            showErrorModal('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
-        }
-    }, 2000);
-}
-
-// Handle register form submission - แก้ไขให้บันทึกข้อมูลถาวร
-function handleRegister(e) {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = getRegistrationFormData();
-    if (!formData) return;
-    
-    // Validation
-    if (!validateRegistrationForm(formData)) {
-        return;
-    }
-    
-    const submitBtn = e.target.querySelector('.login-btn');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-    }
-    
-    showLoading('กำลังสมัครสมาชิก');
-    
-    setTimeout(() => {
-        hideLoading();
-        
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        }
-        
-        // Create new user
-        const newUser = {
-            username: formData.username,
-            password: formData.password,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            phone: formData.phone,
-            studentId: formData.studentId,
-            class: formData.class,
-            role: formData.role,
-            birthDate: formData.birthDate,
-            roleDisplay: formData.role === 'student' ? 'นักเรียน' : 'ครู',
-            address: '',
-            attendanceRate: 0,
-            attendedDays: 0,
-            absentDays: 0,
-            showOnlineStatus: true,
-            emailNotifications: true,
-            browserNotifications: false,
-            registrationDate: new Date().toISOString()
-        };
-        
-        // Add to database
-        userDatabase[formData.username] = newUser;
-        
-        // บันทึกฐานข้อมูลผู้ใช้ลง localStorage
-        const saved = saveUserDatabase();
-        
-        if (saved) {
-            console.log('New user registered and saved:', formData.username);
-            showSuccessModal(
-                'สมัครสมาชิกสำเร็จ!',
-                `ยินดีต้อนรับ ${formData.firstName} ${formData.lastName} เข้าสู่ระบบ Scan Check-in`,
-                'register'
-            );
-        } else {
-            showErrorModal('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง');
-        }
-    }, 2500);
-}
-
-// Get registration form data
-function getRegistrationFormData() {
-    const fields = {
-        username: document.getElementById('regUsername'),
-        password: document.getElementById('regPassword'),
-        confirmPassword: document.getElementById('confirmPassword'),
-        firstName: document.getElementById('firstName'),
-        lastName: document.getElementById('lastName'),
-        email: document.getElementById('email'),
-        phone: document.getElementById('phone'),
-        studentId: document.getElementById('studentId'),
-        class: document.getElementById('class'),
-        role: document.getElementById('role'),
-        birthDate: document.getElementById('birthDate'),
-        acceptTerms: document.getElementById('acceptTerms')
-    };
-    
-    const formData = {};
-    for (const [key, field] of Object.entries(fields)) {
-        if (!field) return null;
-        formData[key] = field.type === 'checkbox' ? field.checked : field.value.trim();
-    }
-    
-    return formData;
-}
-
-// Handle forgot password form submission
-function handleForgotPassword(e) {
-    e.preventDefault();
-    
-    const usernameField = document.getElementById('forgotUsername');
-    const studentIdField = document.getElementById('forgotStudentId');
-    const birthDateField = document.getElementById('forgotBirthDate');
-    const submitBtn = e.target.querySelector('.login-btn');
-    
-    if (!usernameField || !studentIdField || !birthDateField) return;
-    
-    const username = usernameField.value.trim();
-    const studentId = studentIdField.value.trim();
-    const birthDate = birthDateField.value;
-    
-    if (!username || !studentId || !birthDate) {
-        showErrorModal('กรุณากรอกข้อมูลให้ครบถ้วน');
-        return;
-    }
-    
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-    }
-    
-    showLoading('กำลังตรวจสอบข้อมูล');
-    
-    setTimeout(() => {
+console.log('Scan Check-in Registration System Loaded - GitHub Pages Compatible v2.1');
         </script>
     </body>
     </html>
