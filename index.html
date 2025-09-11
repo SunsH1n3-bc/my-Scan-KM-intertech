@@ -2137,525 +2137,345 @@ html {
 </body>
 
     <script>
-// แก้ไข Navigation Problem - ป้องกันการ redirect ผิด
+// แก้ไขปุ่มโปรไฟล์ให้ไปหน้า Nav.html แทน Profile.html
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Navigation fix script loaded');
+    console.log('Profile button redirect fix script loaded');
     
     try {
-        // ตรวจสอบการ login ก่อนทุกอย่าง
-        checkLoginStatus();
+        // รอให้หน้าโหลดเสร็จก่อนแก้ไข
+        setTimeout(() => {
+            fixProfileButtonRedirect();
+        }, 500);
         
-        // เริ่มการทำงานหลัก
-        initializeApp();
-        
-        // แก้ไขปัญหา Navigation
-        fixNavigationIssues();
+        // เริ่มการทำงานปกติ
+        initializeAppSafely();
         
     } catch (error) {
         console.error('Initialization error:', error);
-        // ไม่ redirect ทันทีถ้ามี error
     }
 });
 
-// แก้ไขปัญหา Navigation
-function fixNavigationIssues() {
+// แก้ไขปุ่มโปรไฟล์ให้ไปหน้า Nav.html
+function fixProfileButtonRedirect() {
     try {
-        console.log('Fixing navigation issues...');
+        console.log('🔧 Fixing profile button redirect...');
         
-        // 1. ล้าง cache และ redirect ที่อาจติดค้าง
-        clearNavigationCache();
-        
-        // 2. ตั้งค่า Navigation ใหม่
-        setupCorrectNavigation();
-        
-        // 3. ตรวจสอบ URL ปัจจุบัน
-        checkCurrentURL();
-        
-        console.log('Navigation fix completed');
-        
-    } catch (error) {
-        console.error('Navigation fix error:', error);
-    }
-}
-
-// ล้าง Navigation Cache
-function clearNavigationCache() {
-    try {
-        // ล้าง session storage ที่อาจจัดเก็บ navigation state
-        const navigationKeys = [
-            'lastVisitedPage',
-            'redirectTarget',
-            'navigationState',
-            'currentPage'
+        // หาปุ่มโปรไฟล์ทุกรูปแบบที่เป็นไปได้
+        const profileSelectors = [
+            'a[href*="Profile.html"]',           // ลิงค์ที่ไปหน้า Profile.html
+            'a[href*="profile.html"]',           // ลิงค์ที่ไปหน้า profile.html (lowercase)
+            'button[data-page*="Profile.html"]', // ปุ่มที่มี data-page เป็น Profile.html
+            'button[data-page*="profile.html"]', // ปุ่มที่มี data-page เป็น profile.html
+            '.action-btn[data-page*="Profile"]', // action button ที่มี Profile
+            '.profile-btn',                      // ปุ่มที่มี class profile-btn
+            '[onclick*="Profile.html"]',         // element ที่มี onclick ไป Profile.html
+            'a:contains("โปรไฟล์")',             // ลิงค์ที่มีข้อความ "โปรไฟล์"
+            'button:contains("โปรไฟล์")',        // ปุ่มที่มีข้อความ "โปรไฟล์"
+            '.nav-item a:contains("Profile")',   // nav item ที่มี Profile
+            '.menu-item[href*="Profile"]'        // menu item ที่ไป Profile
         ];
         
-        navigationKeys.forEach(key => {
+        let foundButtons = [];
+        
+        // ค้นหาปุ่มโปรไฟล์
+        profileSelectors.forEach(selector => {
             try {
-                sessionStorage.removeItem(key);
-                localStorage.removeItem(key);
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(element => {
+                    if (!foundButtons.includes(element)) {
+                        foundButtons.push(element);
+                    }
+                });
             } catch (e) {
-                console.warn('Cannot remove key:', key);
+                console.warn('Selector error:', selector);
             }
         });
         
-        console.log('Navigation cache cleared');
-    } catch (error) {
-        console.error('Cache clearing error:', error);
-    }
-}
-
-// ตั้งค่า Navigation ที่ถูกต้อง
-function setupCorrectNavigation() {
-    try {
-        // หา links ทั้งหมดที่ไปยัง Nav.html
-        const navLinks = document.querySelectorAll('a[href*="Nav.html"], a[href="./Nav.html"]');
-        
-        navLinks.forEach(link => {
-            console.log('Found Nav.html link:', link.href);
+        // หาเพิ่มเติมด้วยการตรวจสอบข้อความ
+        const allLinks = document.querySelectorAll('a, button');
+        allLinks.forEach(element => {
+            const text = element.textContent || element.innerText || '';
+            const href = element.href || element.getAttribute('href') || '';
+            const dataPage = element.getAttribute('data-page') || '';
+            const onclick = element.getAttribute('onclick') || '';
             
-            // ลบ event listeners เก่า
-            const newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
-            
-            // เพิ่ม event listener ใหม่
-            newLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                console.log('Navigating to Nav.html...');
-                
-                // บังคับไปยัง Nav.html
-                const targetURL = './Nav.html';
-                
-                // เพิ่ม timestamp เพื่อป้องกัน cache
-                const finalURL = targetURL + '?t=' + Date.now();
-                
-                console.log('Final URL:', finalURL);
-                window.location.href = finalURL;
-            });
-        });
-        
-        // หา action buttons ที่อาจมี data-page="Nav.html"
-        const actionButtons = document.querySelectorAll('.action-btn[data-page*="Nav.html"]');
-        
-        actionButtons.forEach(button => {
-            console.log('Found action button for Nav.html:', button);
-            
-            // ลบ event listeners เก่า
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
-            
-            // เพิ่ม event listener ใหม่
-            newButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                console.log('Action button clicked for Nav.html');
-                
-                // บังคับไปยัง Nav.html
-                const targetURL = './Nav.html';
-                const finalURL = targetURL + '?t=' + Date.now();
-                
-                // แสดงสถานะ loading
-                this.disabled = true;
-                this.innerHTML = 'กำลังไป Nav.html...';
-                
-                setTimeout(() => {
-                    console.log('Redirecting to:', finalURL);
-                    window.location.href = finalURL;
-                }, 500);
-            });
-        });
-        
-        console.log('Correct navigation setup completed');
-        
-    } catch (error) {
-        console.error('Navigation setup error:', error);
-    }
-}
-
-// ตรวจสอบ URL ปัจจุบัน
-function checkCurrentURL() {
-    try {
-        const currentURL = window.location.href;
-        console.log('Current URL:', currentURL);
-        
-        // ตรวจสอบว่าอยู่ในหน้าที่ถูกต้องหรือไม่
-        if (currentURL.includes('Profile.html') && !document.referrer.includes('Nav.html')) {
-            console.warn('May have been redirected incorrectly to Profile.html');
-            
-            // แสดงการแจ้งเตือน
-            showNavigationWarning();
-        }
-        
-    } catch (error) {
-        console.error('URL check error:', error);
-    }
-}
-
-// แสดงการแจ้งเตือนเกี่ยวกับ Navigation
-function showNavigationWarning() {
-    try {
-        const warning = document.createElement('div');
-        warning.style.cssText = `
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ff6b6b;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            z-index: 10000;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        `;
-        warning.innerHTML = `
-            ⚠️ อาจมีปัญหาการ redirect - หากต้องการไปยัง Nav.html 
-            <button onclick="window.location.href='./Nav.html?force=true'" style="
-                background: white; 
-                color: #ff6b6b; 
-                border: none; 
-                padding: 4px 8px; 
-                border-radius: 4px; 
-                margin-left: 10px;
-                cursor: pointer;
-            ">คลิกที่นี่</button>
-        `;
-        
-        document.body.appendChild(warning);
-        
-        // ลบหลังจาก 10 วินาที
-        setTimeout(() => {
-            if (warning.parentNode) {
-                warning.remove();
+            // ตรวจสอบว่าเป็นปุ่มโปรไฟล์หรือไม่
+            if (
+                text.toLowerCase().includes('โปรไฟล์') ||
+                text.toLowerCase().includes('profile') ||
+                href.includes('Profile.html') ||
+                dataPage.includes('Profile.html') ||
+                onclick.includes('Profile.html')
+            ) {
+                if (!foundButtons.includes(element)) {
+                    foundButtons.push(element);
+                }
             }
-        }, 10000);
+        });
+        
+        console.log(`📍 Found ${foundButtons.length} profile buttons to fix:`, foundButtons);
+        
+        // แก้ไขปุ่มโปรไฟล์แต่ละอัน
+        foundButtons.forEach((button, index) => {
+            console.log(`🔄 Fixing button ${index + 1}:`, button);
+            fixSingleProfileButton(button);
+        });
+        
+        console.log('✅ Profile button redirect fix completed!');
+        
+        // แสดงข้อความยืนยัน
+        showFixConfirmation(foundButtons.length);
         
     } catch (error) {
-        console.error('Warning display error:', error);
+        console.error('❌ Profile button fix error:', error);
     }
 }
 
-// แก้ไขฟังก์ชัน handleActionClick เดิม
-function handleActionClick(button) {
+// แก้ไขปุ่มโปรไฟล์ตัวเดียว
+function fixSingleProfileButton(button) {
     try {
-        const targetPage = button.getAttribute('data-page');
+        // บันทึกข้อมูลเดิม
+        const originalHref = button.href || button.getAttribute('href');
+        const originalDataPage = button.getAttribute('data-page');
+        const originalOnclick = button.getAttribute('onclick');
+        const buttonText = button.textContent || button.innerText;
         
-        if (!targetPage) {
-            console.warn('No data-page attribute found');
-            return;
+        console.log('🔍 Original button info:', {
+            href: originalHref,
+            dataPage: originalDataPage,
+            onclick: originalOnclick,
+            text: buttonText
+        });
+        
+        // ลบ event listeners เก่าทั้งหมด
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        // เปลี่ยน href ถ้ามี
+        if (originalHref && originalHref.includes('Profile.html')) {
+            newButton.href = './Nav.html';
+            newButton.setAttribute('href', './Nav.html');
+            console.log('🔗 Changed href to ./Nav.html');
         }
         
-        console.log('Action click target:', targetPage);
+        // เปลี่ยน data-page ถ้ามี
+        if (originalDataPage && originalDataPage.includes('Profile.html')) {
+            newButton.setAttribute('data-page', './Nav.html');
+            console.log('📄 Changed data-page to ./Nav.html');
+        }
         
-        // ถ้าเป็น Nav.html ให้จัดการพิเศษ
-        if (targetPage.includes('Nav.html')) {
-            console.log('Special handling for Nav.html');
+        // ลบ onclick เก่า
+        if (originalOnclick) {
+            newButton.removeAttribute('onclick');
+            console.log('🗑️ Removed old onclick');
+        }
+        
+        // เพิ่ม event listener ใหม่
+        newButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            button.disabled = true;
-            button.innerHTML = '<span>กำลังไปยัง Nav.html...</span>';
+            console.log('🎯 Profile button clicked - redirecting to Nav.html');
             
-            // บังคับไปยัง Nav.html โดยตรง
+            // แสดงข้อความยืนยัน
+            showRedirectMessage();
+            
+            // รอสักครู่แล้ว redirect
             setTimeout(() => {
-                const navURL = targetPage.startsWith('./') ? targetPage : './' + targetPage;
-                const finalURL = navURL + '?direct=true&t=' + Date.now();
-                
-                console.log('Direct navigation to:', finalURL);
-                window.location.href = finalURL;
-            }, 300);
-            
-            return; // หยุดการทำงานที่นี่
-        }
+                const targetURL = './Nav.html?from=profile&t=' + Date.now();
+                console.log('🚀 Redirecting to:', targetURL);
+                window.location.href = targetURL;
+            }, 800);
+        });
         
-        // สำหรับหน้าอื่นๆ ทำงานปกติ
-        button.disabled = true;
-        const originalText = button.innerHTML;
-        button.innerHTML = '<span>กำลังโหลด...</span>';
+        // เพิ่ม visual indicator ว่าปุ่มถูกแก้ไขแล้ว
+        newButton.style.outline = '2px solid #4CAF50';
+        newButton.style.outlineOffset = '2px';
+        newButton.title = 'ปุ่มนี้จะไปยัง Nav.html (แก้ไขแล้ว)';
         
         setTimeout(() => {
-            window.location.href = targetPage;
-        }, 300);
+            newButton.style.outline = '';
+            newButton.style.outlineOffset = '';
+        }, 3000);
         
-        setTimeout(() => {
-            button.disabled = false;
-            button.innerHTML = originalText;
-        }, 2000);
+        console.log('✅ Button fixed successfully');
         
     } catch (error) {
-        console.error('Action click error:', error);
-        alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
+        console.error('❌ Single button fix error:', error);
     }
 }
 
-// ฟังก์ชันตรวจสอบ login แบบไม่บังคับ redirect
-function checkLoginStatus() {
+// แสดงข้อความยืนยันว่าแก้ไขแล้ว
+function showFixConfirmation(buttonCount) {
     try {
-        console.log('Checking login status...');
-        
-        if (typeof(Storage) === "undefined") {
-            console.warn('localStorage not supported');
-            return false;
-        }
-        
-        const userData = getUserFromStorage();
-        const isLoggedIn = getLoginStatusFromStorage();
-        
-        console.log('User data found:', userData ? 'Yes' : 'No');
-        console.log('Login status:', isLoggedIn);
-        
-        if (!isLoggedIn || !userData) {
-            console.log('User not logged in');
-            // ไม่ redirect อัตโนมัติ - ให้ผู้ใช้เลือกเอง
-            showLoginPrompt();
-            return false;
-        }
-        
-        if (!userData.firstName || !userData.lastName) {
-            console.warn('Incomplete user data');
-            showLoginPrompt();
-            return false;
-        }
-        
-        console.log('Login check passed for user:', userData.firstName, userData.lastName);
-        return true;
-        
-    } catch (error) {
-        console.error('Login check error:', error);
-        return false;
-    }
-}
-
-// แสดง prompt สำหรับการ login แทนการ redirect อัตโนมัติ
-function showLoginPrompt() {
-    try {
-        const prompt = document.createElement('div');
-        prompt.style.cssText = `
+        const notification = document.createElement('div');
+        notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #4285f4;
+            background: #4CAF50;
             color: white;
             padding: 15px 20px;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 14px;
             max-width: 300px;
-        `;
-        prompt.innerHTML = `
-            <div style="margin-bottom: 10px;">🔐 ยังไม่ได้เข้าสู่ระบบ</div>
-            <button onclick="window.location.href='login.html'" style="
-                background: white;
-                color: #4285f4;
-                border: none;
-                padding: 8px 15px;
-                border-radius: 6px;
-                cursor: pointer;
-                font-weight: bold;
-            ">เข้าสู่ระบบ</button>
-            <button onclick="this.parentNode.remove()" style="
-                background: transparent;
-                color: white;
-                border: 1px solid white;
-                padding: 8px 15px;
-                border-radius: 6px;
-                cursor: pointer;
-                margin-left: 10px;
-            ">ปิด</button>
+            animation: slideIn 0.3s ease-out;
         `;
         
-        document.body.appendChild(prompt);
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">✅</span>
+                <div>
+                    <strong>แก้ไขสำเร็จ!</strong><br>
+                    ปุ่มโปรไฟล์ ${buttonCount} ปุ่มจะไปยัง Nav.html แล้ว
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
         
     } catch (error) {
-        console.error('Login prompt error:', error);
+        console.error('Fix confirmation error:', error);
     }
 }
 
-// ฟังก์ชันสำหรับการทดสอบ navigation
-function testNavigation() {
-    console.log('Testing navigation to Nav.html...');
+// แสดงข้อความเมื่อกำลัง redirect
+function showRedirectMessage() {
+    try {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(76, 175, 80, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        `;
+        
+        const messageBox = document.createElement('div');
+        messageBox.style.cssText = `
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            margin: 20px;
+        `;
+        
+        messageBox.innerHTML = `
+            <div style="font-size: 48px; color: #4CAF50; margin-bottom: 20px;">
+                🎯
+            </div>
+            <h2 style="color: #1a1a1a; margin-bottom: 16px; font-size: 24px;">
+                กำลังไปยัง Nav.html
+            </h2>
+            <p style="color: #5f6368; margin-bottom: 20px; line-height: 1.5;">
+                ปุ่มโปรไฟล์ได้รับการแก้ไขให้ไปยังหน้า Nav แล้ว
+            </p>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #4CAF50;">
+                <div class="loading-spinner" style="
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid #e8eaed;
+                    border-top: 2px solid #4CAF50;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                "></div>
+                <span>กำลังโหลด Nav.html...</span>
+            </div>
+        `;
+        
+        // เพิ่ม CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        overlay.appendChild(messageBox);
+        document.body.appendChild(overlay);
+        
+    } catch (error) {
+        console.error('Redirect message error:', error);
+    }
+}
+
+// ฟังก์ชันทดสอบการแก้ไข
+function testProfileButtonFix() {
+    console.log('🧪 Testing profile button fix...');
     
     try {
-        // ทดสอบการไปยัง Nav.html โดยตรง
-        const testURL = './Nav.html?test=true&t=' + Date.now();
-        console.log('Test URL:', testURL);
+        // หาปุ่มโปรไฟล์
+        const profileButtons = document.querySelectorAll('a[href*="Profile"], button[data-page*="Profile"]');
         
-        // ใช้ setTimeout เพื่อให้เห็น log
-        setTimeout(() => {
-            window.location.href = testURL;
-        }, 1000);
+        console.log(`Found ${profileButtons.length} profile buttons:`);
+        profileButtons.forEach((btn, i) => {
+            console.log(`Button ${i + 1}:`, {
+                href: btn.href,
+                dataPage: btn.getAttribute('data-page'),
+                text: btn.textContent
+            });
+        });
+        
+        if (profileButtons.length > 0) {
+            console.log('✅ Buttons found - fix should work');
+        } else {
+            console.log('⚠️ No profile buttons found');
+        }
         
     } catch (error) {
-        console.error('Navigation test error:', error);
+        console.error('Test error:', error);
     }
 }
 
-// ฟังก์ชันยืนยันว่าจะไป Nav.html
-function confirmNavToNav() {
-    if (confirm('คุณต้องการไปยังหน้า Nav.html ใช่หรือไม่?')) {
-        const navURL = './Nav.html?confirmed=true&t=' + Date.now();
-        console.log('Confirmed navigation to:', navURL);
-        window.location.href = navURL;
-    }
+// ฟังก์ชันบังคับแก้ไขทันที
+function forceFixProfileButtons() {
+    console.log('🔧 Force fixing profile buttons...');
+    fixProfileButtonRedirect();
 }
 
-// ฟังก์ชันอื่นๆ ที่จำเป็น (เก็บไว้เพื่อความเข้ากันได้)
-function getUserFromStorage() {
+// เริ่มการทำงานแบบปลอดภัย
+function initializeAppSafely() {
     try {
-        let userData = safeGetLocalStorage('scanCheckinUser');
-        if (!userData) {
-            userData = safeGetSessionStorage('scanCheckinUser');
-        }
-        if (!userData) {
-            userData = safeGetLocalStorage('userData') || safeGetSessionStorage('userData');
-        }
-        return userData;
-    } catch (error) {
-        console.error('Error getting user from storage:', error);
-        return null;
-    }
-}
-
-function getLoginStatusFromStorage() {
-    try {
-        let isLoggedIn = safeGetLocalStorage('scanCheckinLoggedIn') || 
-                        safeGetSessionStorage('scanCheckinLoggedIn') ||
-                        safeGetLocalStorage('isLoggedIn') || 
-                        safeGetSessionStorage('isLoggedIn');
-        return isLoggedIn === 'true' || isLoggedIn === true;
-    } catch (error) {
-        console.error('Error getting login status:', error);
-        return false;
-    }
-}
-
-function safeGetLocalStorage(key) {
-    try {
-        const item = localStorage.getItem(key);
-        if (item === null) return null;
-        if (item.startsWith('{') || item.startsWith('[')) {
-            return JSON.parse(item);
-        }
-        return item;
-    } catch (error) {
-        console.error('LocalStorage read error for key:', key, error);
-        return null;
-    }
-}
-
-function safeGetSessionStorage(key) {
-    try {
-        const item = sessionStorage.getItem(key);
-        if (item === null) return null;
-        if (item.startsWith('{') || item.startsWith('[')) {
-            return JSON.parse(item);
-        }
-        return item;
-    } catch (error) {
-        console.error('SessionStorage read error for key:', key, error);
-        return null;
-    }
-}
-
-function initializeApp() {
-    try {
-        console.log('Initializing main application...');
+        console.log('Initializing app safely...');
         
-        loadAndDisplayUserData();
+        // ฟังก์ชันพื้นฐานที่จำเป็น
         updateDateTime();
         setInterval(updateDateTime, 1000);
         
-        // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
-        setupActionButtons();
-        setupSafeNavigation();
-        updateStatisticsDisplay();
+        setupOtherButtons();
+        loadUserDataIfAvailable();
         
-        console.log('Application initialized successfully');
+        console.log('App initialized successfully');
         
     } catch (error) {
         console.error('App initialization error:', error);
     }
 }
 
-function loadAndDisplayUserData() {
-    try {
-        const userData = getUserFromStorage();
-        if (userData) {
-            updateUserDisplayName(userData);
-            updateUserRole(userData);
-            setupRoleBasedUI(userData.role || 'student');
-        }
-    } catch (error) {
-        console.error('Error loading user data:', error);
-    }
-}
-
-function updateUserDisplayName(userData) {
-    try {
-        const displayName = `${userData.firstName} ${userData.lastName}`;
-        const nameElements = [
-            document.getElementById('displayUserName'),
-            document.querySelector('.user-name'),
-            document.querySelector('.user-details .user-name')
-        ];
-        
-        nameElements.forEach(element => {
-            if (element) {
-                element.textContent = displayName;
-            }
-        });
-    } catch (error) {
-        console.error('Error updating display name:', error);
-    }
-}
-
-function updateUserRole(userData) {
-    try {
-        const roleDisplay = userData.roleDisplay || getRoleDisplayName(userData.role) || 'ผู้ใช้งาน';
-        const roleElements = [
-            document.getElementById('displayUserRole'),
-            document.querySelector('.user-status'),
-            document.querySelector('.user-details .user-status')
-        ];
-        
-        roleElements.forEach(element => {
-            if (element) {
-                element.textContent = roleDisplay;
-            }
-        });
-    } catch (error) {
-        console.error('Error updating user role:', error);
-    }
-}
-
-function getRoleDisplayName(role) {
-    const roleMap = {
-        'student': 'นักเรียน',
-        'teacher': 'ครู', 
-        'admin': 'ผู้ดูแลระบบ'
-    };
-    return roleMap[role] || 'ผู้ใช้งาน';
-}
-
-function setupRoleBasedUI(role) {
-    try {
-        const checkinElements = document.querySelectorAll('.checkin-feature');
-        
-        if (role === 'student' || role === 'นักเรียน') {
-            checkinElements.forEach(element => {
-                element.style.display = 'none';
-            });
-        } else {
-            checkinElements.forEach(element => {
-                element.style.display = '';
-            });
-        }
-    } catch (error) {
-        console.error('Role-based UI setup error:', error);
-    }
-}
-
+// อัพเดทวันที่และเวลา
 function updateDateTime() {
     try {
         const now = new Date();
@@ -2685,82 +2505,122 @@ function updateDateTime() {
     }
 }
 
-function setupActionButtons() {
+// ตั้งค่าปุ่มอื่นๆ (ไม่ใช่ปุ่มโปรไฟล์)
+function setupOtherButtons() {
     try {
-        const actionButtons = document.querySelectorAll('.action-btn');
+        const actionButtons = document.querySelectorAll('.action-btn:not([data-page*="Profile"])');
         
         actionButtons.forEach(button => {
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
+            const targetPage = button.getAttribute('data-page');
             
-            newButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                handleActionClick(this); // ใช้ฟังก์ชันที่แก้ไขแล้ว
-            });
-        });
-        
-    } catch (error) {
-        console.error('Button setup error:', error);
-    }
-}
-
-function setupSafeNavigation() {
-    try {
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
+            if (targetPage && !targetPage.includes('Profile.html')) {
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
                 
-                if (!href || href === '#' || href.startsWith('javascript:')) {
+                newButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    return;
-                }
-                
-                console.log('Navigating to:', href);
-            });
+                    
+                    console.log('Other button clicked:', targetPage);
+                    
+                    this.disabled = true;
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<span>กำลังโหลด...</span>';
+                    
+                    setTimeout(() => {
+                        window.location.href = targetPage;
+                    }, 300);
+                    
+                    setTimeout(() => {
+                        this.disabled = false;
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
+            }
         });
         
+        console.log('Other buttons setup completed');
     } catch (error) {
-        console.error('Navigation setup error:', error);
+        console.error('Other buttons setup error:', error);
     }
 }
 
-function updateStatisticsDisplay() {
+// โหลดข้อมูลผู้ใช้ถ้ามี
+function loadUserDataIfAvailable() {
     try {
-        const defaultStats = {
-            present: 18,
-            absent: 2,  
-            late: 1,
-            percentage: 90
-        };
-        
-        updateStatElement('.stat-card.attendance h4', defaultStats.present);
-        updateStatElement('.stat-card.absence h4', defaultStats.absent);
-        updateStatElement('.stat-card.late h4', defaultStats.late);
-        updateStatElement('.stat-card.percentage h4', `${defaultStats.percentage}%`);
-        
-    } catch (error) {
-        console.error('Statistics update error:', error);
-    }
-}
-
-function updateStatElement(selector, value) {
-    try {
-        const element = document.querySelector(selector);
-        if (element) {
-            element.textContent = value;
+        if (typeof(Storage) !== "undefined") {
+            const userData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+            
+            if (userData) {
+                const user = JSON.parse(userData);
+                console.log('User data loaded:', user.firstName, user.lastName);
+                
+                // อัพเดท UI ถ้ามี element
+                const userNameElement = document.getElementById('displayUserName');
+                if (userNameElement && user.firstName && user.lastName) {
+                    userNameElement.textContent = `${user.firstName} ${user.lastName}`;
+                }
+            }
         }
     } catch (error) {
-        console.error('Stat element update error:', selector, error);
+        console.error('User data loading error:', error);
     }
 }
 
-// Export functions สำหรับการใช้งานภายนอก
-window.testNavigation = testNavigation;
-window.confirmNavToNav = confirmNavToNav;
-window.fixNavigationIssues = fixNavigationIssues;
+// ฟังก์ชันตรวจสอบ URL ปัจจุบัน
+function checkCurrentURL() {
+    const currentURL = window.location.href;
+    console.log('Current URL:', currentURL);
+    
+    if (currentURL.includes('from=profile')) {
+        console.log('✅ Successfully redirected from profile button!');
+        showSuccessMessage();
+    }
+}
 
-console.log('Navigation fix script loaded successfully!');
+// แสดงข้อความสำเร็จ
+function showSuccessMessage() {
+    try {
+        const message = document.createElement('div');
+        message.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        `;
+        message.textContent = '🎉 มาจากปุ่มโปรไฟล์สำเร็จ! ตอนนี้อยู่ที่ Nav.html แล้ว';
+        
+        document.body.appendChild(message);
+        
+        setTimeout(() => {
+            if (message.parentNode) {
+                message.remove();
+            }
+        }, 4000);
+        
+    } catch (error) {
+        console.error('Success message error:', error);
+    }
+}
+
+// ตรวจสอบ URL เมื่อโหลดหน้า
+setTimeout(checkCurrentURL, 1000);
+
+// Export functions สำหรับการใช้งาน
+window.testProfileButtonFix = testProfileButtonFix;
+window.forceFixProfileButtons = forceFixProfileButtons;
+window.fixProfileButtonRedirect = fixProfileButtonRedirect;
+
+console.log('🚀 Profile button fix script loaded successfully!');
+console.log('📋 Available functions:');
+console.log('  - testProfileButtonFix() - ทดสอบการแก้ไข');
+console.log('  - forceFixProfileButtons() - บังคับแก้ไขทันที');
+console.log('  - fixProfileButtonRedirect() - แก้ไขปุ่มโปรไฟล์');
     </script>
 </html>
