@@ -1019,7 +1019,7 @@ input:checked + .toggle-slider:before {
     </style>
 </head>
 <body>
-    <!-- Background Pattern -->
+   <!-- Background Pattern -->
     <div class="background-pattern">
         <div class="pattern-grid"></div>
         <div class="floating-elements">
@@ -1032,24 +1032,24 @@ input:checked + .toggle-slider:before {
     </div>
 
     <!-- Navigation Bar -->
-    <nav>
-        <div>
-            <div>
-                <div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="nav-logo">
                     <ion-icon name="scan-outline"></ion-icon>
                 </div>
-                <span>Scan Check-in</span>
+                <span class="nav-title">Scan Check-in</span>
             </div>
-            <div>
-                <a href="index.html">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">
                     <ion-icon name="home-outline"></ion-icon>
                     <span>หน้าหลัก</span>
                 </a>
-                <a href="#">
+                <a href="#" class="nav-link">
                     <ion-icon name="help-circle-outline"></ion-icon>
                     <span>ช่วยเหลือ</span>
                 </a>
-                <a href="#" id="logoutBtn">
+                <a href="#" class="nav-link logout-link" id="logoutBtn">
                     <ion-icon name="log-out-outline"></ion-icon>
                     <span>ออกจากระบบ</span>
                 </a>
@@ -1058,34 +1058,34 @@ input:checked + .toggle-slider:before {
     </nav>
 
     <!-- Main Container -->
-    <main>
+    <main class="main-container">
         <!-- Profile Header -->
-        <div>
-            <div>
-                <div>
-                    <div id="profileAvatar">
+        <div class="profile-header">
+            <div class="profile-header-content">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar" id="profileAvatar">
                         <img src="https://via.placeholder.com/120x120/2563eb/ffffff?text=User" alt="Profile Picture" id="avatarImage">
-                        <div>
+                        <div class="avatar-overlay">
                             <ion-icon name="camera-outline"></ion-icon>
                         </div>
                     </div>
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
                 </div>
-                <div>
-                    <h1 id="profileName">ชื่อผู้ใช้งาน</h1>
-                    <p id="profileRole">นักเรียน</p>
-                    <div>
-                        <div>
-                            <span id="attendanceRate">95%</span>
-                            <span>อัตราการเข้าเรียน</span>
+                <div class="profile-info">
+                    <h1 class="profile-name" id="profileName">ชื่อผู้ใช้งาน</h1>
+                    <p class="profile-role" id="profileRole">นักเรียน</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="attendanceRate">95%</span>
+                            <span class="stat-label">อัตราการเข้าเรียน</span>
                         </div>
-                        <div>
-                            <span id="attendedDays">42</span>
-                            <span>วันที่เข้าเรียน</span>
+                        <div class="stat-item">
+                            <span class="stat-number" id="attendedDays">42</span>
+                            <span class="stat-label">วันที่เข้าเรียน</span>
                         </div>
-                        <div>
-                            <span id="absentDays">3</span>
-                            <span>วันที่ขาด</span>
+                        <div class="stat-item">
+                            <span class="stat-number" id="absentDays">3</span>
+                            <span class="stat-label">วันที่ขาด</span>
                         </div>
                     </div>
                 </div>
@@ -1093,72 +1093,72 @@ input:checked + .toggle-slider:before {
         </div>
 
         <!-- Profile Content -->
-        <div>
+        <div class="profile-content">
             <!-- Profile Form -->
-            <div>
-                <div>
-                    <h2>
+            <div class="profile-form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
                         <ion-icon name="person-outline"></ion-icon>
                         ข้อมูลส่วนตัว
                     </h2>
-                    <p>แก้ไขข้อมูลส่วนตัวของคุณ</p>
+                    <p class="section-description">แก้ไขข้อมูลส่วนตัวของคุณ</p>
                 </div>
 
-                <form id="profileForm">
+                <form class="profile-form" id="profileForm">
                     <!-- Personal Information -->
-                    <div>
-                        <h3>ข้อมูลทั่วไป</h3>
+                    <div class="form-section">
+                        <h3 class="form-section-title">ข้อมูลทั่วไป</h3>
                         
-                        <div>
-                            <div>
-                                <label for="firstName">ชื่อ</label>
-                                <div>
-                                    <ion-icon name="person-outline"></ion-icon>
-                                    <input type="text" id="firstName" name="firstName" placeholder="กรอกชื่อ" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">ชื่อ</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="person-outline"></ion-icon>
+                                    <input type="text" class="form-input" id="firstName" name="firstName" placeholder="กรอกชื่อ" required>
                                 </div>
                             </div>
                             
-                            <div>
-                                <label for="lastName">นามสกุล</label>
-                                <div>
-                                    <ion-icon name="person-outline"></ion-icon>
-                                    <input type="text" id="lastName" name="lastName" placeholder="กรอกนามสกุล" required>
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">นามสกุล</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="person-outline"></ion-icon>
+                                    <input type="text" class="form-input" id="lastName" name="lastName" placeholder="กรอกนามสกุล" required>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <div>
-                                <label for="email">อีเมล</label>
-                                <div>
-                                    <ion-icon name="mail-outline"></ion-icon>
-                                    <input type="email" id="email" name="email" placeholder="กรอกอีเมล" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="email">อีเมล</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="mail-outline"></ion-icon>
+                                    <input type="email" class="form-input" id="email" name="email" placeholder="กรอกอีเมล" required>
                                 </div>
                             </div>
                             
-                            <div>
-                                <label for="phone">เบอร์โทรศัพท์</label>
-                                <div>
-                                    <ion-icon name="call-outline"></ion-icon>
-                                    <input type="tel" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required>
+                            <div class="form-group">
+                                <label class="form-label" for="phone">เบอร์โทรศัพท์</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="call-outline"></ion-icon>
+                                    <input type="tel" class="form-input" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <div>
-                                <label for="studentId">รหัสนักเรียน</label>
-                                <div>
-                                    <ion-icon name="card-outline"></ion-icon>
-                                    <input type="text" id="studentId" name="studentId" placeholder="กรอกรหัสนักเรียน" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="studentId">รหัสนักเรียน</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="card-outline"></ion-icon>
+                                    <input type="text" class="form-input" id="studentId" name="studentId" placeholder="กรอกรหัสนักเรียน" required>
                                 </div>
                             </div>
                             
-                            <div>
-                                <label for="class">ห้องเรียน</label>
-                                <div>
-                                    <ion-icon name="school-outline"></ion-icon>
-                                    <select id="class" name="class" required>
+                            <div class="form-group">
+                                <label class="form-label" for="class">ห้องเรียน</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="school-outline"></ion-icon>
+                                    <select class="form-select" id="class" name="class" required>
                                         <option value="">เลือกห้องเรียน</option>
                                         <option value="1/1">1/1</option>
                                         <option value="1/2">1/2</option>
@@ -1173,58 +1173,58 @@ input:checked + .toggle-slider:before {
                             </div>
                         </div>
 
-                        <div>
-                            <label for="address">ที่อยู่</label>
-                            <div>
-                                <ion-icon name="location-outline"></ion-icon>
-                                <textarea id="address" name="address" placeholder="กรอกที่อยู่" rows="3"></textarea>
+                        <div class="form-group">
+                            <label class="form-label" for="address">ที่อยู่</label>
+                            <div class="input-container">
+                                <ion-icon class="input-icon" name="location-outline"></ion-icon>
+                                <textarea class="form-textarea" id="address" name="address" placeholder="กรอกที่อยู่" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
 
                     <!-- Account Settings -->
-                    <div>
-                        <h3>การตั้งค่าบัญชี</h3>
+                    <div class="form-section">
+                        <h3 class="form-section-title">การตั้งค่าบัญชี</h3>
                         
-                        <div>
-                            <label for="username">ชื่อผู้ใช้งาน</label>
-                            <div>
-                                <ion-icon name="at-outline"></ion-icon>
-                                <input type="text" id="username" name="username" placeholder="กรอกชื่อผู้ใช้งาน" required readonly>
+                        <div class="form-group">
+                            <label class="form-label" for="username">ชื่อผู้ใช้งาน</label>
+                            <div class="input-container">
+                                <ion-icon class="input-icon" name="at-outline"></ion-icon>
+                                <input type="text" class="form-input" id="username" name="username" placeholder="กรอกชื่อผู้ใช้งาน" required readonly>
                             </div>
                             <small>ชื่อผู้ใช้งานไม่สามารถเปลี่ยนแปลงได้</small>
                         </div>
 
-                        <div>
-                            <div>
-                                <label for="currentPassword">รหัสผ่านปัจจุบัน</label>
-                                <div>
-                                    <ion-icon name="lock-closed-outline"></ion-icon>
-                                    <input type="password" id="currentPassword" name="currentPassword" placeholder="กรอกรหัสผ่านปัจจุบัน">
-                                    <button type="button" onclick="togglePassword('currentPassword')">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="currentPassword">รหัสผ่านปัจจุบัน</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="lock-closed-outline"></ion-icon>
+                                    <input type="password" class="form-input" id="currentPassword" name="currentPassword" placeholder="กรอกรหัสผ่านปัจจุบัน">
+                                    <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')">
                                         <ion-icon name="eye-outline"></ion-icon>
                                     </button>
                                 </div>
                             </div>
                             
-                            <div>
-                                <label for="newPassword">รหัสผ่านใหม่</label>
-                                <div>
-                                    <ion-icon name="lock-closed-outline"></ion-icon>
-                                    <input type="password" id="newPassword" name="newPassword" placeholder="กรอกรหัสผ่านใหม่">
-                                    <button type="button" onclick="togglePassword('newPassword')">
+                            <div class="form-group">
+                                <label class="form-label" for="newPassword">รหัสผ่านใหม่</label>
+                                <div class="input-container">
+                                    <ion-icon class="input-icon" name="lock-closed-outline"></ion-icon>
+                                    <input type="password" class="form-input" id="newPassword" name="newPassword" placeholder="กรอกรหัสผ่านใหม่">
+                                    <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
                                         <ion-icon name="eye-outline"></ion-icon>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="confirmPassword">ยืนยันรหัสผ่านใหม่</label>
-                            <div>
-                                <ion-icon name="lock-closed-outline"></ion-icon>
-                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="ยืนยันรหัสผ่านใหม่">
-                                <button type="button" onclick="togglePassword('confirmPassword')">
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">ยืนยันรหัสผ่านใหม่</label>
+                            <div class="input-container">
+                                <ion-icon class="input-icon" name="lock-closed-outline"></ion-icon>
+                                <input type="password" class="form-input" id="confirmPassword" name="confirmPassword" placeholder="ยืนยันรหัสผ่านใหม่">
+                                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
                                     <ion-icon name="eye-outline"></ion-icon>
                                 </button>
                             </div>
@@ -1232,52 +1232,52 @@ input:checked + .toggle-slider:before {
                     </div>
 
                     <!-- Privacy Settings -->
-                    <div>
-                        <h3>การตั้งค่าความเป็นส่วนตัว</h3>
+                    <div class="form-section">
+                        <h3 class="form-section-title">การตั้งค่าความเป็นส่วนตัว</h3>
                         
-                        <div>
-                            <div>
-                                <div>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div class="setting-content">
                                     <h4>แสดงสถานะออนไลน์</h4>
                                     <p>ให้ผู้อื่นเห็นสถานะออนไลน์ของคุณ</p>
                                 </div>
-                                <label>
+                                <label class="toggle-switch">
                                     <input type="checkbox" id="showOnlineStatus" name="showOnlineStatus" checked>
-                                    <span></span>
+                                    <span class="toggle-slider"></span>
                                 </label>
                             </div>
                             
-                            <div>
-                                <div>
+                            <div class="setting-item">
+                                <div class="setting-content">
                                     <h4>การแจ้งเตือนผ่านอีเมล</h4>
                                     <p>รับการแจ้งเตือนผ่านอีเมลเมื่อมีกิจกรรมสำคัญ</p>
                                 </div>
-                                <label>
+                                <label class="toggle-switch">
                                     <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
-                                    <span></span>
+                                    <span class="toggle-slider"></span>
                                 </label>
                             </div>
                             
-                            <div>
-                                <div>
+                            <div class="setting-item">
+                                <div class="setting-content">
                                     <h4>การแจ้งเตือนผ่านเบราว์เซอร์</h4>
                                     <p>รับการแจ้งเตือนผ่านเบราว์เซอร์</p>
                                 </div>
-                                <label>
+                                <label class="toggle-switch">
                                     <input type="checkbox" id="browserNotifications" name="browserNotifications">
-                                    <span></span>
+                                    <span class="toggle-slider"></span>
                                 </label>
                             </div>
                         </div>
                     </div>
 
                     <!-- Form Actions -->
-                    <div>
-                        <button type="button" id="cancelBtn">
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">
                             <ion-icon name="close-outline"></ion-icon>
                             ยกเลิก
                         </button>
-                        <button type="submit" id="saveBtn">
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
                             <ion-icon name="save-outline"></ion-icon>
                             บันทึกการเปลี่ยนแปลง
                         </button>
@@ -1286,46 +1286,46 @@ input:checked + .toggle-slider:before {
             </div>
 
             <!-- Quick Actions -->
-            <div>
-                <div>
-                    <h2>
+            <div class="quick-actions-section">
+                <div class="section-header">
+                    <h2 class="section-title">
                         <ion-icon name="flash-outline"></ion-icon>
                         การกระทำด่วน
                     </h2>
                 </div>
                 
-                <div>
-                    <div>
-                        <div>
+                <div class="quick-actions-grid">
+                    <div class="quick-action-card">
+                        <div class="quick-action-icon">
                             <ion-icon name="calendar-outline"></ion-icon>
                         </div>
                         <h3>ประวัติการเข้าเรียน</h3>
                         <p>ดูประวัติการเข้าเรียนของคุณ</p>
-                        <button>
+                        <button class="quick-action-btn">
                             <span>ดูประวัติ</span>
                             <ion-icon name="arrow-forward-outline"></ion-icon>
                         </button>
                     </div>
                     
-                    <div>
-                        <div>
+                    <div class="quick-action-card">
+                        <div class="quick-action-icon">
                             <ion-icon name="qr-code-outline"></ion-icon>
                         </div>
                         <h3>QR Code ส่วนตัว</h3>
                         <p>แสดง QR Code สำหรับเช็คอิน</p>
-                        <button onclick="window.location.href='ScanQRCode.html'">
+                        <button class="quick-action-btn" onclick="window.location.href='ScanQRCode.html'">
                             <span>แสดง QR Code</span>
                             <ion-icon name="arrow-forward-outline"></ion-icon>
                         </button>
                     </div>
                     
-                    <div>
-                        <div>
+                    <div class="quick-action-card">
+                        <div class="quick-action-icon">
                             <ion-icon name="shield-outline"></ion-icon>
                         </div>
                         <h3>ความปลอดภัย</h3>
                         <p>ตั้งค่าความปลอดภัยบัญชี</p>
-                        <button>
+                        <button class="quick-action-btn">
                             <span>ตั้งค่า</span>
                             <ion-icon name="arrow-forward-outline"></ion-icon>
                         </button>
@@ -1336,9 +1336,9 @@ input:checked + .toggle-slider:before {
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; text-align: center;">
-            <div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner">
                 <ion-icon name="reload-outline"></ion-icon>
             </div>
             <h3>กำลังบันทึกข้อมูล</h3>
@@ -1347,15 +1347,15 @@ input:checked + .toggle-slider:before {
     </div>
 
     <!-- Success Modal -->
-    <div id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; text-align: center;">
-            <div>
+    <div class="success-modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">
                 <ion-icon name="checkmark-circle"></ion-icon>
             </div>
             <h3>บันทึกข้อมูลสำเร็จ!</h3>
             <p>ข้อมูลโปรไฟล์ของคุณได้รับการอัพเดตแล้ว</p>
-            <div>
-                <button id="closeSuccessModal">
+            <div class="modal-actions">
+                <button class="modal-btn primary" id="closeSuccessModal">
                     <ion-icon name="checkmark-outline"></ion-icon>
                     ตกลง
                 </button>
@@ -1364,15 +1364,15 @@ input:checked + .toggle-slider:before {
     </div>
 
     <!-- Error Modal -->
-    <div id="errorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; text-align: center;">
-            <div>
+    <div class="error-modal" id="errorModal">
+        <div class="modal-content">
+            <div class="error-icon">
                 <ion-icon name="alert-circle"></ion-icon>
             </div>
             <h3>เกิดข้อผิดพลาด</h3>
             <p id="errorMessage">ไม่สามารถบันทึกข้อมูลได้</p>
-            <div>
-                <button id="closeErrorModal">
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="closeErrorModal">
                     <ion-icon name="close-outline"></ion-icon>
                     ปิด
                 </button>
@@ -1381,19 +1381,19 @@ input:checked + .toggle-slider:before {
     </div>
 
     <!-- Confirm Modal -->
-    <div id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; text-align: center;">
-            <div>
+    <div class="confirm-modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="confirm-icon">
                 <ion-icon name="help-circle"></ion-icon>
             </div>
             <h3>ยืนยันการเปลี่ยนแปลง</h3>
             <p>คุณต้องการบันทึกการเปลี่ยนแปลงหรือไม่?</p>
-            <div>
-                <button id="cancelConfirm">
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="cancelConfirm">
                     <ion-icon name="close-outline"></ion-icon>
                     ยกเลิก
                 </button>
-                <button id="confirmSave">
+                <button class="modal-btn primary" id="confirmSave">
                     <ion-icon name="save-outline"></ion-icon>
                     บันทึก
                 </button>
@@ -1402,17 +1402,17 @@ input:checked + .toggle-slider:before {
     </div>
 
     <!-- Footer -->
-    <footer>
-        <div>
-            <div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
                 <p>&copy; 2024 Scan Check-in System. สงวนลิขสิทธิ์.</p>
             </div>
-            <div>
-                <a href="#">
+            <div class="footer-right">
+                <a href="#" class="footer-link">
                     <ion-icon name="document-text-outline"></ion-icon>
                     นโยบายความเป็นส่วนตัว
                 </a>
-                <a href="#">
+                <a href="#" class="footer-link">
                     <ion-icon name="information-circle-outline"></ion-icon>
                     เงื่อนไขการใช้งาน
                 </a>
@@ -1424,8 +1424,8 @@ input:checked + .toggle-slider:before {
         // Profile Edit JavaScript
         document.addEventListener('DOMContentLoaded', function() {
             // Check if user is logged in
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn') || localStorage.getItem('isLoggedIn');
+            const userData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || '{}');
             
             if (!isLoggedIn || !userData.username) {
                 // Redirect to login page if not logged in
@@ -1438,7 +1438,29 @@ input:checked + .toggle-slider:before {
             
             // Initialize event listeners
             initializeEventListeners();
+            
+            // Add input focus handlers for icons
+            addInputFocusHandlers();
         });
+
+        // Add input focus handlers for icon color changes
+        function addInputFocusHandlers() {
+            const inputContainers = document.querySelectorAll('.input-container');
+            
+            inputContainers.forEach(container => {
+                const input = container.querySelector('input, select, textarea');
+                
+                if (input) {
+                    input.addEventListener('focus', function() {
+                        container.classList.add('focused');
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        container.classList.remove('focused');
+                    });
+                }
+            });
+        }
 
         // Toggle password visibility
         function togglePassword(targetId) {
@@ -1478,6 +1500,11 @@ input:checked + .toggle-slider:before {
             document.getElementById('showOnlineStatus').checked = userData.showOnlineStatus !== false;
             document.getElementById('emailNotifications').checked = userData.emailNotifications !== false;
             document.getElementById('browserNotifications').checked = userData.browserNotifications || false;
+            
+            // Update avatar if exists
+            if (userData.avatar) {
+                document.getElementById('avatarImage').src = userData.avatar;
+            }
         }
 
         // Initialize all event listeners
@@ -1506,26 +1533,26 @@ input:checked + .toggle-slider:before {
 
             // Cancel button
             document.getElementById('cancelBtn').addEventListener('click', function() {
-                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                const userData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || '{}');
                 loadUserData(userData);
                 showMessage('การเปลี่ยนแปลงถูกยกเลิก');
             });
 
             // Modal close buttons
             document.getElementById('closeSuccessModal').addEventListener('click', function() {
-                document.getElementById('successModal').style.display = 'none';
+                hideModal('successModal');
             });
 
             document.getElementById('closeErrorModal').addEventListener('click', function() {
-                document.getElementById('errorModal').style.display = 'none';
+                hideModal('errorModal');
             });
 
             document.getElementById('cancelConfirm').addEventListener('click', function() {
-                document.getElementById('confirmModal').style.display = 'none';
+                hideModal('confirmModal');
             });
 
             document.getElementById('confirmSave').addEventListener('click', function() {
-                document.getElementById('confirmModal').style.display = 'none';
+                hideModal('confirmModal');
                 saveUserData();
             });
 
@@ -1533,6 +1560,8 @@ input:checked + .toggle-slider:before {
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+                    sessionStorage.removeItem('isLoggedIn');
+                    sessionStorage.removeItem('userData');
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('userData');
                     window.location.href = 'Profile.html';
@@ -1548,7 +1577,7 @@ input:checked + .toggle-slider:before {
             }
 
             // Show confirmation modal
-            document.getElementById('confirmModal').style.display = 'block';
+            showModal('confirmModal');
         }
 
         // Validate form data
@@ -1576,8 +1605,8 @@ input:checked + .toggle-slider:before {
             }
 
             // Validate phone number
-            const phoneRegex = /^[0-9]{10}$/;
-            if (!phoneRegex.test(phone.replace(/[-\s]/g, ''))) {
+            const phoneRegex = /^[0-9\-\s]{10,}$/;
+            if (!phoneRegex.test(phone)) {
                 showErrorModal('หมายเลขโทรศัพท์ไม่ถูกต้อง');
                 return false;
             }
@@ -1613,7 +1642,7 @@ input:checked + .toggle-slider:before {
                 
                 try {
                     // Get current user data
-                    const currentUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    const currentUserData = JSON.parse(sessionStorage.getItem('userData') || localStorage.getItem('userData') || '{}');
                     
                     // Update user data
                     const updatedUserData = {
@@ -1628,10 +1657,12 @@ input:checked + .toggle-slider:before {
                         showOnlineStatus: document.getElementById('showOnlineStatus').checked,
                         emailNotifications: document.getElementById('emailNotifications').checked,
                         browserNotifications: document.getElementById('browserNotifications').checked,
+                        avatar: document.getElementById('avatarImage').src,
                         lastUpdated: new Date().toISOString()
                     };
                     
-                    // Save to localStorage
+                    // Save to both sessionStorage and localStorage
+                    sessionStorage.setItem('userData', JSON.stringify(updatedUserData));
                     localStorage.setItem('userData', JSON.stringify(updatedUserData));
                     
                     // Update profile header
@@ -1653,30 +1684,6 @@ input:checked + .toggle-slider:before {
         }
 
         // Show loading overlay
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'block';
-        }
-
-        // Hide loading overlay
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        // Show success modal
-        function showSuccessModal() {
-            document.getElementById('successModal').style.display = 'block';
-        }
-
-        // Show error modal
-        function showErrorModal(message) {
-            document.getElementById('errorMessage').textContent = message;
-            document.getElementById('errorModal').style.display = 'block';
-        }
-
-        // Show message (for info messages)
-        function showMessage(message) {
-            alert(message);
-        }
     </script>
 </body>
 </html>
