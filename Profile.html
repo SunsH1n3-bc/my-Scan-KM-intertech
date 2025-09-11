@@ -1729,8 +1729,8 @@ select.form-input:focus {
         </footer>
 
         <script>
-// GitHub Pages Compatible Authentication System - แก้ไขแล้ว
-// ใช้ localStorage สำหรับบันทึกข้อมูลถาวรและแก้เส้นทางไฟล์
+// GitHub Pages Compatible Authentication System - แก้ไขปัญหา 404
+// แก้ไขเส้นทางไฟล์และการนำทางสำหรับ GitHub Pages
 
 // Extended user database with birth dates
 let userDatabase = {
@@ -1831,68 +1831,94 @@ function saveUserDatabase() {
     }
 }
 
-// Helper function to detect GitHub Pages environment and construct proper paths
-function getBasePath() {
-    const currentPath = window.location.pathname;
+// แก้ไข: Helper function สำหรับตรวจสอบ GitHub Pages และสร้างเส้นทางที่ถูกต้อง
+function getGitHubPagesConfig() {
     const hostname = window.location.hostname;
+    const pathname = window.location.pathname;
     
-    // Check if we're on GitHub Pages
-    if (hostname.includes('github.io')) {
-        // Extract repository name from path
-        const pathParts = currentPath.split('/').filter(part => part.length > 0);
+    // ตรวจสอบว่าเป็น GitHub Pages หรือไม่
+    const isGitHubPages = hostname.includes('github.io');
+    
+    let basePath = '';
+    let repoName = '';
+    
+    if (isGitHubPages) {
+        // สกัดชื่อ repository จาก URL
+        const pathParts = pathname.split('/').filter(part => part.length > 0);
         if (pathParts.length > 0) {
-            // Return base path with repository name
-            return '/' + pathParts[0];
+            repoName = pathParts[0];
+            basePath = `/${repoName}`;
         }
     }
     
-    // For local development or other hosting
-    return '';
+    return {
+        isGitHubPages,
+        basePath,
+        repoName,
+        currentPath: pathname
+    };
 }
 
-// Helper function to navigate to pages with proper GitHub Pages support
-function navigateToPage(pageName) {
-    const basePath = getBasePath();
+// แก้ไข: สร้าง URL ที่ถูกต้องสำหรับการนำทาง
+function createPageURL(pageName) {
+    const config = getGitHubPagesConfig();
     
-    // แก้ไขเส้นทางสำหรับ GitHub Pages
-    // ถ้าไฟล์อยู่ในโฟลเดอร์เดียวกัน ไม่ต้องใส่ HTML/
-    let fullPath;
+    // ตรวจสอบว่าไฟล์มีนามสกุล .html หรือไม่
+    const fileName = pageName.includes('.html') ? pageName : `${pageName}.html`;
     
-    if (hostname.includes('github.io') || window.location.pathname.includes('/HTML/')) {
-        // สำหรับ GitHub Pages หรือถ้าอยู่ในโฟลเดอร์ HTML แล้ว
-        fullPath = basePath + '/' + pageName;
+    if (config.isGitHubPages) {
+        // สำหรับ GitHub Pages
+        return `${config.basePath}/${fileName}`;
     } else {
-        // สำหรับการพัฒนาในเครื่องหรือไฟล์อยู่ในโฟลเดอร์เดียวกัน
-        fullPath = pageName;
+        // สำหรับ local development
+        return fileName;
     }
-    
-    // Store user data in both localStorage and sessionStorage
-    if (currentUser && isLoggedIn) {
-        try {
-            localStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
-            localStorage.setItem('scanCheckinLoggedIn', 'true');
-            localStorage.setItem('scanCheckinRemember', rememberLogin.toString());
-            
-            sessionStorage.setItem('scanCheckinUser', JSON.stringify(currentUser));
-            sessionStorage.setItem('scanCheckinLoggedIn', 'true');
-            sessionStorage.setItem('scanCheckinRemember', rememberLogin.toString());
-        } catch (e) {
-            console.warn('Storage not available, user data will not persist');
-        }
+}
+
+// แก้ไข: ฟังก์ชันสำหรับตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
+async function checkFileExists(url) {
+    try {
+        const response = await fetch(url, { method: 'HEAD' });
+        return response.ok;
+    } catch (error) {
+        console.warn('Cannot check file existence:', error);
+        return false; // ถ้าไม่สามารถเช็คได้ ให้ถือว่าไฟล์มีอยู่
     }
+}
+
+// แก้ไข: ฟังก์ชันนำทางที่ปลอดภัยกว่า
+async function safeNavigate(pageName, fallbackPage = null) {
+    const primaryURL = createPageURL(pageName);
     
-    console.log('Navigating to:', fullPath);
-    window.location.href = fullPath;
+    // ลองเช็คไฟล์ก่อนนำทาง (อาจไม่ทำงานใน production)
+    const fileExists = await checkFileExists(primaryURL);
+    
+    if (fileExists) {
+        console.log(`Navigating to: ${primaryURL}`);
+        window.location.href = primaryURL;
+    } else if (fallbackPage) {
+        const fallbackURL = createPageURL(fallbackPage);
+        console.log(`Primary file not found, trying fallback: ${fallbackURL}`);
+        window.location.href = fallbackURL;
+    } else {
+        // ถ้าไม่มี fallback ให้แสดงข้อความแทน
+        console.error(`File not found: ${primaryURL}`);
+        showErrorModal(`ไม่พบไฟล์ ${pageName} กรุณาตรวจสอบว่าไฟล์มีอยู่จริง`);
+    }
 }
 
 // Initialize the system
 function initializeSystem() {
-    loadUserDatabase(); // โหลดฐานข้อมูลผู้ใช้จาก localStorage
+    loadUserDatabase();
     setupEventListeners();
     setupPasswordToggles();
     setupValidation();
     checkAutoRedirect();
     restoreUserSession();
+    
+    // Debug: แสดงข้อมูลการกำหนดค่า GitHub Pages
+    const config = getGitHubPagesConfig();
+    console.log('GitHub Pages Configuration:', config);
 }
 
 // Restore user session from localStorage/sessionStorage
@@ -1936,6 +1962,565 @@ function toggleForm(formType) {
             container.style.opacity = '0';
             container.style.transform = 'translateY(20px)';
             setTimeout(() => {
+        hideLoading();
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
+        
+        const user = userDatabase[username];
+        if (user && user.studentId === studentId && user.birthDate === birthDate) {
+            resetUserData = user;
+            showSuccessModal(
+                'ยืนยันตัวตนสำเร็จ!',
+                'กรุณาตั้งรหัสผ่านใหม่ของคุณ',
+                'forgot'
+            );
+        } else {
+            showErrorModal('ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบชื่อผู้ใช้ รหัสประจำตัว และวันเดือนปีเกิดอีกครั้ง');
+        }
+    }, 2000);
+}
+
+// Handle reset password form submission - แก้ไขให้บันทึกรหัสผ่านใหม่ถาวร
+function handleResetPassword(e) {
+    e.preventDefault();
+    
+    const newPasswordField = document.getElementById('newPassword');
+    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
+    const submitBtn = e.target.querySelector('.login-btn');
+    
+    if (!newPasswordField || !confirmNewPasswordField) return;
+    
+    const newPassword = newPasswordField.value;
+    const confirmNewPassword = confirmNewPasswordField.value;
+    
+    // Validation
+    if (newPassword.length < 6) {
+        showErrorModal('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+        return;
+    }
+    
+    if (newPassword !== confirmNewPassword) {
+        showErrorModal('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน');
+        return;
+    }
+    
+    if (!resetUserData) {
+        showErrorModal('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+        return;
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    }
+    
+    showLoading('กำลังเปลี่ยนรหัสผ่าน');
+    
+    setTimeout(() => {
+        hideLoading();
+        
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+        }
+        
+        // Update password in database
+        userDatabase[resetUserData.username].password = newPassword;
+        
+        // บันทึกฐานข้อมูลที่อัพเดทแล้วลง localStorage
+        const saved = saveUserDatabase();
+        
+        if (saved) {
+            console.log('Password updated for user:', resetUserData.username);
+            // Clear reset data
+            resetUserData = null;
+            
+            showSuccessModal(
+                'เปลี่ยนรหัสผ่านสำเร็จ!',
+                'คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว',
+                'reset'
+            );
+        } else {
+            showErrorModal('เกิดข้อผิดพลาดในการบันทึกรหัสผ่านใหม่ กรุณาลองใหม่อีกครั้ง');
+        }
+    }, 2000);
+}
+
+// Handle quick login button clicks
+function handleQuickLogin() {
+    const type = this.classList.contains('qr-btn') ? 'QR Code' : 
+                this.classList.contains('face-btn') ? 'Face ID' : 'Fingerprint';
+    
+    showLoading(`กำลังเข้าสู่ระบบด้วย ${type}`);
+    setTimeout(() => {
+        hideLoading();
+        showErrorModal(`การเข้าสู่ระบบด้วย ${type} ยังไม่พร้อมใช้งาน กรุณาใช้ชื่อผู้ใช้และรหัสผ่าน`);
+    }, 1500);
+}
+
+// Enhanced validation function
+function validateRegistrationForm(data) {
+    // Check required fields
+    const requiredFields = ['username', 'password', 'firstName', 'lastName', 'email', 'phone', 'studentId', 'class', 'role', 'birthDate'];
+    for (let field of requiredFields) {
+        if (!data[field]) {
+            const fieldNames = {
+                'username': 'ชื่อผู้ใช้งาน',
+                'password': 'รหัสผ่าน',
+                'firstName': 'ชื่อ',
+                'lastName': 'นามสกุล',
+                'email': 'อีเมล',
+                'phone': 'เบอร์โทรศัพท์',
+                'studentId': 'รหัสประจำตัว',
+                'class': 'ชั้นเรียน/แผนก',
+                'role': 'ประเภทผู้ใช้งาน',
+                'birthDate': 'วันเดือนปีเกิด'
+            };
+            showErrorModal(`กรุณากรอก ${fieldNames[field] || field}`);
+            return false;
+        }
+    }
+    
+    // Check username availability
+    if (userDatabase[data.username]) {
+        showErrorModal('ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเลือกชื่อใหม่');
+        return false;
+    }
+    
+    // Check username length
+    if (data.username.length < 4) {
+        showErrorModal('ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร');
+        return false;
+    }
+    
+    // Check password length
+    if (data.password.length < 6) {
+        showErrorModal('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+        return false;
+    }
+    
+    // Check password confirmation
+    if (data.password !== data.confirmPassword) {
+        showErrorModal('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน');
+        return false;
+    }
+    
+    // Check email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+        showErrorModal('รูปแบบอีเมลไม่ถูกต้อง');
+        return false;
+    }
+    
+    // Check phone format
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(data.phone.replace(/[-\s]/g, ''))) {
+        showErrorModal('รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง (10 หลัก)');
+        return false;
+    }
+    
+    // Check birth date (must be in the past)
+    const birthDate = new Date(data.birthDate);
+    const today = new Date();
+    if (birthDate >= today) {
+        showErrorModal('วันเดือนปีเกิดไม่ถูกต้อง');
+        return false;
+    }
+    
+    // Check age (must be at least 10 years old)
+    const age = today.getFullYear() - birthDate.getFullYear();
+    if (age < 10) {
+        showErrorModal('อายุต้องมากกว่า 10 ปี');
+        return false;
+    }
+    
+    // Check terms acceptance
+    if (!data.acceptTerms) {
+        showErrorModal('กรุณายอมรับเงื่อนไขการใช้งาน');
+        return false;
+    }
+    
+    return true;
+}
+
+// Modal functions with enhanced animations
+function showLoading(text = 'กำลังประมวลผล') {
+    const loadingText = document.getElementById('loadingText');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    if (loadingText) loadingText.textContent = text;
+    if (loadingOverlay) {
+        loadingOverlay.classList.add('active');
+        // Disable scrolling
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideLoading() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.remove('active');
+        // Re-enable scrolling
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Show success modal with enhanced functionality
+function showSuccessModal(title, message, type) {
+    const successModal = document.getElementById('successModal');
+    const successTitle = document.getElementById('successTitle');
+    const successMessage = document.getElementById('successMessage');
+    const primaryBtn = document.getElementById('successPrimaryBtn');
+    const secondaryBtn = document.getElementById('successSecondaryBtn');
+    
+    if (!successModal || !successTitle || !successMessage || !primaryBtn) return;
+    
+    successTitle.textContent = title;
+    successMessage.textContent = message;
+    
+    // Configure buttons based on context
+    switch(type) {
+        case 'register':
+            primaryBtn.innerHTML = '<ion-icon name="log-in-outline"></ion-icon> เข้าสู่ระบบ';
+            primaryBtn.onclick = () => {
+                successModal.classList.remove('active');
+                toggleForm('login');
+                document.body.style.overflow = 'auto';
+            };
+            if (secondaryBtn) secondaryBtn.style.display = 'none';
+            break;
+            
+        case 'forgot':
+            primaryBtn.innerHTML = '<ion-icon name="key-outline"></ion-icon> ตั้งรหัสผ่านใหม่';
+            primaryBtn.onclick = () => {
+                successModal.classList.remove('active');
+                toggleForm('reset');
+                document.body.style.overflow = 'auto';
+            };
+            if (secondaryBtn) secondaryBtn.style.display = 'none';
+            break;
+            
+        case 'reset':
+            primaryBtn.innerHTML = '<ion-icon name="log-in-outline"></ion-icon> เข้าสู่ระบบ';
+            primaryBtn.onclick = () => {
+                successModal.classList.remove('active');
+                toggleForm('login');
+                document.body.style.overflow = 'auto';
+            };
+            if (secondaryBtn) secondaryBtn.style.display = 'none';
+            break;
+            
+        default: // login
+            primaryBtn.innerHTML = '<ion-icon name="home-outline"></ion-icon> หน้าหลัก';
+            primaryBtn.onclick = () => {
+                successModal.classList.remove('active');
+                redirectToHome();
+            };
+            
+            if (secondaryBtn) {
+                secondaryBtn.innerHTML = '<ion-icon name="person-outline"></ion-icon> โปรไฟล์';
+                secondaryBtn.style.display = 'block';
+                secondaryBtn.onclick = () => {
+                    successModal.classList.remove('active');
+                    redirectToProfile();
+                };
+            }
+    }
+    
+    successModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function showErrorModal(message) {
+    const errorModal = document.getElementById('errorModal');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    if (errorMessage) errorMessage.textContent = message;
+    if (errorModal) {
+        errorModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// แก้ไข: Enhanced redirect functions สำหรับ GitHub Pages
+function redirectToHome() {
+    showLoading('กำลังไปยังหน้าหลัก');
+    setTimeout(async () => {
+        try {
+            // ลองหาไฟล์ index.html ก่อน
+            await safeNavigate('index', 'home');
+        } catch (error) {
+            console.error('Redirect error:', error);
+            hideLoading();
+            showErrorModal('ไม่สามารถไปยังหน้าหลักได้ กรุณาตรวจสอบว่าไฟล์ index.html มีอยู่');
+        }
+    }, 1000);
+}
+
+function redirectToProfile() {
+    showLoading('กำลังไปยังหน้าโปรไฟล์');
+    setTimeout(async () => {
+        try {
+            // ลองหาไฟล์ Profile.html ก่อน
+            await safeNavigate('Profile', 'profile');
+        } catch (error) {
+            console.error('Redirect error:', error);
+            hideLoading();
+            showErrorModal('ไม่สามารถไปยังหน้าโปรไฟล์ได้ กรุณาตรวจสอบว่าไฟล์ Profile.html มีอยู่');
+        }
+    }, 1000);
+}
+
+// Enhanced form reset function
+function resetForms() {
+    const forms = ['loginForm', 'registerForm', 'forgotForm', 'resetForm'];
+    
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.reset();
+            
+            // Remove focused class from input containers
+            form.querySelectorAll('.input-container').forEach(container => {
+                container.classList.remove('focused');
+            });
+            
+            // Remove validation classes from inputs
+            form.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('valid', 'invalid');
+            });
+            
+            // Reset password toggles
+            form.querySelectorAll('.password-toggle ion-icon').forEach(icon => {
+                icon.name = 'eye-outline';
+            });
+            
+            form.querySelectorAll('input[type="text"]').forEach(input => {
+                if (input.id.includes('password') || input.id.includes('Password')) {
+                    input.type = 'password';
+                }
+            });
+        }
+    });
+    
+    // Clear all hints
+    document.querySelectorAll('.form-hint').forEach(hint => {
+        hint.textContent = '';
+        hint.style.color = '';
+    });
+    
+    // Clear reset user data
+    resetUserData = null;
+}
+
+// แก้ไข: Auto-redirect check ที่รองรับ GitHub Pages
+function checkAutoRedirect() {
+    // Check for existing session on page load
+    try {
+        let savedUser = localStorage.getItem('scanCheckinUser');
+        let savedLoggedIn = localStorage.getItem('scanCheckinLoggedIn');
+        
+        // Fall back to sessionStorage if localStorage is empty
+        if (!savedUser || !savedLoggedIn) {
+            savedUser = sessionStorage.getItem('scanCheckinUser');
+            savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        }
+        
+        if (savedUser && savedLoggedIn === 'true') {
+            console.log('Found existing session, user already logged in');
+            
+            // แสดงข้อความที่เป็นมิตรกว่าและไม่บังคับ redirect
+            setTimeout(() => {
+                const user = JSON.parse(savedUser);
+                const shouldRedirect = confirm(`พบว่า ${user.firstName} ${user.lastName} ได้เข้าสู่ระบบแล้ว\nต้องการไปยังหน้าหลักหรือไม่?\n\n(กด Cancel เพื่อใช้งานหน้านี้ต่อ)`);
+                if (shouldRedirect) {
+                    redirectToHome();
+                }
+            }, 1500); // เพิ่มเวลาให้หน้าโหลดเสร็จก่อน
+        }
+    } catch (e) {
+        console.log('No existing session found or session corrupted');
+        // ถ้า session เสีย ลบทิ้ง
+        try {
+            localStorage.removeItem('scanCheckinUser');
+            localStorage.removeItem('scanCheckinLoggedIn');
+            localStorage.removeItem('scanCheckinRemember');
+            sessionStorage.removeItem('scanCheckinUser');
+            sessionStorage.removeItem('scanCheckinLoggedIn');
+            sessionStorage.removeItem('scanCheckinRemember');
+        } catch (cleanupError) {
+            console.warn('Could not clean up corrupted session');
+        }
+    }
+}
+
+// Public API for accessing user data (แก้ไขให้รองรับทั้ง localStorage และ sessionStorage)
+window.getUserData = function() {
+    if (currentUser) {
+        return currentUser;
+    }
+    
+    // Try to restore from localStorage first, then sessionStorage
+    try {
+        let savedUser = localStorage.getItem('scanCheckinUser');
+        if (!savedUser) {
+            savedUser = sessionStorage.getItem('scanCheckinUser');
+        }
+        if (savedUser) {
+            return JSON.parse(savedUser);
+        }
+    } catch (e) {
+        console.warn('Could not retrieve user data');
+    }
+    
+    return null;
+};
+
+window.isUserLoggedIn = function() {
+    if (isLoggedIn) {
+        return true;
+    }
+    
+    // Try to check localStorage first, then sessionStorage
+    try {
+        let loggedIn = localStorage.getItem('scanCheckinLoggedIn');
+        if (!loggedIn) {
+            loggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
+        }
+        return loggedIn === 'true';
+    } catch (e) {
+        return false;
+    }
+};
+
+window.logoutUser = function() {
+    currentUser = null;
+    isLoggedIn = false;
+    rememberLogin = false;
+    resetUserData = null;
+    
+    // Clear both localStorage and sessionStorage
+    try {
+        localStorage.removeItem('scanCheckinUser');
+        localStorage.removeItem('scanCheckinLoggedIn');
+        localStorage.removeItem('scanCheckinRemember');
+        
+        sessionStorage.removeItem('scanCheckinUser');
+        sessionStorage.removeItem('scanCheckinLoggedIn');
+        sessionStorage.removeItem('scanCheckinRemember');
+    } catch (e) {
+        console.warn('Could not clear storage');
+    }
+    
+    console.log('User logged out successfully');
+};
+
+// Additional utility functions
+window.getCurrentUserRole = function() {
+    const user = window.getUserData();
+    return user ? user.role : null;
+};
+
+window.updateUserData = function(updatedData) {
+    if (currentUser && isLoggedIn) {
+        currentUser = { ...currentUser, ...updatedData };
+        
+        try {
+            const userDataStr = JSON.stringify(currentUser);
+            localStorage.setItem('scanCheckinUser', userDataStr);
+            sessionStorage.setItem('scanCheckinUser', userDataStr);
+        } catch (e) {
+            console.warn('Could not update user session');
+        }
+        
+        return true;
+    }
+    return false;
+};
+
+// Function to get all registered users (for admin purposes)
+window.getAllUsers = function() {
+    return userDatabase;
+};
+
+// Function to clear all user data (for testing/reset purposes)
+window.clearAllUserData = function() {
+    try {
+        localStorage.removeItem('scanCheckinUserDatabase');
+        localStorage.removeItem('scanCheckinUser');
+        localStorage.removeItem('scanCheckinLoggedIn');
+        localStorage.removeItem('scanCheckinRemember');
+        
+        sessionStorage.removeItem('scanCheckinUser');
+        sessionStorage.removeItem('scanCheckinLoggedIn');
+        sessionStorage.removeItem('scanCheckinRemember');
+        
+        // Reset to default database
+        userDatabase = {
+            'student001': userDatabase['student001'],
+            'teacher001': userDatabase['teacher001'],
+            'admin': userDatabase['admin']
+        };
+        
+        console.log('All user data cleared');
+        return true;
+    } catch (e) {
+        console.warn('Could not clear all user data');
+        return false;
+    }
+};
+
+// แก้ไข: เพิ่มฟังก์ชันสำหรับ Debug GitHub Pages
+window.debugGitHubPages = function() {
+    const config = getGitHubPagesConfig();
+    console.log('=== GitHub Pages Debug Information ===');
+    console.log('Current URL:', window.location.href);
+    console.log('Hostname:', window.location.hostname);
+    console.log('Pathname:', window.location.pathname);
+    console.log('Is GitHub Pages:', config.isGitHubPages);
+    console.log('Repository Name:', config.repoName);
+    console.log('Base Path:', config.basePath);
+    console.log('Current Path:', config.currentPath);
+    console.log('');
+    console.log('Test URLs:');
+    console.log('- Home page:', createPageURL('index'));
+    console.log('- Profile page:', createPageURL('Profile'));
+    console.log('- Help page:', createPageURL('help'));
+    console.log('=====================================');
+    return config;
+};
+
+// Enhanced error handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript Error:', e.error);
+    // ในโหมด production อาจแสดงข้อความที่เป็นมิตรกว่า
+    if (e.error && e.error.message) {
+        console.error('Error details:', e.error.message);
+    }
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled Promise Rejection:', e.reason);
+    // ป้องกันไม่ให้ error ไป crash page
+    e.preventDefault();
+});
+
+// Initialize when DOM is ready
+function initWhenReady() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeSystem);
+    } else {
+        initializeSystem();
+    }
+}
+
+// Start initialization
+initWhenReady();
+
+console.log('Scan Check-in Registration System Loaded - GitHub Pages Compatible v2.0');
                 container.style.display = 'none';
             }, 200);
         }
@@ -2514,532 +3099,6 @@ function handleForgotPassword(e) {
     showLoading('กำลังตรวจสอบข้อมูล');
     
     setTimeout(() => {
-        hideLoading();
-        
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        }
-        
-        const user = userDatabase[username];
-        if (user && user.studentId === studentId && user.birthDate === birthDate) {
-            resetUserData = user;
-            showSuccessModal(
-                'ยืนยันตัวตนสำเร็จ!',
-                'กรุณาตั้งรหัสผ่านใหม่ของคุณ',
-                'forgot'
-            );
-        } else {
-            showErrorModal('ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบชื่อผู้ใช้ รหัสประจำตัว และวันเดือนปีเกิดอีกครั้ง');
-        }
-    }, 2000);
-}
-
-// Handle reset password form submission - แก้ไขให้บันทึกรหัสผ่านใหม่ถาวร
-function handleResetPassword(e) {
-    e.preventDefault();
-    
-    const newPasswordField = document.getElementById('newPassword');
-    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
-    const submitBtn = e.target.querySelector('.login-btn');
-    
-    if (!newPasswordField || !confirmNewPasswordField) return;
-    
-    const newPassword = newPasswordField.value;
-    const confirmNewPassword = confirmNewPasswordField.value;
-    
-    // Validation
-    if (newPassword.length < 6) {
-        showErrorModal('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
-        return;
-    }
-    
-    if (newPassword !== confirmNewPassword) {
-        showErrorModal('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน');
-        return;
-    }
-    
-    if (!resetUserData) {
-        showErrorModal('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
-        return;
-    }
-    
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-    }
-    
-    showLoading('กำลังเปลี่ยนรหัสผ่าน');
-    
-    setTimeout(() => {
-        hideLoading();
-        
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        }
-        
-        // Update password in database
-        userDatabase[resetUserData.username].password = newPassword;
-        
-        // บันทึกฐานข้อมูลที่อัพเดทแล้วลง localStorage
-        const saved = saveUserDatabase();
-        
-        if (saved) {
-            console.log('Password updated for user:', resetUserData.username);
-            // Clear reset data
-            resetUserData = null;
-            
-            showSuccessModal(
-                'เปลี่ยนรหัสผ่านสำเร็จ!',
-                'คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว',
-                'reset'
-            );
-        } else {
-            showErrorModal('เกิดข้อผิดพลาดในการบันทึกรหัสผ่านใหม่ กรุณาลองใหม่อีกครั้ง');
-        }
-    }, 2000);
-}
-
-// Handle quick login button clicks
-function handleQuickLogin() {
-    const type = this.classList.contains('qr-btn') ? 'QR Code' : 
-                this.classList.contains('face-btn') ? 'Face ID' : 'Fingerprint';
-    
-    showLoading(`กำลังเข้าสู่ระบบด้วย ${type}`);
-    setTimeout(() => {
-        hideLoading();
-        showErrorModal(`การเข้าสู่ระบบด้วย ${type} ยังไม่พร้อมใช้งาน กรุณาใช้ชื่อผู้ใช้และรหัสผ่าน`);
-    }, 1500);
-}
-
-// Enhanced validation function
-function validateRegistrationForm(data) {
-    // Check required fields
-    const requiredFields = ['username', 'password', 'firstName', 'lastName', 'email', 'phone', 'studentId', 'class', 'role', 'birthDate'];
-    for (let field of requiredFields) {
-        if (!data[field]) {
-            const fieldNames = {
-                'username': 'ชื่อผู้ใช้งาน',
-                'password': 'รหัสผ่าน',
-                'firstName': 'ชื่อ',
-                'lastName': 'นามสกุล',
-                'email': 'อีเมล',
-                'phone': 'เบอร์โทรศัพท์',
-                'studentId': 'รหัสประจำตัว',
-                'class': 'ชั้นเรียน/แผนก',
-                'role': 'ประเภทผู้ใช้งาน',
-                'birthDate': 'วันเดือนปีเกิด'
-            };
-            showErrorModal(`กรุณากรอก ${fieldNames[field] || field}`);
-            return false;
-        }
-    }
-    
-    // Check username availability
-    if (userDatabase[data.username]) {
-        showErrorModal('ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเลือกชื่อใหม่');
-        return false;
-    }
-    
-    // Check username length
-    if (data.username.length < 4) {
-        showErrorModal('ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร');
-        return false;
-    }
-    
-    // Check password length
-    if (data.password.length < 6) {
-        showErrorModal('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
-        return false;
-    }
-    
-    // Check password confirmation
-    if (data.password !== data.confirmPassword) {
-        showErrorModal('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน');
-        return false;
-    }
-    
-    // Check email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-        showErrorModal('รูปแบบอีเมลไม่ถูกต้อง');
-        return false;
-    }
-    
-    // Check phone format
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(data.phone.replace(/[-\s]/g, ''))) {
-        showErrorModal('รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง (10 หลัก)');
-        return false;
-    }
-    
-    // Check birth date (must be in the past)
-    const birthDate = new Date(data.birthDate);
-    const today = new Date();
-    if (birthDate >= today) {
-        showErrorModal('วันเดือนปีเกิดไม่ถูกต้อง');
-        return false;
-    }
-    
-    // Check age (must be at least 10 years old)
-    const age = today.getFullYear() - birthDate.getFullYear();
-    if (age < 10) {
-        showErrorModal('อายุต้องมากกว่า 10 ปี');
-        return false;
-    }
-    
-    // Check terms acceptance
-    if (!data.acceptTerms) {
-        showErrorModal('กรุณายอมรับเงื่อนไขการใช้งาน');
-        return false;
-    }
-    
-    return true;
-}
-
-// Modal functions with enhanced animations
-function showLoading(text = 'กำลังประมวลผล') {
-    const loadingText = document.getElementById('loadingText');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    
-    if (loadingText) loadingText.textContent = text;
-    if (loadingOverlay) {
-        loadingOverlay.classList.add('active');
-        // Disable scrolling
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function hideLoading() {
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    if (loadingOverlay) {
-        loadingOverlay.classList.remove('active');
-        // Re-enable scrolling
-        document.body.style.overflow = 'auto';
-    }
-}
-
-// Show success modal with enhanced functionality
-function showSuccessModal(title, message, type) {
-    const successModal = document.getElementById('successModal');
-    const successTitle = document.getElementById('successTitle');
-    const successMessage = document.getElementById('successMessage');
-    const primaryBtn = document.getElementById('successPrimaryBtn');
-    const secondaryBtn = document.getElementById('successSecondaryBtn');
-    
-    if (!successModal || !successTitle || !successMessage || !primaryBtn) return;
-    
-    successTitle.textContent = title;
-    successMessage.textContent = message;
-    
-    // Configure buttons based on context
-    switch(type) {
-        case 'register':
-            primaryBtn.innerHTML = '<ion-icon name="log-in-outline"></ion-icon> เข้าสู่ระบบ';
-            primaryBtn.onclick = () => {
-                successModal.classList.remove('active');
-                toggleForm('login');
-                document.body.style.overflow = 'auto';
-            };
-            if (secondaryBtn) secondaryBtn.style.display = 'none';
-            break;
-            
-        case 'forgot':
-            primaryBtn.innerHTML = '<ion-icon name="key-outline"></ion-icon> ตั้งรหัสผ่านใหม่';
-            primaryBtn.onclick = () => {
-                successModal.classList.remove('active');
-                toggleForm('reset');
-                document.body.style.overflow = 'auto';
-            };
-            if (secondaryBtn) secondaryBtn.style.display = 'none';
-            break;
-            
-        case 'reset':
-            primaryBtn.innerHTML = '<ion-icon name="log-in-outline"></ion-icon> เข้าสู่ระบบ';
-            primaryBtn.onclick = () => {
-                successModal.classList.remove('active');
-                toggleForm('login');
-                document.body.style.overflow = 'auto';
-            };
-            if (secondaryBtn) secondaryBtn.style.display = 'none';
-            break;
-            
-        default: // login
-            primaryBtn.innerHTML = '<ion-icon name="home-outline"></ion-icon> หน้าหลัก';
-            primaryBtn.onclick = () => {
-                successModal.classList.remove('active');
-                redirectToHome();
-            };
-            
-            if (secondaryBtn) {
-                secondaryBtn.innerHTML = '<ion-icon name="person-outline"></ion-icon> โปรไฟล์';
-                secondaryBtn.style.display = 'block';
-                secondaryBtn.onclick = () => {
-                    successModal.classList.remove('active');
-                    redirectToProfile();
-                };
-            }
-    }
-    
-    successModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function showErrorModal(message) {
-    const errorModal = document.getElementById('errorModal');
-    const errorMessage = document.getElementById('errorMessage');
-    
-    if (errorMessage) errorMessage.textContent = message;
-    if (errorModal) {
-        errorModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-// Enhanced redirect functions for GitHub Pages - แก้ไขเส้นทางไฟล์
-function redirectToHome() {
-    showLoading('กำลังไปยังหน้าหลัก');
-    setTimeout(() => {
-        // แก้ไขเส้นทางให้ถูกต้องตามโครงสร้างไฟล์ของคุณ
-        const currentPath = window.location.pathname;
-        const hostname = window.location.hostname;
-        
-        if (hostname.includes('github.io')) {
-            // สำหรับ GitHub Pages - ไปยัง index.html ในโฟลเดอร์เดียวกัน
-            window.location.href = './index.html';
-        } else {
-            // สำหรับการพัฒนาในเครื่อง
-            window.location.href = 'index.html';
-        }
-    }, 1000);
-}
-
-function redirectToProfile() {
-    showLoading('กำลังไปยังหน้าโปรไฟล์');
-    setTimeout(() => {
-        // แก้ไขเส้นทางให้ถูกต้องตามโครงสร้างไฟล์ของคุณ
-        const hostname = window.location.hostname;
-        
-        if (hostname.includes('github.io')) {
-            // สำหรับ GitHub Pages - ไปยัง Profile.html ในโฟลเดอร์เดียวกัน
-            window.location.href = './Profile.html';
-        } else {
-            // สำหรับการพัฒนาในเครื่อง
-            window.location.href = 'Profile.html';
-        }
-    }, 1000);
-}
-
-// Enhanced form reset function
-function resetForms() {
-    const forms = ['loginForm', 'registerForm', 'forgotForm', 'resetForm'];
-    
-    forms.forEach(formId => {
-        const form = document.getElementById(formId);
-        if (form) {
-            form.reset();
-            
-            // Remove focused class from input containers
-            form.querySelectorAll('.input-container').forEach(container => {
-                container.classList.remove('focused');
-            });
-            
-            // Remove validation classes from inputs
-            form.querySelectorAll('.form-input').forEach(input => {
-                input.classList.remove('valid', 'invalid');
-            });
-            
-            // Reset password toggles
-            form.querySelectorAll('.password-toggle ion-icon').forEach(icon => {
-                icon.name = 'eye-outline';
-            });
-            
-            form.querySelectorAll('input[type="text"]').forEach(input => {
-                if (input.id.includes('password') || input.id.includes('Password')) {
-                    input.type = 'password';
-                }
-            });
-        }
-    });
-    
-    // Clear all hints
-    document.querySelectorAll('.form-hint').forEach(hint => {
-        hint.textContent = '';
-        hint.style.color = '';
-    });
-    
-    // Clear reset user data
-    resetUserData = null;
-}
-
-// Auto-redirect check for GitHub Pages compatibility
-function checkAutoRedirect() {
-    // Check for existing session on page load
-    try {
-        let savedUser = localStorage.getItem('scanCheckinUser');
-        let savedLoggedIn = localStorage.getItem('scanCheckinLoggedIn');
-        
-        // Fall back to sessionStorage if localStorage is empty
-        if (!savedUser || !savedLoggedIn) {
-            savedUser = sessionStorage.getItem('scanCheckinUser');
-            savedLoggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
-        }
-        
-        if (savedUser && savedLoggedIn === 'true') {
-            console.log('Found existing session, user already logged in');
-            
-            // Optional: Show a brief message or redirect automatically
-            setTimeout(() => {
-                const autoRedirect = confirm('พบว่าคุณได้เข้าสู่ระบบแล้ว ต้องการไปยังหน้าหลักหรือไม่?');
-                if (autoRedirect) {
-                    redirectToHome();
-                }
-            }, 1000);
-        }
-    } catch (e) {
-        console.log('No existing session found');
-    }
-}
-
-// Public API for accessing user data (แก้ไขให้รองรับทั้ง localStorage และ sessionStorage)
-window.getUserData = function() {
-    if (currentUser) {
-        return currentUser;
-    }
-    
-    // Try to restore from localStorage first, then sessionStorage
-    try {
-        let savedUser = localStorage.getItem('scanCheckinUser');
-        if (!savedUser) {
-            savedUser = sessionStorage.getItem('scanCheckinUser');
-        }
-        if (savedUser) {
-            return JSON.parse(savedUser);
-        }
-    } catch (e) {
-        console.warn('Could not retrieve user data');
-    }
-    
-    return null;
-};
-
-window.isUserLoggedIn = function() {
-    if (isLoggedIn) {
-        return true;
-    }
-    
-    // Try to check localStorage first, then sessionStorage
-    try {
-        let loggedIn = localStorage.getItem('scanCheckinLoggedIn');
-        if (!loggedIn) {
-            loggedIn = sessionStorage.getItem('scanCheckinLoggedIn');
-        }
-        return loggedIn === 'true';
-    } catch (e) {
-        return false;
-    }
-};
-
-window.logoutUser = function() {
-    currentUser = null;
-    isLoggedIn = false;
-    rememberLogin = false;
-    resetUserData = null;
-    
-    // Clear both localStorage and sessionStorage
-    try {
-        localStorage.removeItem('scanCheckinUser');
-        localStorage.removeItem('scanCheckinLoggedIn');
-        localStorage.removeItem('scanCheckinRemember');
-        
-        sessionStorage.removeItem('scanCheckinUser');
-        sessionStorage.removeItem('scanCheckinLoggedIn');
-        sessionStorage.removeItem('scanCheckinRemember');
-    } catch (e) {
-        console.warn('Could not clear storage');
-    }
-    
-    console.log('User logged out successfully');
-};
-
-// Additional utility functions
-window.getCurrentUserRole = function() {
-    const user = window.getUserData();
-    return user ? user.role : null;
-};
-
-window.updateUserData = function(updatedData) {
-    if (currentUser && isLoggedIn) {
-        currentUser = { ...currentUser, ...updatedData };
-        
-        try {
-            const userDataStr = JSON.stringify(currentUser);
-            localStorage.setItem('scanCheckinUser', userDataStr);
-            sessionStorage.setItem('scanCheckinUser', userDataStr);
-        } catch (e) {
-            console.warn('Could not update user session');
-        }
-        
-        return true;
-    }
-    return false;
-};
-
-// Function to get all registered users (for admin purposes)
-window.getAllUsers = function() {
-    return userDatabase;
-};
-
-// Function to clear all user data (for testing/reset purposes)
-window.clearAllUserData = function() {
-    try {
-        localStorage.removeItem('scanCheckinUserDatabase');
-        localStorage.removeItem('scanCheckinUser');
-        localStorage.removeItem('scanCheckinLoggedIn');
-        localStorage.removeItem('scanCheckinRemember');
-        
-        sessionStorage.removeItem('scanCheckinUser');
-        sessionStorage.removeItem('scanCheckinLoggedIn');
-        sessionStorage.removeItem('scanCheckinRemember');
-        
-        // Reset to default database
-        userDatabase = {
-            'student001': userDatabase['student001'],
-            'teacher001': userDatabase['teacher001'],
-            'admin': userDatabase['admin']
-        };
-        
-        console.log('All user data cleared');
-        return true;
-    } catch (e) {
-        console.warn('Could not clear all user data');
-        return false;
-    }
-};
-
-// Enhanced error handling
-window.addEventListener('error', function(e) {
-    console.error('JavaScript Error:', e.error);
-});
-
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Unhandled Promise Rejection:', e.reason);
-});
-
-// Initialize when DOM is ready
-function initWhenReady() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeSystem);
-    } else {
-        initializeSystem();
-    }
-}
-
-// Start initialization
-initWhenReady();
-
-console.log('Scan Check-in Registration System Loaded - Fixed for GitHub Pages with Persistent Storage');
         </script>
     </body>
     </html>
