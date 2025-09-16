@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสร้างรหัสเข้าเช็คชื่อ</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            --secondary-gradient: linear-gradient(135deg, #60a5fa 0%, #1d4ed8 100%);
+            --success-gradient: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            --dark-gradient: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --shadow-light: 0 8px 32px rgba(59, 130, 246, 0.15);
+            --shadow-heavy: 0 20px 60px rgba(59, 130, 246, 0.2);
+            --blur: blur(10px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: #1f2937;
+        }
+
+        /* Background Animation */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 50%, #bfdbfe 100%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(147, 197, 253, 0.08) 1px, transparent 1px);
+            background-size: 60px 60px, 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 0;
+        }
+
+        .header-content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #4b5563;
+            margin-bottom: 30px;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        /* Glass Card Design */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            box-shadow: var(--shadow-heavy);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .section-header ion-icon {
+            font-size: 2rem;
+            color: #3b82f6;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        /* Form Styling */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .form-label ion-icon {
+            font-size: 1.2rem;
+            color: #3b82f6;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Premium Buttons */
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-decoration: none;
+            min-width: 160px;
+        }
+
+        .btn-primary {
+            background: var(--success-gradient);
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--dark-gradient);
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Code Display */
+        .code-showcase {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.1));
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-showcase-content {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .code-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #4b5563;
+        }
+
+        .code-number {
+            font-size: 4rem;
+            font-weight: 900;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            margin: 20px 0;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: var(--shadow-light);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .info-card-header ion-icon {
+            font-size: 1.5rem;
+            color: #3b82f6;
+        }
+
+        .info-card-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .info-card-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        /* URL Section */
+        .url-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 197, 253, 0.05));
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            margin: 30px 0;
+        }
+
+        .url-textarea {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #1f2937;
+            resize: vertical;
+        }
+
+        .url-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Button Groups */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* Notifications */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            color: #1f2937;
+            font-weight: 500;
+            box-shadow: var(--shadow-light);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 320px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast ion-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast-error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast-success ion-icon {
+            color: #10b981;
+        }
+
+        .toast-error ion-icon {
+            color: #ef4444;
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* No Link Section - แสดงแทนการไปหน้าอื่น */
+        .no-link-notice {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .no-link-notice ion-icon {
+            font-size: 3rem;
+            color: #f59e0b;
+            margin-bottom: 15px;
+        }
+
+        .no-link-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+
+        .no-link-text {
+            color: #a16207;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header-stats {
+                gap: 20px;
+            }
+            
+            .glass-card {
+                padding: 25px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .code-number {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .toast {
+                right: 15px;
+                left: 15px;
+                transform: translateY(-100px);
+                min-width: auto;
+            }
+            
+            .toast.show {
+                transform: translateY(0);
+            }
+        }
+
+        /* Hidden utility */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-container"></div>
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="header-content">
+                <h1>ระบบสร้างรหัสเช็คชื่อ</h1>
+                <p class="header-subtitle">แพลตฟอร์มจัดการเข้าเรียนสำหรับสถาบันการศึกษา</p>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalCodes">0</div>
+                        <div class="stat-label">รหัสทั้งหมด</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="activeCodes">0</div>
+                        <div class="stat-label">รหัสที่ใช้งาน</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">ความเสถียร</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Generator Section -->
+        <div id="codeGenerator" class="glass-card">
+            <div class="section-header">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                <h2 class="section-title">สร้างรหัสเข้าเรียนใหม่</h2>
+            </div>
+            
+            <form id="generateForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="person-outline"></ion-icon>
+                            ชื่อ - นามสกุล
+                        </label>
+                        <input type="text" id="studentName" class="form-input" required 
+                               placeholder="กรอกชื่อ-นามสกุลนักเรียน">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="school-outline"></ion-icon>
+                            ระดับชั้น
+                        </label>
+                        <select id="gradeLevel" class="form-select" required>
+                            <option value="">เลือกระดับชั้น</option>
+                            <option value="ปวช.1/1">ปวช.1/1</option>
+                            <option value="ปวช.1/2">ปวช.1/2</option>
+                            <option value="ปวช.1/3">ปวช.1/3</option>
+                            <option value="ปวช.1/4">ปวช.1/4</option>
+                            <option value="ปวช.1/5">ปวช.1/5</option>
+                            <option value="ปวช.1/6">ปวช.1/6</option>
+                            <option value="ปวช.2/1">ปวช.2/1</option>
+                            <option value="ปวช.2/3">ปวช.2/3</option>
+                            <option value="ปวช.2/4">ปวช.2/4</option>
+                            <option value="ปวช.3/1">ปวช.3/1</option>
+                            <option value="ปวช.3/3">ปวช.3/3</option>
+                            <option value="ปวช.3/5">ปวช.3/5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="code-outline"></ion-icon>
+                            รหัสวิชา
+                        </label>
+                        <input type="text" id="subjectCode" class="form-input" required 
+                               placeholder="เช่น 2101-1001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="book-outline"></ion-icon>
+                            ชื่อรายวิชา
+                        </label>
+                        <input type="text" id="subjectName" class="form-input" required 
+                               placeholder="เช่น คณิตศาสตร์พื้นฐาน">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span id="generateBtnText">
+                        <ion-icon name="rocket-outline"></ion-icon>
+                        สร้างรหัสเข้าเรียน
+                    </span>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Result Section -->
+        <div id="resultSection" class="glass-card hidden">
+            <div class="section-header">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <h2 class="section-title">รหัสเข้าเรียนของคุณ</h2>
+            </div>
+            
+            <div class="code-showcase">
+                <div class="code-showcase-content">
+                    <div class="code-title">รหัสของคุณคือ</div>
+                    <div class="code-number" id="codeDisplay"></div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <ion-icon name="person"></ion-icon>
+                        <div class="info-card-label">ชื่อนักเรียน</div>
+                    </div>
+                    <div class="info-card-value" id="nameDisplay"></div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <ion-icon name="school"></ion-icon>
+                        <div class="info-card-label">ระดับชั้น</div>
+                    </div>
+                    <div class="info-card-value" id="gradeDisplay"></div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <ion-icon name="book"></ion-icon>
+                        <div class="info-card-label">รายวิชา</div>
+                    </div>
+                    <div class="info-card-value" id="subjectDisplay"></div>
+                </div>
+            </div>
+            
+            <!-- แจ้งเตือนแทนการลิงก์ไปหน้าอื่น -->
+            <div class="no-link-notice">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <div class="no-link-title">สำหรับ GitHub Pages Demo</div>
+                <div class="no-link-text">
+                    ในสภาพแวดล้อมจริง ระบบจะเปิดหน้าเช็คชื่อโดยอัตโนมัติ<br>
+                    คุณสามารถใช้รหัส <strong id="codeForNotice"></strong> เพื่อเข้าเช็คชื่อในระบบจริง
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button onclick="resetForm()" class="btn btn-secondary">
+                    <ion-icon name="refresh-outline"></ion-icon>
+                    สร้างรหัสใหม่
+                </button>
+            </div>
+        </div>
+        
+        <!-- Code Checker Section -->
+        <div id="codeChecker" class="glass-card">
+            <div class="section-header">
+                <ion-icon name="search-outline"></ion-icon>
+                <h2 class="section-title">ใช้รหัสเข้าเช็คชื่อ</h2>
+            </div>
+            
+            <form id="checkCodeForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        <ion-icon name="key-outline"></ion-icon>
+                        กรอกรหัสเข้าเรียน
+                    </label>
+                    <input type="text" id="inputCode" class="form-input" required 
+                           placeholder="กรอกรหัส 6 หลัก" maxlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <ion-icon name="log-in-outline"></ion-icon>
+                    เข้าเช็คชื่อ
+                </button>
+            </form>
+            
+            <!-- แจ้งเตือนสำหรับการตรวจสอบรหัส -->
+            <div id="codeCheckResult" class="no-link-notice hidden">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <div class="no-link-title">รหัสถูกต้อง!</div>
+                <div class="no-link-text" id="checkResultText"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // เก็บข้อมูลรหัสที่สร้างใน memory (แทน localStorage)
+        let generatedCodes = {};
+        
+        // โหลดข้อมูลรหัส
+        function loadCodes() {
+            updateStats();
+        }
+        
+        // บันทึกข้อมูลรหัส (จำลอง)
+        function saveCodes() {
+            updateStats();
+        }
+        
+        // อัปเดตสถิติ
+        function updateStats() {
+            const total = Object.keys(generatedCodes).length;
+            const active = Object.values(generatedCodes).filter(code => !code.used).length;
+            
+            document.getElementById('totalCodes').textContent = total;
+            document.getElementById('activeCodes').textContent = active;
+        }
+        
+        // สร้างรหัส 6 หลัก
+        function generateCode() {
+            return Math.random().toString().substr(2, 6);
+        }
+        
+        // แสดง toast notification
+        function showToast(message, type = 'success', icon = 'checkmark-circle-outline') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const iconEl = document.createElement('ion-icon');
+            iconEl.setAttribute('name', icon);
+            
+            const messageEl = document.createElement('div');
+            messageEl.textContent = message;
+            
+            toast.appendChild(iconEl);
+            toast.appendChild(messageEl);
+            document.body.appendChild(toast);
+            
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 400);
+            }, 4000);
+        }
+        
+        // จัดการฟอร์มสร้างรหัส
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('#generateForm button[type="submit"]');
+            const btnText = document.getElementById('generateBtnText');
+            const originalText = btnText.innerHTML;
+            
+            // แสดง loading
+            btnText.innerHTML = '<div class="loading-spinner"></div>กำลังสร้างรหัส...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                const name = document.getElementById('studentName').value.trim();
+                const grade = document.getElementById('gradeLevel').value;
+                const subjectCode = document.getElementById('subjectCode').value.trim();
+                const subjectName = document.getElementById('subjectName').value.trim();
+                
+                if
