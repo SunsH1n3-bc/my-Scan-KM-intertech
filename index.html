@@ -2252,13 +2252,13 @@ function redirectToLogin() {
             
             if (currentPath.includes('/HTML/')) {
                 // ถ้าอยู่ในโฟลเดอร์ HTML
-                loginPath = './login.html';
+                loginPath = './Profile.html';
             } else if (window.location.hostname.includes('github.io')) {
                 // GitHub Pages
-                loginPath = './login.html';
+                loginPath = './Profile.html';
             } else {
                 // Local development
-                loginPath = 'login.html';
+                loginPath = './Profile.html';
             }
             
             console.log('Redirecting to:', loginPath);
@@ -2268,7 +2268,7 @@ function redirectToLogin() {
     } catch (error) {
         console.error('Redirect error:', error);
         // fallback redirect
-        window.location.href = 'login.html';
+        window.location.href = './Profile.html';
     }
 }
 
