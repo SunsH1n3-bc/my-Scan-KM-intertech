@@ -463,7 +463,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* No Link Section - แสดงแทนการไปหน้าอื่น */
+        /* No Link Section */
         .no-link-notice {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
             border: 2px solid rgba(251, 191, 36, 0.3);
@@ -807,4 +807,187 @@
                 const subjectCode = document.getElementById('subjectCode').value.trim();
                 const subjectName = document.getElementById('subjectName').value.trim();
                 
-                if
+                // สร้างรหัสใหม่
+                const code = generateCode();
+                
+                // บันทึกข้อมูลรหัส
+                generatedCodes[code] = {
+                    name: name,
+                    grade: grade,
+                    subjectCode: subjectCode,
+                    subjectName: subjectName,
+                    createdAt: new Date().toLocaleString('th-TH'),
+                    used: false
+                };
+                
+                // แสดงผลลัพธ์
+                document.getElementById('codeDisplay').textContent = code;
+                document.getElementById('nameDisplay').textContent = name;
+                document.getElementById('gradeDisplay').textContent = grade;
+                document.getElementById('subjectDisplay').textContent = `${subjectCode} - ${subjectName}`;
+                document.getElementById('codeForNotice').textContent = code;
+                
+                // ซ่อนฟอร์ม แสดงผลลัพธ์
+                document.getElementById('codeGenerator').classList.add('hidden');
+                document.getElementById('resultSection').classList.remove('hidden');
+                
+                // รีเซ็ตปุ่ม
+                btnText.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // แสดงการแจ้งเตือน
+                showToast(`สร้างรหัสเข้าเรียนสำเร็จ: ${code}`, 'success');
+                
+                // บันทึกข้อมูล
+                saveCodes();
+                
+            }, 1500); // จำลอง loading time
+        });
+        
+        // จัดการฟอร์มตรวจสอบรหัส
+        document.getElementById('checkCodeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const inputCode = document.getElementById('inputCode').value.trim();
+            const resultDiv = document.getElementById('codeCheckResult');
+            const resultText = document.getElementById('checkResultText');
+            
+            if (inputCode.length !== 6) {
+                showToast('กรุณากรอกรหัส 6 หลัก', 'error', 'alert-circle-outline');
+                return;
+            }
+            
+            // ตรวจสอบรหัส
+            if (generatedCodes[inputCode]) {
+                const codeData = generatedCodes[inputCode];
+                
+                if (codeData.used) {
+                    showToast('รหัสนี้ถูกใช้งานแล้ว', 'error', 'close-circle-outline');
+                    resultDiv.classList.add('hidden');
+                } else {
+                    // ทำเครื่องหมายว่าใช้แล้ว
+                    generatedCodes[inputCode].used = true;
+                    saveCodes();
+                    
+                    resultText.innerHTML = `
+                        รหัส ${inputCode} ถูกต้อง!<br>
+                        <strong>นักเรียน:</strong> ${codeData.name}<br>
+                        <strong>ชั้น:</strong> ${codeData.grade}<br>
+                        <strong>วิชา:</strong> ${codeData.subjectCode} - ${codeData.subjectName}<br>
+                        <strong>สร้างเมื่อ:</strong> ${codeData.createdAt}
+                    `;
+                    
+                    resultDiv.classList.remove('hidden');
+                    showToast('เข้าเช็คชื่อสำเร็จ!', 'success');
+                    
+                    // ล้างฟอร์ม
+                    document.getElementById('inputCode').value = '';
+                }
+            } else {
+                showToast('ไม่พบรหัสนี้ในระบบ', 'error', 'close-circle-outline');
+                resultDiv.classList.add('hidden');
+            }
+        });
+        
+        // รีเซ็ตฟอร์ม
+        function resetForm() {
+            document.getElementById('generateForm').reset();
+            document.getElementById('codeGenerator').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('codeCheckResult').classList.add('hidden');
+            
+            // เลื่อนขึ้นไปด้านบน
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // จำกัดการพิมพ์ในช่องรหัสให้เป็นตัวเลขเท่านั้น
+        document.getElementById('inputCode').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+        
+        // Auto-format รหัสวิชา
+        document.getElementById('subjectCode').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9-]/g, '');
+            
+            // จัดรูปแบบ xxxx-xxxx
+            if (value.length > 4 && value.indexOf('-') === -1) {
+                value = value.substring(0, 4) + '-' + value.substring(4, 8);
+            }
+            
+            e.target.value = value;
+        });
+        
+        // โหลดข้อมูลเมื่อเปิดหน้า
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCodes();
+            
+            // เพิ่มเอฟเฟค fade-in
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.container').style.transition = 'all 0.8s ease';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+        
+        // เอฟเฟคพิเศษสำหรับ input focus
+        document.querySelectorAll('.form-input, .form-select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + Enter = สร้างรหัส
+            if (e.ctrlKey && e.key === 'Enter') {
+                const generateForm = document.getElementById('generateForm');
+                if (!generateForm.classList.contains('hidden')) {
+                    generateForm.dispatchEvent(new Event('submit'));
+                }
+            }
+            
+            // Escape = รีเซ็ต
+            if (e.key === 'Escape') {
+                if (!document.getElementById('resultSection').classList.contains('hidden')) {
+                    resetForm();
+                }
+            }
+        });
+        
+        // เอฟเฟค parallax สำหรับ background
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.2;
+            
+            document.querySelector('.bg-grid').style.transform = `translate3d(0, ${rate}px, 0)`;
+        });
+        
+        // ป้องกันการ copy รหัสในบางกรณี (สำหรับการใช้งานจริง)
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.id === 'codeDisplay') {
+                // ในการใช้งานจริงอาจต้องการป้องกันการคลิกขวา
+                // e.preventDefault();
+            }
+        });
+        
+        // Auto-save draft (จำลอง)
+        let draftTimer;
+        document.querySelectorAll('#generateForm input, #generateForm select').forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(draftTimer);
+                draftTimer = setTimeout(() => {
+                    // ในการใช้งานจริงอาจบันทึก draft ไว้
+                    console.log('Draft saved');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
