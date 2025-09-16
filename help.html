@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ช่วยเหลือ - ระบบเช็คอินทันสมัย</title>
+    
+    <!-- Ionicons -->
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.js"></script>
+    
+    <!-- CSS -->
+    <style>
+        /* Help Page Specific Styles */
+/* Modern Blue & White Theme */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fafbfc;
+    color: #1a1a1a;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+    
+}
+
+:root {
+    --primary-blue: #2563eb;
+    --primary-blue-light: #3b82f6;
+    --primary-blue-dark: #1d4ed8;
+    --secondary-blue: #60a5fa;
+    --accent-blue: #93c5fd;
+    --light-blue: #dbeafe;
+    --extra-light-blue: #eff6ff;
+    
+    --white: #ffffff;
+    --off-white: #f8fafc;
+    --light-gray: #f1f5f9;
+    --gray: #64748b;
+    --dark-gray: #334155;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --maintenance: #8b5cf6;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
+    
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Help Header Styles */
+.help-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    padding: 4rem 0 6rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.help-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.05); opacity: 0.1; }
+}
+
+.help-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.help-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.help-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    color: var(--white);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.help-content h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.help-content p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.help-search {
+    margin-top: 2rem;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.search-icon {
+    color: var(--gray);
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: transparent;
+}
+
+.search-input::placeholder {
+    color: var(--gray);
+}
+
+.search-btn {
+    background: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover {
+    background: var(--primary-blue-dark);
+    transform: translateY(-1px);
+}
+
+.help-illustration {
+    flex: 0 0 300px;
+    position: relative;
+    height: 300px;
+}
+
+.floating-help-icons {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-help-icon {
+    font-size: 6rem;
+    color: var(--white);
+    opacity: 0.9;
+    animation: float 3s ease-in-out infinite;
+}
+
+.floating-help-icon {
+    position: absolute;
+    font-size: 2rem;
+    color: var(--white);
+    opacity: 0.7;
+    animation: float 3s ease-in-out infinite;
+}
+
+.help-icon-1 {
+    top: 20%;
+    left: 20%;
+    animation-delay: -1s;
+}
+
+.help-icon-2 {
+    top: 60%;
+    right: 20%;
+    animation-delay: -2s;
+}
+
+.help-icon-3 {
+    bottom: 20%;
+    left: 30%;
+    animation-delay: -0.5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Quick Help Categories */
+.quick-help {
+    padding: 4rem 0;
+    background: var(--off-white);
+}
+
+.help-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.help-category {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.help-category::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+}
+
+.help-category:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-blue);
+}
+
+.category-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+    font-size: 1.5rem;
+}
+
+.help-category h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.help-category p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.category-btn {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    width: 100%;
+    justify-content: center;
+}
+
+.category-btn:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+/* FAQ Section */
+.faq-section {
+    padding: 4rem 0;
+    background: var(--white);
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.faq-item {
+    background: var(--off-white);
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: var(--transition);
+}
+
+.faq-item:hover {
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-md);
+}
+
+.faq-question {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white);
+    transition: var(--transition);
+}
+
+.faq-question:hover {
+    background: var(--extra-light-blue);
+}
+
+.faq-question h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.faq-icon {
+    font-size: 1.25rem;
+    color: var(--primary-blue);
+    transition: var(--transition);
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    padding: 0 1.5rem 1.5rem;
+    background: var(--white);
+    display: none;
+}
+
+.faq-item.active .faq-answer {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.faq-answer p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.faq-answer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.faq-answer li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.faq-answer li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 6px;
+    height: 6px;
+    background: var(--primary-blue);
+    border-radius: 50%;
+}
+
+/* Contact Support */
+.contact-support {
+    padding: 4rem 0;
+    background: var(--light-gray);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.contact-card {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: var(--transition);
+}
+
+.contact-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-blue);
+}
+
+.contact-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: var(--white);
+    font-size: 1.5rem;
+}
+
+.contact-card h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.contact-card p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.contact-btn {
+    background: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    margin: 1.5rem auto 0;
+    justify-content: center;
+}
+
+.contact-btn:hover {
+    background: var(--primary-blue-dark);
+    transform: translateY(-2px);
+}
+
+/* System Status */
+.system-status {
+    padding: 4rem 0;
+    background: var(--white);
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.status-item {
+    background: var(--off-white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: var(--transition);
+}
+
+.status-item:hover {
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-blue);
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse-status 2s infinite;
+}
+
+.status-indicator.online {
+    background: var(--success);
+}
+
+.status-indicator.maintenance {
+    background: var(--maintenance);
+}
+
+@keyframes pulse-status {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-info h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.status-info p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.online {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.status-badge.maintenance {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--maintenance);
+}
+
+/* Video Tutorials */
+.video-tutorials {
+    padding: 4rem 0;
+    background: var(--off-white);
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.video-card {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-blue);
+}
+
+.video-thumbnail {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+}
+
+.play-icon {
+    font-size: 3rem;
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.video-card:hover .play-icon {
+    transform: scale(1.1);
+}
+
+.video-duration {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--white);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.video-info {
+    padding: 1.5rem;
+}
+
+.video-info h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.video-info p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.video-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.875rem;
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+}
+
+.section-header h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.section-divider {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-blue), transparent);
+    margin-left: 2rem;
+}
+
+.view-all-btn {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.view-all-btn:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .help-hero {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .help-illustration {
+        flex: none;
+        width: 100%;
+        height: 200px;
+    }
+    
+    .help-content h2 {
+        font-size: 2rem;
+    }
+    
+    .help-content p {
+        font-size: 1rem;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .section-divider {
+        display: none;
+    }
+    
+    .section-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .help-categories,
+    .contact-grid,
+    .status-grid,
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .search-btn {
+        width: 100%;
+    }
+}
+
+/* Animation for smooth interactions */
+.help-category,
+.contact-card,
+.video-card,
+.status-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-blue);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Header Styles - Modern Clean Design */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #e8eaed;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    height: 70px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 100%;
+}
+
+.logo-section .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: #4285f4;
+    transition: transform 0.3s ease;
+}
+
+.logo-icon:hover {
+    transform: scale(1.05);
+}
+
+.logo h1 {
+    font-size: 20px;
+    color: #1a1a1a;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: #e8f0fe;
+}
+
+.profile-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #1a1a1a;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.notification {
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-icon {
+    font-size: 20px;
+    color: #5f6368;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.notification-icon:hover {
+    background: #f1f3f4;
+    color: #4285f4;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #ea4335;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Modern Vertical Navigation */
+.vertical-nav {
+    position: fixed;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 72px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e8eaed;
+    z-index: 999;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vertical-nav:hover {
+    transform: translateY(-50%) scale(1.02);
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.nav-container {
+    padding: 16px 0;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #5f6368;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+}
+
+.nav-link:hover {
+    background: #f8f9fa;
+    color: #4285f4;
+    transform: scale(1.05);
+}
+
+.nav-link.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+}
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background: #4285f4;
+    border-radius: 2px;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+/* Modern Tooltip */
+.nav-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 76px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1a1a1a;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-item:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(8px);
+}
+
+/* Main Content Layout */
+.main-content {
+    margin-left: 120px;
+    margin-top: 70px;
+    padding: 32px;
+    min-height: calc(100vh - 70px);
+    max-width: 1200px;
+}
+
+/* Modern Footer */
+.main-footer {
+    background: white;
+    border-top: 1px solid #e8eaed;
+    padding: 24px 0;
+    margin-top: 48px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-container p {
+    color: #5f6368;
+    font-size: 14px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.footer-links a {
+    color: #5f6368;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #4285f4;
+}
+    </style>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-bg">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="floating-element element-3"></div>
+        <div class="floating-element element-4"></div>
+        <div class="floating-element element-5"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-icon-wrapper">
+                        <ion-icon name="school" class="logo-icon"></ion-icon>
+                    </div>
+                    <h1>Scan Check In</h1>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="profile-img">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">สมชาย ใจดี</span>
+                        <span class="user-status">นักเรียน</span>
+                    </div>
+                </div>
+                <div class="notification">
+                    <ion-icon name="notifications" class="notification-icon"></ion-icon>
+                    <span class="notification-badge">3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Vertical Navigation Sidebar -->
+    <nav class="vertical-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item" data-tooltip="หน้าแรก">
+                    <a href="./index.html" class="nav-link" aria-label="หน้าแรก">
+                        <ion-icon name="home" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="สแกน QR Code">
+                    <a href="./member.html" class="nav-link" aria-label="สแกน">
+                        <ion-icon name="qr-code" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="เช็คอิน">
+                    <a href="./studens.html" class="nav-link" aria-label="เช็คอิน">
+                        <ion-icon name="checkmark-circle" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="ตารางเรียน">
+                    <a href="./ClassRoom.html" class="nav-link" aria-label="ตารางเรียน">
+                        <ion-icon name="calendar" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="รายงาน">
+                    <a href="./Report.html" class="nav-link" aria-label="รายงาน">
+                        <ion-icon name="bar-chart" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="โปรไฟล์">
+                    <a href="./Profile.html" class="nav-link" aria-label="โปรไฟล์">
+                        <ion-icon name="person" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+                
+                <li class="nav-item" data-tooltip="ติดต่อ">
+                    <a href="#" class="nav-link active" aria-label="ติดต่อ">
+                        <ion-icon name="help-circle" class="nav-icon"></ion-icon>
+                        <span class="nav-ripple"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Help Header -->
+        <section class="help-header">
+            <div class="help-hero">
+                <div class="help-content">
+                    <div class="help-badge">
+                        <ion-icon name="help-buoy"></ion-icon>
+                        <span>ศูนย์ช่วยเหลือ</span>
+                    </div>
+                    <h2>ยินดีให้ความช่วยเหลือ</h2>
+                    <p>ค้นหาคำตอบและเรียนรู้วิธีใช้งานระบบเช็คอินของเรา</p>
+                    
+                    <!-- Search Box -->
+                    <div class="help-search">
+                        <div class="search-container">
+                            <ion-icon name="search" class="search-icon"></ion-icon>
+                            <input type="text" placeholder="ค้นหาคำถาม คำตอบ หรือหัวข้อ..." class="search-input">
+                            <button class="search-btn">
+                                <ion-icon name="arrow-forward"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="help-illustration">
+                    <div class="floating-help-icons">
+                        <ion-icon name="help-circle-outline" class="help-icon main-help-icon"></ion-icon>
+                        <ion-icon name="chatbubble-outline" class="floating-help-icon help-icon-1"></ion-icon>
+                        <ion-icon name="book-outline" class="floating-help-icon help-icon-2"></ion-icon>
+                        <ion-icon name="bulb-outline" class="floating-help-icon help-icon-3"></ion-icon>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Help Categories -->
+        <section class="quick-help">
+            <div class="section-header">
+                <h3>หมวดหมู่ช่วยเหลือ</h3>
+                <div class="section-divider"></div>
+            </div>
+            <div class="help-categories">
+                <div class="help-category">
+                    <div class="category-icon">
+                        <ion-icon name="qr-code"></ion-icon>
+                    </div>
+                    <h4>การสแกน QR Code</h4>
+                    <p>เรียนรู้วิธีสแกนและแก้ไขปัญหาเกี่ยวกับ QR Code</p>
+                    <button class="category-btn">
+                        <span>ดูวิธีใช้</span>
+                        <ion-icon name="arrow-forward"></ion-icon>
+                    </button>
+                </div>
+                
+                <div class="help-category">
+                    <div class="category-icon">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                    </div>
+                    <h4>การเช็คอิน</h4>
+                    <p>วิธีเช็คอินเข้าเรียนและตรวจสอบสถานะ</p>
+                    <button class="category-btn">
+                        <span>ดูวิธีใช้</span>
+                        <ion-icon name="arrow-forward"></ion-icon>
+                    </button>
+                </div>
+                
+                <div class="help-category">
+                    <div class="category-icon">
+                        <ion-icon name="calendar"></ion-icon>
+                    </div>
+                    <h4>ตารางเรียน</h4>
+                    <p>จัดการและดูตารางเรียนของคุณ</p>
+                    <button class="category-btn">
+                        <span>ดูวิธีใช้</span>
+                        <ion-icon name="arrow-forward"></ion-icon>
+                    </button>
+                </div>
+                
+                <div class="help-category">
+                    <div class="category-icon">
+                        <ion-icon name="bar-chart"></ion-icon>
+                    </div>
+                    <h4>รายงานและสถิติ</h4>
+                    <p>ดูรายงานการเข้าเรียนและสถิติต่างๆ</p>
+                    <button class="category-btn">
+                        <span>ดูวิธีใช้</span>
+                        <ion-icon name="arrow-forward"></ion-icon>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="section-header">
+                <h3>คำถามที่พบบ่อย</h3>
+                <div class="section-divider"></div>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>ทำไมไม่สามารถสแกน QR Code ได้?</h4>
+                        <ion-icon name="chevron-down" class="faq-icon"></ion-icon>
+                    </div>
+                    <div class="faq-answer">
+                        <p>มีหลายสาเหตุที่อาจทำให้ไม่สามารถสแกน QR Code ได้:</p>
+                        <ul>
+                            <li>ตรวจสอบว่ากล้องได้รับอนุญาตให้เข้าถึงแล้ว</li>
+                            <li>ทำความสะอาดเลนส์กล้อง</li>
+                            <li>ให้แสงสว่างเพียงพอ</li>
+                            <li>ถือมือถือให้นิ่งและระยะที่เหมาะสม</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>เช็คอินสำเร็จแล้ว แต่ระบบไม่แสดงสถานะ?</h4>
+                        <ion-icon name="chevron-down" class="faq-icon"></ion-icon>
+                    </div>
+                    <div class="faq-answer">
+                        <p>หากเช็คอินสำเร็จแล้วแต่ระบบไม่แสดงสถานะ:</p>
+                        <ul>
+                            <li>รอสักครู่แล้วรีเฟรชหน้าเว็บ</li>
+                            <li>ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</li>
+                            <li>ลองเข้าออกระบบใหม่</li>
+                            <li>ติดต่อเจ้าหน้าที่หากยังไม่แสดงผล</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>ลืมรหัสผ่านต้องทำอย่างไร?</h4>
+                        <ion-icon name="chevron-down" class="faq-icon"></ion-icon>
+                    </div>
+                    <div class="faq-answer">
+                        <p>หากลืมรหัสผ่าน:</p>
+                        <ul>
+                            <li>คลิกที่ "ลืมรหัสผ่าน" ในหน้าเข้าสู่ระบบ</li>
+                            <li>กรอกอีเมลที่ลงทะเบียนไว้</li>
+                            <li>ตรวจสอบอีเมลและทำตามขั้นตอน</li>
+                            <li>หรือติดต่อเจ้าหน้าที่โรงเรียน</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>ตารางเรียนไม่ตรงกับความเป็นจริง?</h4>
+                        <ion-icon name="chevron-down" class="faq-icon"></ion-icon>
+                    </div>
+                    <div class="faq-answer">
+                        <p>หากตารางเรียนไม่ตรงกับความเป็นจริง:</p>
+                        <ul>
+                            <li>ตรวจสอบว่าเลือกภาคเรียนที่ถูกต้อง</li>
+                            <li>รีเฟรชหน้าเว็บ</li>
+                            <li>ติดต่อเจ้าหน้าที่งานวิชาการ</li>
+                            <li>อาจมีการเปลี่ยนแปลงตารางเรียนล่าสุด</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>วิธีดูสถิติการเข้าเรียนย้อนหลัง?</h4>
+                        <ion-icon name="chevron-down" class="faq-icon"></ion-icon>
+                    </div>
+                    <div class="faq-answer">
+                        <p>การดูสถิติการเข้าเรียนย้อนหลัง:</p>
+                        <ul>
+                            <li>ไปที่เมนู "รายงาน"</li>
+                            <li>เลือกช่วงเวลาที่ต้องการดู</li>
+                            <li>คลิก "ดูรายงาน" หรือ "ส่งออก"</li>
+                            <li>สามารถดาวน์โหลดเป็นไฟล์ PDF ได้</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Support -->
+        <section class="contact-support">
+            <div class="section-header">
+                <h3>ติดต่อเจ้าหน้าที่</h3>
+                <div class="section-divider"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <ion-icon name="call"></ion-icon>
+                    </div>
+                    <h4>โทรศัพท์</h4>
+                    <p>061-060-7931</p>
+                    <p>จันทร์-ศุกร์ 8:00-17:00</p>
+                    <button class="contact-btn">
+                        <ion-icon name="call"></ion-icon>
+                        <span>โทรเลย</span>
+                    </button>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <ion-icon name="mail"></ion-icon>
+                    </div>
+                    <h4>อีเมล</h4>
+                    <p>Siributwicha015@Gmail.com</p>
+                    <p>ตอบกลับภายใน 24 ชั่วโมง</p>
+                    <button class="contact-btn">
+                        <ion-icon name="mail"></ion-icon>
+                        <span>ส่งอีเมล</span>
+                    </button>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <ion-icon name="chatbubble"></ion-icon>
+                    </div>
+                    <h4>Live Chat</h4>
+                    <p>แชทสดกับเจ้าหน้าที่</p>
+                    <p>จันทร์-ศุกร์ 8:00-17:00</p>
+                    <button class="contact-btn">
+                        <ion-icon name="chatbubble"></ion-icon>
+                        <span>เริ่มแชท</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Status -->
+        <section class="system-status">
+            <div class="section-header">
+                <h3>สถานะระบบ</h3>
+                <div class="section-divider"></div>
+            </div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-indicator online"></div>
+                    <div class="status-info">
+                        <h4>ระบบเช็คอิน</h4>
+                        <p>ทำงานปกติ</p>
+                    </div>
+                    <div class="status-badge online">Online</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-indicator online"></div>
+                    <div class="status-info">
+                        <h4>ระบบตารางเรียน</h4>
+                        <p>ทำงานปกติ</p>
+                    </div>
+                    <div class="status-badge online">Online</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-indicator maintenance"></div>
+                    <div class="status-info">
+                        <h4>ระบบรายงาน</h4>
+                        <p>ปรับปรุงระบบ</p>
+                    </div>
+                    <div class="status-badge maintenance">Maintenance</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-indicator online"></div>
+                    <div class="status-info">
+                        <h4>ระบบการแจ้งเตือน</h4>
+                        <p>ทำงานปกติ</p>
+                    </div>
+                    <div class="status-badge online">Online</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Tutorials -->
+        <section class="video-tutorials">
+            <div class="section-header">
+                <h3>วิดีโอสอนใช้งาน</h3>
+                <div class="section-divider"></div>
+            </div>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <ion-icon name="play-circle" class="play-icon"></ion-icon>
+                        <div class="video-duration">3:45</div>
+                    </div>
+                    <div class="video-info">
+                        <h4>วิธีการสแกน QR Code</h4>
+                        <p>เรียนรู้การใช้งานเบื้องต้นของระบบสแกน QR Code</p>
+                        <div class="video-stats">
+                            <span>1,234 ครั้ง</span>
+                            <span>•</span>
+                            <span>2 วันที่แล้ว</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <ion-icon name="play-circle" class="play-icon"></ion-icon>
+                        <div class="video-duration">5:12</div>
+                    </div>
+                    <div class="video-info">
+                        <h4>การเช็คอินและตรวจสอบสถานะ</h4>
+                        <p>แนะนำการใช้งานระบบเช็คอินและการตรวจสอบสถานะ</p>
+                        <div class="video-stats">
+                            <span>892 ครั้ง</span>
+                            <span>•</span>
+                            <span>5 วันที่แล้ว</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <ion-icon name="play-circle" class="play-icon"></ion-icon>
+                        <div class="video-duration">4:28</div>
+                    </div>
+                    <div class="video-info">
+                        <h4>การใช้งานตารางเรียน</h4>
+                        <p>วิธีดูตารางเรียนและการแจ้งเตือนต่างๆ</p>
+                        <div class="video-stats">
+                            <span>567 ครั้ง</span>
+                            <span>•</span>
+                            <span>1 สัปดาห์ที่แล้ว</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>เกี่ยวกับเรา</h4>
+                    <p>ระบบเช็คอินเรียนออนไลน์ที่ทันสมัยและใช้งานง่าย</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ติดต่อเรา</h4>
+                    <p>โทร: 061-060-7931</p>
+                    <p>อีเมล: Siributwicha015@Gmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ลิงก์ด่วน</h4>
+                    <div class="footer-links">
+                        <a href="./about.html">เกี่ยวกับเรา</a>
+                        <a href="./N.html">เงื่อนไขการใช้งาน</a>
+                        <a href="#">ช่วยเหลือ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ระบบเช็คอินเรียนออนไลน์. สงวนลิขสิทธิ์.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
