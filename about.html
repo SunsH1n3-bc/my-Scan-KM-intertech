@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกี่ยวกับเรา - About Us</title>
+    
+    <!-- Ionicons -->
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.js"></script>
+
+    <style>
+        /* Reset และ Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1a202c;
+    background: #ffffff;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.about-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    transition: all 0.3s ease;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    font-size: 2rem;
+    color: #3b82f6;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 80%;
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 8rem 0 4rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%233b82f6" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+}
+
+.hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-text h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    font-size: 1.25rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.hero-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 300px;
+}
+
+.main-icon {
+    font-size: 8rem;
+    color: #3b82f6;
+    filter: drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3));
+}
+
+.floating-icons {
+    position: absolute;
+    inset: 0;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 2rem;
+    color: #60a5fa;
+    animation: float 3s ease-in-out infinite;
+}
+
+.icon-1 { top: 20%; left: 20%; animation-delay: 0s; }
+.icon-2 { top: 20%; right: 20%; animation-delay: 1s; }
+.icon-3 { bottom: 20%; left: 20%; animation-delay: 2s; }
+.icon-4 { bottom: 20%; right: 20%; animation-delay: 1.5s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Section Headers */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    font-size: 1.125rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Mission Section */
+.mission-section {
+    padding: 5rem 0;
+    background: #ffffff;
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.mission-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.mission-card:hover::before {
+    transform: scaleX(1);
+}
+
+.mission-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+}
+
+.mission-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.mission-icon ion-icon {
+    font-size: 2rem;
+    color: #3b82f6;
+}
+
+.mission-card:hover .mission-icon {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+}
+
+.mission-card:hover .mission-icon ion-icon {
+    color: white;
+}
+
+.mission-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 1rem;
+}
+
+.mission-card p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* Vision Section */
+.vision-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.vision-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.vision-text h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+}
+
+.vision-text p {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
+.vision-points {
+    display: grid;
+    gap: 1rem;
+}
+
+.point {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.point:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateX(10px);
+}
+
+.point ion-icon {
+    font-size: 1.5rem;
+    color: #22c55e;
+}
+
+.point span {
+    font-weight: 500;
+    color: #374151;
+}
+
+.vision-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+
+.vision-icon {
+    font-size: 8rem;
+    color: #3b82f6;
+    filter: drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3));
+}
+
+/* Team Section */
+.team-section {
+    padding: 5rem 0;
+    background: #ffffff;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.team-member {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+}
+
+.member-photo {
+    width: 5rem;
+    height: 5rem;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.member-icon {
+    font-size: 2.5rem;
+    color: #3b82f6;
+}
+
+.team-member:hover .member-photo {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+}
+
+.team-member:hover .member-icon {
+    color: white;
+}
+
+.member-info h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+}
+
+.member-role {
+    font-size: 0.875rem;
+    color: #3b82f6;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.member-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.member-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-icon {
+    font-size: 1.25rem;
+    color: #64748b;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.social-icon:hover {
+    color: #3b82f6;
+    transform: scale(1.2);
+}
+
+/* History Section */
+.history-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    margin: 3rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.timeline-item:nth-child(even) {
+    direction: rtl;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    direction: ltr;
+    text-align: right;
+}
+
+.timeline-date {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 1rem;
+    text-align: center;
+    border: 2px solid #3b82f6;
+    backdrop-filter: blur(10px);
+}
+
+.timeline-content {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+}
+
+.timeline-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 5rem 0;
+    background: #ffffff;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.contact-info h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 1rem;
+}
+
+.contact-info p {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+.contact-details {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(248, 250, 252, 0.8);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateX(10px);
+}
+
+.contact-icon {
+    font-size: 1.5rem;
+    color: #3b82f6;
+    margin-top: 0.25rem;
+}
+
+.contact-text h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+}
+
+.contact-text p {
+    color: #64748b;
+    margin: 0;
+}
+
+.contact-form {
+    background: rgba(248, 250, 252, 0.5);
+    padding: 2rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.contact-form h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Footer */
+.footer {
+    background: #1e40af;
+    color: white;
+    padding: 3rem 0 1rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.footer-logo-icon {
+    font-size: 2rem;
+    color: #60a5fa;
+}
+
+.footer-logo h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.footer-section p {
+    color: #bfdbfe;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.footer-section h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: #bfdbfe;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #60a5fa;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-link {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(96, 165, 250, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #60a5fa;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: #60a5fa;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(96, 165, 250, 0.2);
+    color: #bfdbfe;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+}
+
+.scroll-to-top.show {
+    display: flex;
+}
+
+/* Mobile Menu */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.mobile-menu-btn span {
+    width: 25px;
+    height: 3px;
+    background: #3b82f6;
+    transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content,
+    .vision-content,
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .hero-text h2 {
+        font-size: 2rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0.5rem;
+        border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    .header-content {
+        position: relative;
+    }
+    
+    .timeline::before {
+        left: 2rem;
+    }
+    
+    .timeline-item {
+        grid-template-columns: 1fr;
+        margin-left: 3rem;
+    }
+    
+    .timeline-item:nth-child(even) {
+        direction: ltr;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-content {
+        text-align: left;
+    }
+    
+    .timeline-date {
+        position: absolute;
+        left: -4rem;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0.5rem;
+        font-size: 1rem;
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .mission-grid,
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .vision-text h2,
+    .contact-info h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Loading Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mission-card,
+.team-member,
+.timeline-item,
+.contact-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Form Validation Styles */
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-group.success input,
+.form-group.success select,
+.form-group.success textarea {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.error-message {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 0.5rem;
+    display: none;
+}
+
+.form-group.error .error-message {
+    display: block;
+}
+
+/* Success Message */
+.success-message {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid #22c55e;
+    color: #166534;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.success-message.show {
+    display: flex;
+}
+
+/* Print Styles */
+@media print {
+    .about-header,
+    .scroll-to-top,
+    .contact-form {
+        display: none;
+    }
+    
+    .hero-section {
+        padding-top: 2rem;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="about-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <ion-icon name="school" class="logo-icon"></ion-icon>
+                    <h1>เกี่ยวกับเรา</h1>
+                </div>
+                <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#mission" class="nav-link">พันธกิจ</a>
+                    <a href="#vision" class="nav-link">วิสัยทัศน์</a>
+                    <a href="#team" class="nav-link">ทีมงาน</a>
+                    <a href="#history" class="nav-link">ประวัติ</a>
+                    <a href="#contact" class="nav-link">ติดต่อ</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>ยินดีต้อนรับสู่ระบบเช็คอินเรียนออนไลน์</h2>
+                    <p>เราคือผู้นำในการพัฒนาระบบจัดการการเข้าเรียนที่ทันสมัย มีประสิทธิภาพ และใช้งานง่าย</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">100+</div>
+                            <div class="stat-label">นักเรียนที่ใช้งาน</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1+</div>
+                            <div class="stat-label">สถานศึกษา</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">99%</div>
+                            <div class="stat-label">ความพึงพอใจ</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <ion-icon name="school-outline" class="main-icon"></ion-icon>
+                        <div class="floating-icons">
+                            <ion-icon name="checkmark-circle" class="floating-icon icon-1"></ion-icon>
+                            <ion-icon name="qr-code" class="floating-icon icon-2"></ion-icon>
+                            <ion-icon name="calendar" class="floating-icon icon-3"></ion-icon>
+                            <ion-icon name="bar-chart" class="floating-icon icon-4"></ion-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="mission-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>พันธกิจของเรา</h2>
+                <p>เราทุ่มเทเพื่อพัฒนาระบบที่จะเปลี่ยนแปลงวิธีการจัดการการเข้าเรียน</p>
+            </div>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <ion-icon name="rocket"></ion-icon>
+                    </div>
+                    <h3>นวัตกรรม</h3>
+                    <p>พัฒนาเทคโนโลยีที่ทันสมัยและตอบสนองความต้องการของผู้ใช้งาน</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <ion-icon name="people"></ion-icon>
+                    </div>
+                    <h3>ประสิทธิภาพ</h3>
+                    <p>สร้างระบบที่มีประสิทธิภาพสูงและช่วยลดเวลาในการจัดการ</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <ion-icon name="shield-checkmark"></ion-icon>
+                    </div>
+                    <h3>ความปลอดภัย</h3>
+                    <p>รับรองความปลอดภัยของข้อมูลและการใช้งานระบบ</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <ion-icon name="heart"></ion-icon>
+                    </div>
+                    <h3>การบริการ</h3>
+                    <p>ให้การสนับสนุนและบริการที่ดีที่สุดแก่ผู้ใช้งานทุกท่าน</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision" class="vision-section">
+        <div class="container">
+            <div class="vision-content">
+                <div class="vision-text">
+                    <h2>วิสัยทัศน์</h2>
+                    <p>เป็นผู้นำในการพัฒนาระบบจัดการการเข้าเรียนที่ทันสมัยและมีประสิทธิภาพสูงสุด เพื่อสร้างประสบการณ์การเรียนรู้ที่ดีที่สุดให้กับนักเรียนและสถานศึกษา</p>
+                    <div class="vision-points">
+                        <div class="point">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>ระบบที่ใช้งานง่ายและสะดวก</span>
+                        </div>
+                        <div class="point">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>เทคโนโลยีที่ทันสมัยและเชื่อถือได้</span>
+                        </div>
+                        <div class="point">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>การสนับสนุนที่ครอบคลุมและรวดเร็ว</span>
+                        </div>
+                        <div class="point">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>การพัฒนาอย่างต่อเนื่อง</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vision-image">
+                    <div class="vision-illustration">
+                        <ion-icon name="telescope" class="vision-icon"></ion-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>ทีมงานของเรา</h2>
+                <p>บุคลากรผู้เชี่ยวชาญที่มีประสบการณ์และความเชี่ยวชาญในด้านเทคโนโลยี</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <ion-icon name="person" class="member-icon"></ion-icon>
+                    </div>
+                    <div class="member-info">
+                        <h3>นายศิริ บุตรวิชา</h3>
+                        <p class="member-role">หัวหน้าทีมพัฒนา</p>
+                        <p class="member-description">นักศึกษา สาขาคอมพิวเตอร์ธุรกิจ</p>
+                        <div class="member-social">
+                            <ion-icon name="mail" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-linkedin" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-github" class="social-icon"></ion-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <ion-icon name="person" class="member-icon"></ion-icon>
+                    </div>
+                    <div class="member-info">
+                        <h3>นายศิริ บุตรวิชา / Claude.ai</h3>
+                        <p class="member-role">นักออกแบบ UX/UI</p>
+                        <p class="member-description">ผู้ออกแบบและตกแต่งเว็บไซต์</p>
+                        <div class="member-social">
+                            <ion-icon name="mail" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-linkedin" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-dribbble" class="social-icon"></ion-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <ion-icon name="person" class="member-icon"></ion-icon>
+                    </div>
+                    <div class="member-info">
+                        <h3>นางสาวอินทร์ปารี วัยวัฒนพงษ์</h3>
+                        <p class="member-role">ผู้จัดการโครงการ</p>
+                        <p class="member-description">ผู้จัดทำโครงงาน</p>
+                        <div class="member-social">
+                            <ion-icon name="mail" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-linkedin" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-slack" class="social-icon"></ion-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <ion-icon name="person" class="member-icon"></ion-icon>
+                    </div>
+                    <div class="member-info">
+                        <h3>นางสาวกรรณิกา แสนคนึง</h3>
+                        <p class="member-role">ทีมสนับสนุน</p>
+                        <p class="member-description">ผู้สนับสนุนและผู้ช่วยออกแบบ</p>
+                        <div class="member-social">
+                            <ion-icon name="mail" class="social-icon"></ion-icon>
+                            <ion-icon name="logo-linkedin" class="social-icon"></ion-icon>
+                            <ion-icon name="call" class="social-icon"></ion-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="history-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>ประวัติการก่อตั้ง</h2>
+                <p>เส้นทางการพัฒนาและความสำเร็จของเราตลอดระยะเวลาที่ผ่านมา</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">มิถุนายน</div>
+                    <div class="timeline-content">
+                        <h3>เริ่มก่อตั้งกลุ่ม</h3>
+                        <p>เริ่มต้นด้วยไอเดียในการพัฒนาระบบเช็คอินที่ใช้งานง่าย</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">กรกฎาคม</div>
+                    <div class="timeline-content">
+                        <h3>เปิดตัวระบบ</h3>
+                        <p>เปิดตัวระบบเช็คอินเรียนออนไลน์เวอร์ชั่นแรก</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">สิงหาคม</div>
+                    <div class="timeline-content">
+                        <h3>ขยายฟีเจอร์</h3>
+                        <p>เพิ่มฟีเจอร์ QR Code สแกนและระบบรายงานขั้นสูง</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">กันยายน</div>
+                    <div class="timeline-content">
+                        <h3>ได้รับการยอมรับ</h3>
+                        <p>พัฒนาเทคโนโลยีที่ทันสมัยและตอบสนอง</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">ตุลาคม</div>
+                    <div class="timeline-content">
+                        <h3>ปัจจุบัน</h3>
+                        <p>ได้ทำการนำเสนอโครงการ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>ติดต่อเรา</h2>
+                    <p>พร้อมให้บริการและตอบข้อสงสัยทุกเวลา</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <ion-icon name="location" class="contact-icon"></ion-icon>
+                            <div class="contact-text">
+                                <h4>ที่อยู่</h4>
+                                <p>123 ถนนเทคโนโลยี แขวงนวัตกรรม เขตดิจิทัล กรุงเทพฯ 10110</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <ion-icon name="call" class="contact-icon"></ion-icon>
+                            <div class="contact-text">
+                                <h4>เบอร์โทร</h4>
+                                <p>061-060-7931</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <ion-icon name="mail" class="contact-icon"></ion-icon>
+                            <div class="contact-text">
+                                <h4>อีเมล</h4>
+                                <p>Siributwicha015@Gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <ion-icon name="time" class="contact-icon"></ion-icon>
+                            <div class="contact-text">
+                                <h4>เวลาทำการ</h4>
+                                <p>จันทร์ - ศุกร์: 08:00 - 18:00 น.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>ส่งข้อความหาเรา</h3>
+                    <div class="success-message" id="successMessage">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        <span>ข้อความของคุณถูกส่งเรียบร้อยแล้ว!</span>
+                    </div>
+                    <form class="form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">ชื่อ-นามสกุล</label>
+                            <input type="text" id="name" name="name" required>
+                            <div class="error-message">กรุณากรอกชื่อ-นามสกุล</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">อีเมล</label>
+                            <input type="email" id="email" name="email" required>
+                            <div class="error-message">กรุณากรอกอีเมลที่ถูกต้อง</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">เบอร์โทร</label>
+                            <input type="tel" id="phone" name="phone">
+                            <div class="error-message">กรุณากรอกเบอร์โทรที่ถูกต้อง</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">หัวข้อ</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">เลือกหัวข้อ</option>
+                                <option value="general">สอบถามทั่วไป</option>
+                                <option value="support">ขอความช่วยเหลือ</option>
+                                <option value="bug">แจ้งปัญหาการใช้งาน</option>
+                                <option value="feature">ขอฟีเจอร์เพิ่มเติม</option>
+                            </select>
+                            <div class="error-message">กรุณาเลือกหัวข้อ</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">ข้อความ</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                            <div class="error-message">กรุณากรอกข้อความ</div>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <ion-icon name="send"></ion-icon>
+                            <span>ส่งข้อความ</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <ion-icon name="school" class="footer-logo-icon"></ion-icon>
+                        <h3>Scan Check In</h3>
+                    </div>
+                    <p>ระบบเช็คอินเรียนออนไลน์ที่ทันสมัยและใช้งานง่าย</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-twitter"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-instagram"></ion-icon>
+                        </a>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>ลิงก์ด่วน</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">หน้าแรก</a></li>
+                        <li><a href="#mission">พันธกิจ</a></li>
+                        <li><a href="#vision">วิสัยทัศน์</a></li>
+                        <li><a href="#contact">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>การสนับสนุน</h4>
+                    <ul class="footer-links">
+                        <li><a href="#team">ทีมงาน</a></li>
+                        <li><a href="#history">ประวัติ</a></li>
+                        <li><a href="#contact">ติดต่อเรา</a></li>
+                        <li><a href="#contact">แจ้งปัญหา</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>นโยบาย</h4>
+                    <ul class="footer-links"> 
+                        <li><a href="terms.html">เงื่อนไขการใช้งาน</a></li>
+                        <li><a href="privacy.html">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="cookies.html">นโยบายคุกกี้</a></li>
+                        <li><a href="service.html">ข้อกำหนดการบริการ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Scan Check In. สงวนลิขสิทธิ์.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        <ion-icon name="chevron-up"></ion-icon>
+    </button>
+
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+                // Close mobile menu after clicking
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+
+        // Scroll to top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+
+            // Header shadow on scroll
+            const header = document.querySelector('.about-header');
+            if (window.pageYOffset > 50) {
+                header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Form validation and submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            const formGroups = document.querySelectorAll('.form-group');
+            
+            // Reset previous validation states
+            formGroups.forEach(group => {
+                group.classList.remove('error', 'success');
+            });
+
+            // Validate name
+            const name = document.getElementById('name');
+            if (!name.value.trim()) {
+                name.closest('.form-group').classList.add('error');
+                isValid = false;
+            } else {
+                name.closest('.form-group').classList.add('success');
+            }
+
+            // Validate email
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim() || !emailRegex.test(email.value)) {
+                email.closest('.form-group').classList.add('error');
+                isValid = false;
+            } else {
+                email.closest('.form-group').classList.add('success');
+            }
+
+            // Validate phone (optional but if provided, should be valid)
+            const phone = document.getElementById('phone');
+            if (phone.value.trim()) {
+                const phoneRegex = /^[0-9-+\s()]+$/;
+                if (!phoneRegex.test(phone.value)) {
+                    phone.closest('.form-group').classList.add('error');
+                    isValid = false;
+                } else {
+                    phone.closest('.form-group').classList.add('success');
+                }
+            }
+
+            // Validate subject
+            const subject = document.getElementById('subject');
+            if (!subject.value) {
+                subject.closest('.form-group').classList.add('error');
+                isValid = false;
+            } else {
+                subject.closest('.form-group').classList.add('success');
+            }
+
+            // Validate message
+            const message = document.getElementById('message');
+            if (!message.value.trim()) {
+                message.closest('.form-group').classList.add('error');
+                isValid = false;
+            } else {
+                message.closest('.form-group').classList.add('success');
+            }
+
+            // If form is valid, show success message
+            if (isValid) {
+                // Show success message
+                document.getElementById('successMessage').classList.add('show');
+                
+                // Reset form
+                this.reset();
+                formGroups.forEach(group => {
+                    group.classList.remove('error', 'success');
+                });
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('show');
+                }, 5000);
+
+                // Scroll to success message
+                document.getElementById('successMessage').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        });
+
+        // Add loading animation for mission cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.mission-card, .team-member, .timeline-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add counter animation for hero stats
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + (target === 99 ? '%' : '+');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + (target === 99 ? '%' : '+');
+                }
+            }, 16);
+        }
+
+        // Animate counters when they come into view
+        const statsObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const numbers = entry.target.querySelectorAll('.stat-number');
+                    numbers.forEach((num, index) => {
+                        const targets = [100, 1, 99];
+                        setTimeout(() => {
+                            animateCounter(num, targets[index]);
+                        }, index * 200);
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        const heroStats = document.querySelector('.hero-stats');
+        if (heroStats) {
+            statsObserver.observe(heroStats);
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navMenu = document.getElementById('navMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Add active state to navigation links based on scroll position
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
