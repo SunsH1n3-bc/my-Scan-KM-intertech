@@ -272,6 +272,7 @@
 
         .btn-block {
             width: 100%;
+            top: 10px;
         }
 
         .btn:disabled {
@@ -364,7 +365,7 @@
             color: #1f2937;
         }
 
-        /* URL Section */
+        /* URL Section - เพิ่มใหม่ */
         .url-section {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 197, 253, 0.05));
             border-radius: 20px;
@@ -463,33 +464,22 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* No Link Section */
-        .no-link-notice {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+        /* File not found warning */
+        .warning-box {
+            background: rgba(251, 191, 36, 0.1);
             border: 2px solid rgba(251, 191, 36, 0.3);
             border-radius: 16px;
-            padding: 25px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .no-link-notice ion-icon {
-            font-size: 3rem;
-            color: #f59e0b;
-            margin-bottom: 15px;
-        }
-
-        .no-link-title {
-            font-size: 1.3rem;
-            font-weight: 700;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
             color: #92400e;
-            margin-bottom: 10px;
         }
 
-        .no-link-text {
-            color: #a16207;
-            font-weight: 500;
-            line-height: 1.6;
+        .warning-box ion-icon {
+            font-size: 1.5rem;
+            color: #f59e0b;
         }
 
         /* Responsive Design */
@@ -680,18 +670,28 @@
                     <div class="info-card-value" id="subjectDisplay"></div>
                 </div>
             </div>
-            
-            <!-- แจ้งเตือนแทนการลิงก์ไปหน้าอื่น -->
-            <div class="no-link-notice">
-                <ion-icon name="information-circle-outline"></ion-icon>
-                <div class="no-link-title">สำหรับ GitHub Pages Demo</div>
-                <div class="no-link-text">
-                    ในสภาพแวดล้อมจริง ระบบจะเปิดหน้าเช็คชื่อโดยอัตโนมัติ<br>
-                    คุณสามารถใช้รหัส <strong id="codeForNotice"></strong> เพื่อเข้าเช็คชื่อในระบบจริง
+
+            <!-- URL Section -->
+            <div class="url-section">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <ion-icon name="link-outline"></ion-icon>
+                    <h3 style="font-size: 1.2rem;">URL สำหรับเข้าเช็คชื่อ</h3>
+                </div>
+                <textarea id="attendanceURL" class="url-textarea" readonly 
+                          placeholder="URL จะแสดงที่นี่หลังจากสร้างรหัส"></textarea>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button onclick="copyURL()" class="btn btn-secondary">
+                        <ion-icon name="copy-outline"></ion-icon>
+                        คัดลอก URL
+                    </button>
                 </div>
             </div>
             
             <div class="btn-group">
+                <button onclick="openAttendancePage()" class="btn btn-primary">
+                    <ion-icon name="open-outline"></ion-icon>
+                    เข้าเช็คชื่อทันที
+                </button>
                 <button onclick="resetForm()" class="btn btn-secondary">
                     <ion-icon name="refresh-outline"></ion-icon>
                     สร้างรหัสใหม่
@@ -720,26 +720,122 @@
                     เข้าเช็คชื่อ
                 </button>
             </form>
-            
-            <!-- แจ้งเตือนสำหรับการตรวจสอบรหัส -->
-            <div id="codeCheckResult" class="no-link-notice hidden">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-                <div class="no-link-title">รหัสถูกต้อง!</div>
-                <div class="no-link-text" id="checkResultText"></div>
+        </div>
+
+        <!-- GitHub Pages Notice -->
+        <div id="githubNotice" class="glass-card" style="margin-top: 60px;">
+            <div class="section-header">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <h2 class="section-title">คำแนะนำสำหรับ GitHub Pages</h2>
             </div>
+            
+            <div class="warning-box">
+                <ion-icon name="warning-outline"></ion-icon>
+                <div>
+                    <strong>สำคัญ:</strong> ให้สร้างไฟล์ <code>students.html</code> หรือ <code>studens.html</code> 
+                    ในโฟลเดอร์เดียวกันเพื่อให้ระบบทำงานได้อย่างสมบูรณ์
+                </div>
+            </div>
+            
+            <p style="color: #6b7280; text-align: center; margin-top: 20px;">
+                ระบบจะพยายามหาไฟล์เช็คชื่ออัตโนมัติ และจะแจ้งเตือนหากไม่พบไฟล์
+            </p>
         </div>
     </div>
 
     <script>
-        // เก็บข้อมูลรหัสที่สร้างใน memory (แทน localStorage)
+        // เก็บข้อมูลรหัสที่สร้าง (ใช้ memory แทน localStorage เพื่อความเข้ากันได้)
         let generatedCodes = {};
         
-        // โหลดข้อมูลรหัส
+        // ฟังก์ชันสำหรับ GitHub Pages - ตรวจหา base path
+        function getBasePath() {
+            const path = window.location.pathname;
+            // ถ้าอยู่ใน subfolder ให้ใช้ subfolder เป็น base
+            if (path.includes('/')) {
+                const segments = path.split('/').filter(segment => segment !== '');
+                if (segments.length > 0 && !segments[segments.length - 1].includes('.html')) {
+                    return '/' + segments.join('/') + '/';
+                } else if (segments.length > 1) {
+                    return '/' + segments.slice(0, -1).join('/') + '/';
+                }
+            }
+            return '/';
+        }
+
+        // สร้าง URL สำหรับหน้าเช็คชื่อ - ปรับปรุงให้รองรับ GitHub Pages
+        function createAttendanceURL(data) {
+            const origin = window.location.origin;
+            const basePath = getBasePath();
+            
+            // รายการไฟล์ที่อาจใช้สำหรับหน้าเช็คชื่อ
+            const possibleFiles = [
+                'students.html',
+                'studens.html',  // รองรับ typo ที่มีอยู่
+                'student.html',
+                'attendance.html',
+                'checkin.html'
+            ];
+            
+            // ใช้ไฟล์แรกเป็นค่าเริ่มต้น
+            const targetFile = possibleFiles[0];
+            const baseURL = origin + basePath + targetFile;
+            
+            const params = new URLSearchParams({
+                auto: 'true',
+                code: data.code,
+                name: data.name,
+                grade: data.grade,
+                subjectCode: data.subjectCode,
+                subjectName: data.subjectName
+            });
+            
+            return baseURL + '?' + params.toString();
+        }
+
+        // ตรวจสอบว่าไฟล์เป้าหมายมีอยู่จริงหรือไม่
+        async function checkFileExists(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // หาไฟล์เช็คชื่อที่มีอยู่จริง
+        async function findAttendanceFile() {
+            const origin = window.location.origin;
+            const basePath = getBasePath();
+            
+            const possibleFiles = [
+                'students.html',
+                'studens.html',
+                'student.html', 
+                'attendance.html',
+                'checkin.html'
+            ];
+            
+            for (const file of possibleFiles) {
+                const url = origin + basePath + file;
+                const exists = await checkFileExists(url);
+                if (exists) {
+                    return file;
+                }
+            }
+            
+            // ถ้าไม่พบไฟล์ใดเลย ให้ใช้ไฟล์แรกและแจ้งเตือน
+            return possibleFiles[0];
+        }
+
+        // โหลดข้อมูลรหัสจาก memory
         function loadCodes() {
+            if (!generatedCodes) {
+                generatedCodes = {};
+            }
             updateStats();
         }
         
-        // บันทึกข้อมูลรหัส (จำลอง)
+        // บันทึกข้อมูลรหัส
         function saveCodes() {
             updateStats();
         }
@@ -788,9 +884,32 @@
                 }, 400);
             }, 4000);
         }
+
+        // คัดลอก URL
+        function copyURL() {
+            const urlTextarea = document.getElementById('attendanceURL');
+            urlTextarea.select();
+            urlTextarea.setSelectionRange(0, 99999); // สำหรับมือถือ
+
+            try {
+                document.execCommand('copy');
+                showToast('คัดลอก URL สำเร็จ!', 'success', 'copy-outline');
+            } catch (err) {
+                // ถ้า execCommand ไม่ทำงาน ให้ลองใช้ Clipboard API
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(urlTextarea.value).then(() => {
+                        showToast('คัดลอก URL สำเร็จ!', 'success', 'copy-outline');
+                    }).catch(() => {
+                        showToast('ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง', 'error', 'alert-circle-outline');
+                    });
+                } else {
+                    showToast('ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง', 'error', 'alert-circle-outline');
+                }
+            }
+        }
         
         // จัดการฟอร์มสร้างรหัส
-        document.getElementById('generateForm').addEventListener('submit', function(e) {
+        document.getElementById('generateForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.querySelector('#generateForm button[type="submit"]');
@@ -801,193 +920,270 @@
             btnText.innerHTML = '<div class="loading-spinner"></div>กำลังสร้างรหัส...';
             submitBtn.disabled = true;
             
-            setTimeout(() => {
+            setTimeout(async () => {
                 const name = document.getElementById('studentName').value.trim();
                 const grade = document.getElementById('gradeLevel').value;
                 const subjectCode = document.getElementById('subjectCode').value.trim();
                 const subjectName = document.getElementById('subjectName').value.trim();
                 
-                // สร้างรหัสใหม่
-                const code = generateCode();
+                if (!name || !grade || !subjectCode || !subjectName) {
+                    showToast('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'error', 'alert-circle-outline');
+                    btnText.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    return;
+                }
                 
-                // บันทึกข้อมูลรหัส
-                generatedCodes[code] = {
+                // สร้างรหัสใหม่ (ตรวจสอบไม่ให้ซ้ำ)
+                let code;
+                do {
+                    code = generateCode();
+                } while (generatedCodes[code]);
+                
+                // เก็บข้อมูลรหัส
+                const codeData = {
+                    code: code,
                     name: name,
                     grade: grade,
                     subjectCode: subjectCode,
                     subjectName: subjectName,
-                    createdAt: new Date().toLocaleString('th-TH'),
+                    createdAt: new Date().toISOString(),
                     used: false
                 };
+                
+                generatedCodes[code] = codeData;
+                saveCodes();
+                
+                // ตรวจหาไฟล์เช็คชื่อ
+                const attendanceFile = await findAttendanceFile();
+                
+                // สร้าง URL
+                const attendanceURL = createAttendanceURL(codeData);
                 
                 // แสดงผลลัพธ์
                 document.getElementById('codeDisplay').textContent = code;
                 document.getElementById('nameDisplay').textContent = name;
                 document.getElementById('gradeDisplay').textContent = grade;
                 document.getElementById('subjectDisplay').textContent = `${subjectCode} - ${subjectName}`;
-                document.getElementById('codeForNotice').textContent = code;
+                document.getElementById('attendanceURL').value = attendanceURL;
                 
-                // ซ่อนฟอร์ม แสดงผลลัพธ์
-                document.getElementById('codeGenerator').classList.add('hidden');
+                // แสดงส่วนผลลัพธ์และซ่อนฟอร์ม
+                document.getElementById('codeGenerator').style.display = 'none';
                 document.getElementById('resultSection').classList.remove('hidden');
                 
-                // รีเซ็ตปุ่ม
+                // ตรวจสอบว่าไฟล์มีอยู่จริงและแจ้งเตือนหากจำเป็น
+                const fileExists = await checkFileExists(attendanceURL.split('?')[0]);
+                if (!fileExists) {
+                    showToast(`ไม่พบไฟล์ ${attendanceFile} กรุณาสร้างไฟล์หน้าเช็คชื่อ`, 'error', 'warning-outline');
+                }
+                
+                // Scroll to result
+                document.getElementById('resultSection').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Reset button
                 btnText.innerHTML = originalText;
                 submitBtn.disabled = false;
                 
-                // แสดงการแจ้งเตือน
-                showToast(`สร้างรหัสเข้าเรียนสำเร็จ: ${code}`, 'success');
-                
-                // บันทึกข้อมูล
-                saveCodes();
-                
-            }, 1500); // จำลอง loading time
+                showToast('สร้างรหัสเข้าเรียนสำเร็จ!', 'success', 'checkmark-circle-outline');
+            }, 1500);
         });
         
-        // จัดการฟอร์มตรวจสอบรหัส
-        document.getElementById('checkCodeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // เปิดหน้าเช็คชื่อทันที
+        async function openAttendancePage() {
+            const code = document.getElementById('codeDisplay').textContent;
+            const name = document.getElementById('nameDisplay').textContent;
+            const grade = document.getElementById('gradeDisplay').textContent;
+            const subjectInfo = document.getElementById('subjectDisplay').textContent;
+            const [subjectCode, subjectName] = subjectInfo.split(' - ');
             
-            const inputCode = document.getElementById('inputCode').value.trim();
-            const resultDiv = document.getElementById('codeCheckResult');
-            const resultText = document.getElementById('checkResultText');
+            const codeData = {
+                code, name, grade, subjectCode, subjectName
+            };
             
-            if (inputCode.length !== 6) {
-                showToast('กรุณากรอกรหัส 6 หลัก', 'error', 'alert-circle-outline');
-                return;
-            }
+            const attendanceURL = createAttendanceURL(codeData);
             
-            // ตรวจสอบรหัส
-            if (generatedCodes[inputCode]) {
-                const codeData = generatedCodes[inputCode];
-                
-                if (codeData.used) {
-                    showToast('รหัสนี้ถูกใช้งานแล้ว', 'error', 'close-circle-outline');
-                    resultDiv.classList.add('hidden');
-                } else {
-                    // ทำเครื่องหมายว่าใช้แล้ว
-                    generatedCodes[inputCode].used = true;
-                    saveCodes();
-                    
-                    resultText.innerHTML = `
-                        รหัส ${inputCode} ถูกต้อง!<br>
-                        <strong>นักเรียน:</strong> ${codeData.name}<br>
-                        <strong>ชั้น:</strong> ${codeData.grade}<br>
-                        <strong>วิชา:</strong> ${codeData.subjectCode} - ${codeData.subjectName}<br>
-                        <strong>สร้างเมื่อ:</strong> ${codeData.createdAt}
-                    `;
-                    
-                    resultDiv.classList.remove('hidden');
-                    showToast('เข้าเช็คชื่อสำเร็จ!', 'success');
-                    
-                    // ล้างฟอร์ม
-                    document.getElementById('inputCode').value = '';
-                }
+            // ตรวจสอบว่าไฟล์มีอยู่จริงก่อนเปิด
+            const fileExists = await checkFileExists(attendanceURL.split('?')[0]);
+            
+            if (fileExists) {
+                window.open(attendanceURL, '_blank');
+                showToast('เปิดหน้าเช็คชื่อใหม่แล้ว', 'success', 'open-outline');
             } else {
-                showToast('ไม่พบรหัสนี้ในระบบ', 'error', 'close-circle-outline');
-                resultDiv.classList.add('hidden');
+                // ถ้าไม่พบไฟล์ ให้แสดง URL และแจ้งให้ผู้ใช้สร้างไฟล์
+                showToast('ไม่พบหน้าเช็คชื่อ กรุณาสร้างไฟล์หรือใช้ URL ที่แสดงด้านล่าง', 'error', 'warning-outline');
+                
+                // scroll ไปที่ URL section
+                document.querySelector('.url-section').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
             }
-        });
+        }
         
         // รีเซ็ตฟอร์ม
         function resetForm() {
             document.getElementById('generateForm').reset();
-            document.getElementById('codeGenerator').classList.remove('hidden');
+            document.getElementById('codeGenerator').style.display = 'block';
             document.getElementById('resultSection').classList.add('hidden');
-            document.getElementById('codeCheckResult').classList.add('hidden');
             
-            // เลื่อนขึ้นไปด้านบน
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Scroll to form
+            document.getElementById('codeGenerator').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
         
-        // จำกัดการพิมพ์ในช่องรหัสให้เป็นตัวเลขเท่านั้น
-        document.getElementById('inputCode').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-        });
-        
-        // Auto-format รหัสวิชา
-        document.getElementById('subjectCode').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/[^0-9-]/g, '');
+        // จัดการฟอร์มตรวจสอบรหัส
+        document.getElementById('checkCodeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // จัดรูปแบบ xxxx-xxxx
-            if (value.length > 4 && value.indexOf('-') === -1) {
-                value = value.substring(0, 4) + '-' + value.substring(4, 8);
+            const inputCode = document.getElementById('inputCode').value.trim();
+            const submitBtn = document.querySelector('#checkCodeForm button[type="submit"]');
+            
+            if (!inputCode) {
+                showToast('กรุณากรอกรหัส', 'error', 'alert-circle-outline');
+                return;
             }
             
+            // แสดง loading
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="loading-spinner"></div>กำลังตรวจสอบ...';
+            submitBtn.disabled = true;
+            
+            setTimeout(async () => {
+                // ตรวจสอบรหัส
+                if (generatedCodes[inputCode]) {
+                    const codeData = generatedCodes[inputCode];
+                    
+                    // สร้าง URL
+                    const attendanceURL = createAttendanceURL(codeData);
+                    
+                    // ตรวจสอบว่าไฟล์มีอยู่จริง
+                    const fileExists = await checkFileExists(attendanceURL.split('?')[0]);
+                    
+                    if (fileExists) {
+                        // ทำเครื่องหมายว่าใช้แล้ว
+                        generatedCodes[inputCode].used = true;
+                        generatedCodes[inputCode].usedAt = new Date().toISOString();
+                        saveCodes();
+                        
+                        // เปิดหน้าเช็คชื่อ
+                        window.open(attendanceURL, '_blank');
+                        
+                        // แสดงข้อความยืนยัน
+                        showToast(`เข้าเช็คชื่อสำเร็จ! ${codeData.name} - ${codeData.grade}`, 'success', 'checkmark-circle-outline');
+                        
+                        // รีเซ็ตช่องกรอกรหัส
+                        document.getElementById('inputCode').value = '';
+                    } else {
+                        showToast('ไม่พบหน้าเช็คชื่อ กรุณาสร้างไฟล์หน้าเช็คชื่อก่อน', 'error', 'warning-outline');
+                    }
+                } else {
+                    showToast('รหัสไม่ถูกต้องหรือไม่มีอยู่ในระบบ', 'error', 'close-circle-outline');
+                }
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1000);
+        });
+        
+        // Auto-format input code (numbers only)
+        document.getElementById('inputCode').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
             e.target.value = value;
         });
         
-        // โหลดข้อมูลเมื่อเปิดหน้า
+        // ฟังก์ชันทำความสะอาดรหัสเก่า (เก็บไว้ 7 วัน)
+        function cleanOldCodes() {
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            
+            Object.keys(generatedCodes).forEach(code => {
+                const codeData = generatedCodes[code];
+                const createdDate = new Date(codeData.createdAt);
+                
+                if (createdDate < sevenDaysAgo) {
+                    delete generatedCodes[code];
+                }
+            });
+            
+            saveCodes();
+        }
+
+        // ตรวจสอบไฟล์เช็คชื่อเมื่อโหลดหน้าเว็บ
+        async function checkAttendanceFilesOnLoad() {
+            const origin = window.location.origin;
+            const basePath = getBasePath();
+            
+            const possibleFiles = [
+                'students.html',
+                'studens.html',
+                'student.html',
+                'attendance.html',
+                'checkin.html'
+            ];
+            
+            let foundFiles = [];
+            
+            for (const file of possibleFiles) {
+                const url = origin + basePath + file;
+                const exists = await checkFileExists(url);
+                if (exists) {
+                    foundFiles.push(file);
+                }
+            }
+            
+            if (foundFiles.length === 0) {
+                // แสดงการแจ้งเตือนถ้าไม่พบไฟล์ใด ๆ
+                setTimeout(() => {
+                    showToast('ไม่พบไฟล์หน้าเช็คชื่อ กรุณาสร้างไฟล์ students.html', 'error', 'warning-outline');
+                }, 2000);
+            } else {
+                console.log('Found attendance files:', foundFiles);
+            }
+        }
+        
+        // โหลดข้อมูลเมื่อเริ่มต้น
         document.addEventListener('DOMContentLoaded', function() {
             loadCodes();
+            cleanOldCodes();
             
-            // เพิ่มเอฟเฟค fade-in
-            document.querySelector('.container').style.opacity = '0';
-            document.querySelector('.container').style.transform = 'translateY(20px)';
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
             
-            setTimeout(() => {
-                document.querySelector('.container').style.transition = 'all 0.8s ease';
-                document.querySelector('.container').style.opacity = '1';
-                document.querySelector('.container').style.transform = 'translateY(0)';
-            }, 100);
+            // ตรวจสอบไฟล์เช็คชื่อ
+            checkAttendanceFilesOnLoad();
+            
+            // แสดงข้อมูล path ปัจจุบันใน console เพื่อ debug
+            console.log('Current path:', window.location.pathname);
+            console.log('Base path:', getBasePath());
         });
-        
-        // เอฟเฟคพิเศษสำหรับ input focus
-        document.querySelectorAll('.form-input, .form-select').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'translateY(-2px)';
-            });
-            
-            input.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'translateY(0)';
-            });
-        });
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Ctrl + Enter = สร้างรหัส
-            if (e.ctrlKey && e.key === 'Enter') {
-                const generateForm = document.getElementById('generateForm');
-                if (!generateForm.classList.contains('hidden')) {
-                    generateForm.dispatchEvent(new Event('submit'));
+
+        // เพิ่มฟังก์ชันสำหรับ handle การเปลี่ยน URL แบบ dynamic
+        function updateAttendanceURL() {
+            const urlTextarea = document.getElementById('attendanceURL');
+            if (urlTextarea && urlTextarea.value) {
+                const code = document.getElementById('codeDisplay').textContent;
+                if (code && generatedCodes[code]) {
+                    const attendanceURL = createAttendanceURL(generatedCodes[code]);
+                    urlTextarea.value = attendanceURL;
                 }
             }
-            
-            // Escape = รีเซ็ต
-            if (e.key === 'Escape') {
-                if (!document.getElementById('resultSection').classList.contains('hidden')) {
-                    resetForm();
-                }
-            }
-        });
+        }
+
+        // ฟัง event เมื่อ URL เปลี่ยน (สำหรับ SPA routing)
+        window.addEventListener('popstate', updateAttendanceURL);
         
-        // เอฟเฟค parallax สำหรับ background
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.2;
-            
-            document.querySelector('.bg-grid').style.transform = `translate3d(0, ${rate}px, 0)`;
-        });
-        
-        // ป้องกันการ copy รหัสในบางกรณี (สำหรับการใช้งานจริง)
-        document.addEventListener('contextmenu', function(e) {
-            if (e.target.id === 'codeDisplay') {
-                // ในการใช้งานจริงอาจต้องการป้องกันการคลิกขวา
-                // e.preventDefault();
-            }
-        });
-        
-        // Auto-save draft (จำลอง)
-        let draftTimer;
-        document.querySelectorAll('#generateForm input, #generateForm select').forEach(input => {
-            input.addEventListener('input', function() {
-                clearTimeout(draftTimer);
-                draftTimer = setTimeout(() => {
-                    // ในการใช้งานจริงอาจบันทึก draft ไว้
-                    console.log('Draft saved');
-                }, 1000);
-            });
-        });
-    </script>
-</body>
-</html>
+        // Export functions สำหรับใช้งานจาก console หรือ external scripts
+        window.AttendanceSystem = {
+            generateCode,
+            createAttendanceURL,
+            getBasePath,
+            checkFileExists,
+            findAttendanceFile,
+            generatedCodes,
+            updateStats
+        };
