@@ -900,7 +900,7 @@
         <div class="user-info-section" id="userInfoSection" style="display: none;">
             <div class="user-card">
                 <div class="user-avatar">
-                    👤
+                    <ion-icon name="person"></ion-icon>
                 </div>
                 <div class="user-details">
                     <h3 id="userName">ผู้ใช้งาน</h3>
@@ -947,7 +947,8 @@
             </div>
             
             <button id="refreshBtn" class="btn-refresh">
-                🔄 รีเฟรช
+                <ion-icon name="refresh"></ion-icon>
+                รีเฟรช
             </button>
         </div>
 
@@ -986,30 +987,51 @@
         <!-- กราฟแสดงผล -->
         <div class="charts-container">
             <div class="chart-wrapper">
-                <h3>สถิติการเข้าเรียนรายวิชา</h3>
+                <h3>
+                    <ion-icon name="bar-chart"></ion-icon>
+                    สถิติการเข้าเรียนรายวิชา
+                </h3>
                 <canvas id="subjectChart" width="400" height="200"></canvas>
             </div>
             
             <div class="chart-wrapper">
-                <h3>สถิติการเข้าเรียนรายชั้น</h3>
+                <h3>
+                    <ion-icon name="pie-chart"></ion-icon>
+                    สถิติการเข้าเรียนรายชั้น
+                </h3>
                 <canvas id="gradeChart" width="400" height="200"></canvas>
             </div>
             
             <div class="chart-wrapper full-width">
-                <h3>แนวโน้มการเข้าเรียนรายวัน</h3>
+                <h3>
+                    <ion-icon name="trending-up"></ion-icon>
+                    แนวโน้มการเข้าเรียนรายวัน
+                </h3>
                 <canvas id="trendChart" width="800" height="300"></canvas>
             </div>
         </div>
 
         <!-- ตารางรายละเอียด -->
         <div class="details-section">
-            <h3>รายละเอียดการเข้าเรียน</h3>
+            <h3>
+                <ion-icon name="list"></ion-icon>
+                รายละเอียดการเข้าเรียน
+            </h3>
             
             <!-- แท็บสำหรับเลือกดูข้อมูล -->
             <div class="tabs">
-                <button class="tab-btn active" data-tab="students">รายชื่อนักเรียน</button>
-                <button class="tab-btn" data-tab="subjects">สถิติรายวิชา</button>
-                <button class="tab-btn" data-tab="grades">สถิติรายชั้น</button>
+                <button class="tab-btn active" data-tab="students">
+                    <ion-icon name="people"></ion-icon>
+                    รายชื่อนักเรียน
+                </button>
+                <button class="tab-btn" data-tab="subjects">
+                    <ion-icon name="book"></ion-icon>
+                    สถิติรายวิชา
+                </button>
+                <button class="tab-btn" data-tab="grades">
+                    <ion-icon name="school"></ion-icon>
+                    สถิติรายชั้น
+                </button>
             </div>
             
             <!-- เนื้อหาแท็บ -->
@@ -1073,19 +1095,27 @@
 
         <!-- ข้อมูล Real-time -->
         <div class="realtime-section">
-            <h3>การเช็คชื่อล่าสุด (Real-time)</h3>
+            <h3>
+                <ion-icon name="pulse"></ion-icon>
+                การเช็คชื่อล่าสุด (Real-time)
+            </h3>
             <div id="realtimeList" class="realtime-list">
-                <div class="no-data">ยังไม่มีการเช็คชื่อในวันนี้</div>
+                <div class="no-data">
+                    <ion-icon name="information-circle"></ion-icon>
+                    ยังไม่มีการเช็คชื่อในวันนี้
+                </div>
             </div>
         </div>
 
         <!-- ปุ่มการทำงาน -->
         <div class="actions">
             <button class="btn btn-export" onclick="exportStatistics()">
-                📥 ส่งออกสถิติ
+                <ion-icon name="download"></ion-icon>
+                ส่งออกสถิติ
             </button>
             <button class="btn btn-back" onclick="goHome()">
-                ← กลับหน้าหลัก
+                <ion-icon name="arrow-back"></ion-icon>
+                กลับหน้าหลัก
             </button>
         </div>
     </div>
