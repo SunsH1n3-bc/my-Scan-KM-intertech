@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สถิติการเข้าเรียน</title>
+    <!-- Use reliable CDN sources -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <style>
+        /* CSS Variables สำหรับจัดการสีและขนาด */
+        :root {
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-900: #1e3a8a;
+            
+            --neutral-50: #fafafa;
+            --neutral-100: #f5f5f5;
+            --neutral-200: #e5e5e5;
+            --neutral-300: #d4d4d4;
+            --neutral-400: #a3a3a3;
+            --neutral-500: #737373;
+            --neutral-600: #525252;
+            --neutral-700: #404040;
+            --neutral-800: #262626;
+            --neutral-900: #171717;
+            
+            --success-50: #f0fdf4;
+            --success-500: #22c55e;
+            --success-600: #16a34a;
+            
+            --warning-50: #fffbeb;
+            --warning-500: #f59e0b;
+            --warning-600: #d97706;
+            
+            --error-50: #fef2f2;
+            --error-500: #ef4444;
+            --error-600: #dc2626;
+            
+            --info-50: #f0f9ff;
+            --info-500: #06b6d4;
+            --info-600: #0891b2;
+            
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
+            color: var(--neutral-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--primary-900) 100%);
+            color: white;
+            padding: var(--space-12) var(--space-8);
+            border-radius: var(--radius-2xl);
+            text-align: center;
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-2xl), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: var(--space-3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .user-info-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .user-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-5);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .user-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .user-details h3 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+            letter-spacing: -0.01em;
+        }
+
+        .user-details p {
+            color: var(--neutral-500);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .user-stats {
+            margin-left: auto;
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary-600);
+            font-size: 1.125rem;
+        }
+
+        .filters {
+            background: white;
+            padding: var(--space-8) var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-6);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-6);
+            align-items: end;
+            border: 1px solid var(--neutral-200);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: var(--space-2);
+            font-weight: 600;
+            color: var(--neutral-700);
+            font-size: 0.875rem;
+            letter-spacing: 0.01em;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            background: var(--neutral-50);
+            color: var(--neutral-700);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+
+        .filter-group select:hover {
+            border-color: var(--neutral-300);
+            background: white;
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+
+        .btn-refresh:active {
+            transform: translateY(0);
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--space-8) var(--space-6);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--neutral-200);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+        }
+
+        .stat-total::before {
+            background: linear-gradient(90deg, var(--neutral-400), var(--neutral-500));
+        }
+
+        .stat-present::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+
+        .stat-absent::before {
+            background: linear-gradient(90deg, var(--error-500), var(--error-600));
+        }
+
+        .stat-late::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+
+        .stat-leave::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+
+        .stat-number {
+            font-size: clamp(2.5rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: var(--space-2);
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+            letter-spacing: 0.01em;
+        }
+
+        .stat-percent {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+            display: inline-block;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .chart-wrapper {
+            background: white;
+            padding: var(--space-8) var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart-wrapper:hover {
+            box-shadow: var(--shadow-xl);
+        }
+
+        .chart-wrapper.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-wrapper h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-5);
+            padding-bottom: var(--space-3);
+            border-bottom: 2px solid var(--neutral-100);
+            letter-spacing: -0.01em;
+        }
+
+        .details-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-6);
+            border: 1px solid var(--neutral-200);
+            overflow: hidden;
+        }
+
+        .details-section h3 {
+            padding: var(--space-6) var(--space-6) 0;
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            letter-spacing: -0.01em;
+        }
+
+        .tabs {
+            display: flex;
+            padding: 0 var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-top: var(--space-4);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: var(--space-4) var(--space-6);
+            font-weight: 600;
+            color: var(--neutral-500);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.875rem;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+            background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.02) 100%);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--neutral-700);
+            background: var(--neutral-50);
+        }
+
+        .tab-content {
+            display: none;
+            padding: var(--space-6);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--neutral-200);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        th {
+            background: var(--neutral-50);
+            padding: var(--space-4) var(--space-3);
+            text-align: left;
+            font-weight: 600;
+            color: var(--neutral-700);
+            border-bottom: 1px solid var(--neutral-200);
+            white-space: nowrap;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: var(--space-4) var(--space-3);
+            border-bottom: 1px solid var(--neutral-100);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: var(--neutral-50);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-badge.present {
+            background: var(--success-50);
+            color: var(--success-600);
+            border: 1px solid var(--success-200);
+        }
+
+        .status-badge.absent {
+            background: var(--error-50);
+            color: var(--error-600);
+            border: 1px solid var(--error-200);
+        }
+
+        .status-badge.late {
+            background: var(--warning-50);
+            color: var(--warning-600);
+            border: 1px solid var(--warning-200);
+        }
+
+        .status-badge.leave {
+            background: var(--info-50);
+            color: var(--info-600);
+            border: 1px solid var(--info-200);
+        }
+
+        .status-badge.no-status {
+            background: var(--neutral-100);
+            color: var(--neutral-500);
+            border: 1px solid var(--neutral-200);
+        }
+
+        .realtime-section {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-6);
+            border: 1px solid var(--neutral-200);
+        }
+
+        .realtime-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            letter-spacing: -0.01em;
+        }
+
+        .realtime-section h3::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--success-500);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+
+        .realtime-list {
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neutral-300) transparent;
+        }
+
+        .realtime-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-2);
+            background: var(--neutral-50);
+            border-left: 4px solid var(--neutral-200);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .realtime-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .realtime-item.present {
+            border-left-color: var(--success-500);
+            background: var(--success-50);
+        }
+
+        .realtime-item.late {
+            border-left-color: var(--warning-500);
+            background: var(--warning-50);
+        }
+
+        .realtime-item.absent {
+            border-left-color: var(--error-500);
+            background: var(--error-50);
+        }
+
+        .realtime-item.leave {
+            border-left-color: var(--info-500);
+            background: var(--info-50);
+        }
+
+        .student-info strong {
+            color: var(--neutral-900);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .student-info span {
+            color: var(--neutral-500);
+            font-size: 0.75rem;
+            margin-left: var(--space-2);
+            font-weight: 500;
+        }
+
+        .status-info {
+            text-align: right;
+        }
+
+        .status-info .status {
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-info .time {
+            color: var(--neutral-500);
+            font-size: 0.75rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--neutral-500);
+            font-style: italic;
+            padding: var(--space-16) var(--space-8);
+            font-weight: 500;
+        }
+
+        .actions {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: var(--space-8);
+        }
+
+        .btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.875rem;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+            color: white;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--neutral-600);
+            border: 2px solid var(--neutral-200);
+        }
+
+        .btn-back:hover {
+            background: var(--neutral-50);
+            border-color: var(--neutral-300);
+            color: var(--neutral-700);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, var(--error-500), var(--error-600));
+            color: white;
+            position: absolute;
+            top: var(--space-5);
+            right: var(--space-5);
+            padding: var(--space-2) var(--space-4);
+            font-size: 0.75rem;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--neutral-200);
+            border-top: 2px solid var(--primary-500);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: var(--space-6) var(--space-4);
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-4) var(--space-3);
+            }
+            
+            .header {
+                padding: var(--space-8) var(--space-6);
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                min-width: auto;
+            }
+            
+            .summary-cards {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: var(--space-4);
+            }
+            
+            .user-card {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-4);
+            }
+            
+            .user-stats {
+                margin-left: 0;
+                text-align: center;
+            }
+            
+            .tabs {
+                padding: 0 var(--space-4);
+            }
+            
+            .btn-logout {
+                position: static;
+                margin: var(--space-4) auto 0;
+                display: flex;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: var(--space-6) var(--space-4);
+            }
+            
+            .stat-card {
+                padding: var(--space-6) var(--space-4);
+            }
+            
+            .chart-wrapper,
+            .details-section .tab-content,
+            .realtime-section {
+                padding: var(--space-4);
+            }
+            
+            table {
+                font-size: 0.75rem;
+            }
+            
+            th, td {
+                padding: var(--space-3) var(--space-2);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        button:focus,
+        select:focus,
+        a:focus {
+            outline: 2px solid var(--primary-500);
+            outline-offset: 2px;
+        }
+
+        @media print {
+            .btn-logout,
+            .actions {
+                display: none;
+            }
+            
+            .container {
+                max-width: none;
+                padding: 0;
+            }
+            
+            .header {
+                background: var(--neutral-900) !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--neutral-100);
+            border-radius: var(--radius-sm);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neutral-300);
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--neutral-100);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neutral-400);
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .container > * {
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- User Info Section -->
+        <div class="user-info-section" id="userInfoSection" style="display: none;">
+            <div class="user-card">
+                <div class="user-avatar">
+                    👤
+                </div>
+                <div class="user-details">
+                    <h3 id="userName">ผู้ใช้งาน</h3>
+                    <p>
+                        <span id="userRole">สถานะ</span> | 
+                        <span id="userClass">ชั้นเรียน</span>
+                    </p>
+                    <p>รหัส: <span id="userStudentId">-</span></p>
+                </div>
+                <div class="user-stats">
+                    <div>อัตราการเข้าเรียน: <span id="userAttendanceRate">0%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>สถิติการเข้าเรียน</h1>
+            <p>ระบบติดตามและแสดงผลสถิติการเข้าเรียนแบบ Real-time</p>
+        </div>
+
+        <!-- การเลือกรายวิชาและช่วงเวลา -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="subjectFilter">รายวิชา:</label>
+                <select id="subjectFilter">
+                    <option value="">เลือกรายวิชา</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="gradeFilter">ระดับชั้น:</label>
+                <select id="gradeFilter">
+                    <option value="">ทุกระดับชั้น</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="dateRange">ช่วงเวลา:</label>
+                <select id="dateRange">
+                    <option value="today">วันนี้</option>
+                    <option value="week">สัปดาห์นี้</option>
+                    <option value="month">เดือนนี้</option>
+                </select>
+            </div>
+            
+            <button id="refreshBtn" class="btn-refresh">
+                🔄 รีเฟรช
+            </button>
+        </div>
+
+        <!-- สถิติรวม -->
+        <div class="summary-cards">
+            <div class="stat-card stat-total">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">นักเรียนทั้งหมด</div>
+            </div>
+            
+            <div class="stat-card stat-present">
+                <div class="stat-number" id="presentStudents">0</div>
+                <div class="stat-label">เข้าเรียน</div>
+                <div class="stat-percent" id="presentPercent">0%</div>
+            </div>
+            
+            <div class="stat-card stat-absent">
+                <div class="stat-number" id="absentStudents">0</div>
+                <div class="stat-label">ขาดเรียน</div>
+                <div class="stat-percent" id="absentPercent">0%</div>
+            </div>
+            
+            <div class="stat-card stat-late">
+                <div class="stat-number" id="lateStudents">0</div>
+                <div class="stat-label">มาสาย</div>
+                <div class="stat-percent" id="latePercent">0%</div>
+            </div>
+            
+            <div class="stat-card stat-leave">
+                <div class="stat-number" id="leaveStudents">0</div>
+                <div class="stat-label">ลา</div>
+                <div class="stat-percent" id="leavePercent">0%</div>
+            </div>
+        </div>
+
+        <!-- กราฟแสดงผล -->
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h3>สถิติการเข้าเรียนรายวิชา</h3>
+                <canvas id="subjectChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="chart-wrapper">
+                <h3>สถิติการเข้าเรียนรายชั้น</h3>
+                <canvas id="gradeChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="chart-wrapper full-width">
+                <h3>แนวโน้มการเข้าเรียนรายวัน</h3>
+                <canvas id="trendChart" width="800" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- ตารางรายละเอียด -->
+        <div class="details-section">
+            <h3>รายละเอียดการเข้าเรียน</h3>
+            
+            <!-- แท็บสำหรับเลือกดูข้อมูล -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="students">รายชื่อนักเรียน</button>
+                <button class="tab-btn" data-tab="subjects">สถิติรายวิชา</button>
+                <button class="tab-btn" data-tab="grades">สถิติรายชั้น</button>
+            </div>
+            
+            <!-- เนื้อหาแท็บ -->
+            <div class="tab-content active" id="students-tab">
+                <div class="table-container">
+                    <table id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>ระดับชั้น</th>
+                                <th>รายวิชา</th>
+                                <th>สถานะ</th>
+                                <th>เวลา</th>
+                                <th>เปอร์เซ็นต์การเข้าเรียน</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="subjects-tab">
+                <div class="table-container">
+                    <table id="subjectsTable">
+                        <thead>
+                            <tr>
+                                <th>รหัสวิชา</th>
+                                <th>ชื่อรายวิชา</th>
+                                <th>นักเรียนทั้งหมด</th>
+                                <th>เข้าเรียน</th>
+                                <th>ขาดเรียน</th>
+                                <th>มาสาย</th>
+                                <th>ลา</th>
+                                <th>เปอร์เซ็นต์การเข้าเรียน</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="grades-tab">
+                <div class="table-container">
+                    <table id="gradesTable">
+                        <thead>
+                            <tr>
+                                <th>ระดับชั้น</th>
+                                <th>นักเรียนทั้งหมด</th>
+                                <th>เข้าเรียน</th>
+                                <th>ขาดเรียน</th>
+                                <th>มาสาย</th>
+                                <th>ลา</th>
+                                <th>เปอร์เซ็นต์การเข้าเรียน</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ข้อมูล Real-time -->
+        <div class="realtime-section">
+            <h3>การเช็คชื่อล่าสุด (Real-time)</h3>
+            <div id="realtimeList" class="realtime-list">
+                <div class="no-data">ยังไม่มีการเช็คชื่อในวันนี้</div>
+            </div>
+        </div>
+
+        <!-- ปุ่มการทำงาน -->
+        <div class="actions">
+            <button class="btn btn-export" onclick="exportStatistics()">
+                📥 ส่งออกสถิติ
+            </button>
+            <button class="btn btn-back" onclick="goHome()">
+                ← กลับหน้าหลัก
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ตัวแปรสำหรับเก็บข้อมูล
+        let allData = null;
+        let charts = {};
+        let realtimeUpdateInterval;
+        let currentUser = null;
+
+        // ฟังก์ชันโหลดข้อมูลผู้ใช้จาก localStorage
+        function loadUserData() {
+            try {
+                const userData = localStorage.getItem('userData');
+                const isLoggedIn = localStorage.getItem('isLoggedIn');
+                
+                if (isLoggedIn === 'true' && userData) {
+                    currentUser = JSON.parse(userData);
+                    displayUserInfo();
+                    return true;
+                } else {
+                    // ใช้ข้อมูลตัวอย่างถ้าไม่ได้ล็อกอิน
+                    currentUser = {
+                        firstName: 'สมชาย',
+                        lastName: 'ตัวอย่าง',
+                        role: 'student',
+                        roleDisplay: 'นักเรียน',
+                        class: 'ม.3/1',
+                        studentId: '12345',
+                        attendanceRate: 85
+                    };
+                    displayUserInfo();
+                    return true;
+                }
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูลผู้ใช้:', error);
+                // ใช้ข้อมูลตัวอย่างเมื่อเกิดข้อผิดพลาด
+                currentUser = {
+                    firstName: 'ผู้ใช้',
+                    lastName: 'ตัวอย่าง',
+                    role: 'guest',
+                    roleDisplay: 'ผู้เยี่ยมชม',
+                    class: '-',
+                    studentId: '-',
+                    attendanceRate: 0
+                };
+                displayUserInfo();
+                return true;
+            }
+        }
+
+        // ฟังก์ชันแสดงข้อมูลผู้ใช้
+        function displayUserInfo() {
+            if (!currentUser) return;
+
+            const userInfoSection = document.getElementById('userInfoSection');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const userClass = document.getElementById('userClass');
+            const userStudentId = document.getElementById('userStudentId');
+            const userAttendanceRate = document.getElementById('userAttendanceRate');
+
+            userName.textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            userRole.textContent = currentUser.roleDisplay || currentUser.role;
+            userClass.textContent = currentUser.class || '-';
+            userStudentId.textContent = currentUser.studentId || '-';
+            userAttendanceRate.textContent = `${currentUser.attendanceRate || 0}%`;
+
+            userInfoSection.style.display = 'block';
+        }
+
+        // ฟังก์ชันสร้างข้อมูลจำลองสำหรับผู้ใช้ปัจจุบัน
+        function generateMockDataForUser() {
+            if (!currentUser) return null;
+
+            // สร้างข้อมูลรายวิชาจำลอง
+            const subjects = [
+                { id: 1, code: 'TH101', name: 'ภาษาไทย' },
+                { id: 2, code: 'EN101', name: 'ภาษาอังกฤษ' },
+                { id: 3, code: 'MA101', name: 'คณิตศาสตร์' },
+                { id: 4, code: 'SC101', name: 'วิทยาศาสตร์' },
+                { id: 5, code: 'CS101', name: 'คอมพิวเตอร์' }
+            ];
+
+            // สร้างข้อมูลนักเรียนจำลอง
+            const mockStudents = [
+                { 
+                    id: 1, 
+                    name: `${currentUser.firstName} ${currentUser.lastName}`, 
+                    grade: currentUser.class, 
+                    subjectId: 1, 
+                    status: 'present',
+                    statusTime: '08:30'
+                },
+                {
+                    id: 2,
+                    name: 'นางสาวสมใจ ดีใจ',
+                    grade: currentUser.class,
+                    subjectId: 1,
+                    status: 'present',
+                    statusTime: '08:25'
+                },
+                {
+                    id: 3,
+                    name: 'นายวิชัย ขยันเรียน',
+                    grade: currentUser.class,
+                    subjectId: 1,
+                    status: 'late',
+                    statusTime: '08:45'
+                },
+                {
+                    id: 4,
+                    name: 'นางสาวมาลี รักเรียน',
+                    grade: currentUser.class,
+                    subjectId: 2,
+                    status: 'present',
+                    statusTime: '09:00'
+                },
+                {
+                    id: 5,
+                    name: 'นายสมศักดิ์ เก่งมาก',
+                    grade: currentUser.class,
+                    subjectId: 2,
+                    status: 'absent',
+                    statusTime: null
+                },
+                {
+                    id: 6,
+                    name: 'นางสาวจินดา เรียนดี',
+                    grade: currentUser.class,
+                    subjectId: 3,
+                    status: 'present',
+                    statusTime: '10:00'
+                },
+                {
+                    id: 7,
+                    name: 'นายสุรชัย ใจดี',
+                    grade: currentUser.class,
+                    subjectId: 3,
+                    status: 'leave',
+                    statusTime: '10:15'
+                }
+            ];
+
+            // จัดกลุ่มข้อมูลตามชั้นเรียน
+            const gradeData = {};
+            gradeData[currentUser.class] = mockStudents;
+
+            return {
+                subjects: subjects,
+                gradeData: gradeData
+            };
+        }
+
+        // ฟังก์ชันโหลดข้อมูลจาก localStorage หรือสร้างข้อมูลจำลอง
+        function loadAttendanceData() {
+            try {
+                const savedData = localStorage.getItem('studentAttendanceData');
+                if (savedData) {
+                    allData = JSON.parse(savedData);
+                    console.log('โหลดข้อมูลสำเร็จ:', allData);
+                    return true;
+                } else {
+                    // ถ้าไม่มีข้อมูล ใช้ข้อมูลจำลอง
+                    allData = generateMockDataForUser();
+                    if (allData) {
+                        localStorage.setItem('studentAttendanceData', JSON.stringify(allData));
+                        console.log('สร้างข้อมูลจำลองสำเร็จ:', allData);
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+                // สร้างข้อมูลจำลองเมื่อเกิดข้อผิดพลาด
+                allData = generateMockDataForUser();
+                return allData !== null;
+            }
+            return false;
+        }
+
+        // ฟังก์ชันอัพเดทตัวเลือกรายวิชา
+        function updateSubjectFilter() {
+            const subjectFilter = document.getElementById('subjectFilter');
+            subjectFilter.innerHTML = '<option value="">เลือกรายวิชา</option>';
+            
+            if (allData && allData.subjects) {
+                allData.subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = `${subject.code} - ${subject.name}`;
+                    subjectFilter.appendChild(option);
+                });
+            }
+        }
+
+        // ฟังก์ชันอัพเดทตัวเลือกระดับชั้น
+        function updateGradeFilter() {
+            const gradeFilter = document.getElementById('gradeFilter');
+            gradeFilter.innerHTML = '<option value="">ทุกระดับชั้น</option>';
+            
+            if (allData && allData.gradeData) {
+                const grades = Object.keys(allData.gradeData).filter(grade => 
+                    allData.gradeData[grade].length > 0
+                );
+                
+                grades.forEach(grade => {
+                    const option = document.createElement('option');
+                    option.value = grade;
+                    option.textContent = grade;
+                    gradeFilter.appendChild(option);
+                });
+            }
+        }
+
+        // ฟังก์ชันคำนวณสถิติรวม
+        function calculateOverallStats(filteredStudents) {
+            const stats = {
+                total: filteredStudents.length,
+                present: filteredStudents.filter(s => s.status === 'present').length,
+                absent: filteredStudents.filter(s => s.status === 'absent').length,
+                late: filteredStudents.filter(s => s.status === 'late').length,
+                leave: filteredStudents.filter(s => s.status === 'leave').length
+            };
+            
+            // คำนวณเปอร์เซ็นต์
+            if (stats.total > 0) {
+                stats.presentPercent = Math.round((stats.present / stats.total) * 100);
+                stats.absentPercent = Math.round((stats.absent / stats.total) * 100);
+                stats.latePercent = Math.round((stats.late / stats.total) * 100);
+                stats.leavePercent = Math.round((stats.leave / stats.total) * 100);
+            } else {
+                stats.presentPercent = 0;
+                stats.absentPercent = 0;
+                stats.latePercent = 0;
+                stats.leavePercent = 0;
+            }
+            
+            return stats;
+        }
+
+        // ฟังก์ชันกรองข้อมูลตามตัวเลือก
+        function getFilteredStudents() {
+            if (!allData || !allData.gradeData) return [];
+            
+            const subjectFilter = document.getElementById('subjectFilter').value;
+            const gradeFilter = document.getElementById('gradeFilter').value;
+            
+            let filteredStudents = [];
+            
+            // รวบรวมนักเรียนทั้งหมด
+            Object.keys(allData.gradeData).forEach(grade => {
+                allData.gradeData[grade].forEach(student => {
+                    // กรองตามรายวิชา
+                    if (subjectFilter && student.subjectId != subjectFilter) return;
+                    
+                    // กรองตามระดับชั้น
+                    if (gradeFilter && student.grade !== gradeFilter) return;
+                    
+                    // เพิ่มข้อมูลรายวิชา
+                    const subject = allData.subjects.find(s => s.id === student.subjectId);
+                    filteredStudents.push({
+                        ...student,
+                        subjectName: subject ? `${subject.code} - ${subject.name}` : 'ไม่ระบุ'
+                    });
+                });
+            });
+            
+            return filteredStudents;
+        }
+
+        // ฟังก์ชันอัพเดทสถิติรวม
+        function updateSummaryCards() {
+            const filteredStudents = getFilteredStudents();
+            const stats = calculateOverallStats(filteredStudents);
+            
+            document.getElementById('totalStudents').textContent = stats.total;
+            document.getElementById('presentStudents').textContent = stats.present;
+            document.getElementById('absentStudents').textContent = stats.absent;
+            document.getElementById('lateStudents').textContent = stats.late;
+            document.getElementById('leaveStudents').textContent = stats.leave;
+            
+            document.getElementById('presentPercent').textContent = `${stats.presentPercent}%`;
+            document.getElementById('absentPercent').textContent = `${stats.absentPercent}%`;
+            document.getElementById('latePercent').textContent = `${stats.latePercent}%`;
+            document.getElementById('leavePercent').textContent = `${stats.leavePercent}%`;
+        }
+
+        // ฟังก์ชันสร้างกราฟสถิติรายวิชา
+        function createSubjectChart() {
+            const ctx = document.getElementById('subjectChart').getContext('2d');
+            
+            if (charts.subject) {
+                charts.subject.destroy();
+            }
+            
+            // รวบรวมข้อมูลรายวิชา
+            const subjectStats = {};
+            const filteredStudents = getFilteredStudents();
+            
+            filteredStudents.forEach(student => {
+                const subjectKey = student.subjectName;
+                if (!subjectStats[subjectKey]) {
+                    subjectStats[subjectKey] = { present: 0, absent: 0, late: 0, leave: 0, total: 0 };
+                }
+                
+                subjectStats[subjectKey].total++;
+                if (student.status) {
+                    subjectStats[subjectKey][student.status]++;
+                }
+            });
+            
+            const labels = Object.keys(subjectStats);
+            const presentData = labels.map(label => subjectStats[label].present);
+            const absentData = labels.map(label => subjectStats[label].absent);
+            const lateData = labels.map(label => subjectStats[label].late);
+            const leaveData = labels.map(label => subjectStats[label].leave);
+            
+            charts.subject = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'เข้าเรียน',
+                            data: presentData,
+                            backgroundColor: '#22c55e'
+                        },
+                        {
+                            label: 'ขาดเรียน',
+                            data: absentData,
+                            backgroundColor: '#ef4444'
+                        },
+                        {
+                            label: 'มาสาย',
+                            data: lateData,
+                            backgroundColor: '#f59e0b'
+                        },
+                        {
+                            label: 'ลา',
+                            data: leaveData,
+                            backgroundColor: '#06b6d4'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // ฟังก์ชันสร้างกราฟสถิติรายชั้น
+        function createGradeChart() {
+            const ctx = document.getElementById('gradeChart').getContext('2d');
+            
+            if (charts.grade) {
+                charts.grade.destroy();
+            }
+            
+            const filteredStudents = getFilteredStudents();
+            const stats = calculateOverallStats(filteredStudents);
+            
+            charts.grade = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['เข้าเรียน', 'ขาดเรียน', 'มาสาย', 'ลา'],
+                    datasets: [{
+                        data: [stats.present, stats.absent, stats.late, stats.leave],
+                        backgroundColor: ['#22c55e', '#ef4444', '#f59e0b', '#06b6d4']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ฟังก์ชันสร้างกราฟแนวโน้ม
+        function createTrendChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            if (charts.trend) {
+                charts.trend.destroy();
+            }
+            
+            // สร้างข้อมูลจำลองสำหรับ 7 วันที่ผ่านมา
+            const days = [];
+            const presentData = [];
+            const absentData = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                days.push(date.toLocaleDateString('th-TH', { month: 'short', day: 'numeric' }));
+                
+                const filteredStudents = getFilteredStudents();
+                const totalStudents = filteredStudents.length || 7;
+                
+                if (i === 0) {
+                    // วันนี้ใช้ข้อมูลจริง
+                    presentData.push(filteredStudents.filter(s => s.status === 'present').length);
+                    absentData.push(filteredStudents.filter(s => s.status === 'absent').length);
+                } else {
+                    // วันอื่นๆ จำลองข้อมูล
+                    const presentCount = Math.floor(Math.random() * totalStudents * 0.5) + Math.floor(totalStudents * 0.4);
+                    presentData.push(presentCount);
+                    absentData.push(totalStudents - presentCount);
+                }
+            }
+            
+            charts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'เข้าเรียน',
+                            data: presentData,
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'ขาดเรียน',
+                            data: absentData,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ฟังก์ชันอัพเดทตารางรายชื่อนักเรียน
+        function updateStudentsTable() {
+            const tbody = document.querySelector('#studentsTable tbody');
+            tbody.innerHTML = '';
+            
+            const filteredStudents = getFilteredStudents();
+            
+            filteredStudents.forEach(student => {
+                const row = tbody.insertRow();
+                
+                const statusText = {
+                    'present': 'เข้าเรียน',
+                    'absent': 'ขาดเรียน',
+                    'late': 'มาสาย',
+                    'leave': 'ลา'
+                };
+                
+                const statusClass = student.status || 'no-status';
+                
+                // เน้นแสดงผู้ใช้ปัจจุบัน
+                const isCurrentUser = currentUser && student.name === `${currentUser.firstName} ${currentUser.lastName}`;
+                const rowClass = isCurrentUser ? ' style="background-color: #f0f9ff; font-weight: bold;"' : '';
+                
+                row.innerHTML = `
+                    <td${rowClass}>${student.name}${isCurrentUser ? ' (คุณ)' : ''}</td>
+                    <td${rowClass}>${student.grade}</td>
+                    <td${rowClass}>${student.subjectName}</td>
+                    <td${rowClass}><span class="status-badge ${statusClass}">${statusText[student.status] || 'ยังไม่เช็คชื่อ'}</span></td>
+                    <td${rowClass}>${student.statusTime || '-'}</td>
+                    <td${rowClass}>${isCurrentUser ? (currentUser.attendanceRate || 0) + '%' : Math.floor(Math.random() * 20) + 80 + '%'}</td>
+                `;
+            });
+        }
+
+        // ฟังก์ชันอัพเดทตารางสถิติรายวิชา
+        function updateSubjectsTable() {
+            const tbody = document.querySelector('#subjectsTable tbody');
+            tbody.innerHTML = '';
+            
+            if (!allData || !allData.subjects) return;
+            
+            // รวบรวมข้อมูลรายวิชา
+            const subjectStats = {};
+            const filteredStudents = getFilteredStudents();
+            
+            // เตรียมข้อมูลรายวิชา
+            allData.subjects.forEach(subject => {
+                subjectStats[subject.id] = {
+                    code: subject.code,
+                    name: subject.name,
+                    total: 0,
+                    present: 0,
+                    absent: 0,
+                    late: 0,
+                    leave: 0
+                };
+            });
+            
+            // นับสถิติ
+            filteredStudents.forEach(student => {
+                const subjectId = student.subjectId;
+                if (subjectStats[subjectId]) {
+                    subjectStats[subjectId].total++;
+                    if (student.status) {
+                        subjectStats[subjectId][student.status]++;
+                    }
+                }
+            });
+            
+            // แสดงผลในตาราง
+            Object.values(subjectStats).forEach(stats => {
+                if (stats.total > 0) {
+                    const row = tbody.insertRow();
+                    const attendancePercent = stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0;
+                    
+                    row.innerHTML = `
+                        <td>${stats.code}</td>
+                        <td>${stats.name}</td>
+                        <td>${stats.total}</td>
+                        <td>${stats.present}</td>
+                        <td>${stats.absent}</td>
+                        <td>${stats.late}</td>
+                        <td>${stats.leave}</td>
+                        <td>${attendancePercent}%</td>
+                    `;
+                }
+            });
+        }
+
+        // ฟังก์ชันอัพเดทตารางสถิติรายชั้น
+        function updateGradesTable() {
+            const tbody = document.querySelector('#gradesTable tbody');
+            tbody.innerHTML = '';
+            
+            // รวบรวมข้อมูลรายชั้น
+            const gradeStats = {};
+            const filteredStudents = getFilteredStudents();
+            
+            filteredStudents.forEach(student => {
+                const grade = student.grade;
+                if (!gradeStats[grade]) {
+                    gradeStats[grade] = { total: 0, present: 0, absent: 0, late: 0, leave: 0 };
+                }
+                
+                gradeStats[grade].total++;
+                if (student.status) {
+                    gradeStats[grade][student.status]++;
+                }
+            });
+            
+            // แสดงผลในตาราง
+            Object.keys(gradeStats).forEach(grade => {
+                const stats = gradeStats[grade];
+                const row = tbody.insertRow();
+                const attendancePercent = stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0;
+                
+                row.innerHTML = `
+                    <td>${grade}</td>
+                    <td>${stats.total}</td>
+                    <td>${stats.present}</td>
+                    <td>${stats.absent}</td>
+                    <td>${stats.late}</td>
+                    <td>${stats.leave}</td>
+                    <td>${attendancePercent}%</td>
+                `;
+            });
+        }
+
+        // ฟังก์ชันอัพเดทข้อมูล Real-time
+        function updateRealtime() {
+            const realtimeList = document.getElementById('realtimeList');
+            const filteredStudents = getFilteredStudents();
+            
+            // กรองเฉพาะนักเรียนที่เช็คชื่อแล้ววันนี้
+            const todayChecked = filteredStudents.filter(student => 
+                student.status && student.statusTime
+            ).sort((a, b) => {
+                // เรียงตามเวลาล่าสุด
+                return b.id - a.id;
+            });
+            
+            if (todayChecked.length === 0) {
+                realtimeList.innerHTML = '<div class="no-data">ยังไม่มีการเช็คชื่อในวันนี้</div>';
+                return;
+            }
+            
+            realtimeList.innerHTML = '';
+            todayChecked.slice(0, 10).forEach(student => {
+                const item = document.createElement('div');
+                item.className = `realtime-item ${student.status}`;
+                
+                const statusText = {
+                    'present': 'เข้าเรียน',
+                    'absent': 'ขาดเรียน',
+                    'late': 'มาสาย',
+                    'leave': 'ลา'
+                };
+                
+                // เน้นแสดงผู้ใช้ปัจจุบัน
+                const isCurrentUser = currentUser && student.name === `${currentUser.firstName} ${currentUser.lastName}`;
+                const highlight = isCurrentUser ? ' style="border-left: 4px solid #3b82f6; background-color: #f0f9ff;"' : '';
+                
+                item.innerHTML = `
+                    <div class="student-info"${highlight}>
+                        <strong>${student.name}${isCurrentUser ? ' (คุณ)' : ''}</strong>
+                        <span>${student.grade}</span>
+                    </div>
+                    <div class="status-info">
+                        <span class="status">${statusText[student.status]}</span>
+                        <span class="time">${student.statusTime}</span>
+                    </div>
+                `;
+                
+                realtimeList.appendChild(item);
+            });
+        }
+
+        // ฟังก์ชันอัพเดททุกอย่าง
+        function updateAllData() {
+            if (!loadUserData()) return;
+            
+            if (!loadAttendanceData()) {
+                console.log('ไม่สามารถโหลดข้อมูลได้');
+                return;
+            }
+            
+            updateSubjectFilter();
+            updateGradeFilter();
+            updateSummaryCards();
+            createSubjectChart();
+            createGradeChart();
+            createTrendChart();
+            updateStudentsTable();
+            updateSubjectsTable();
+            updateGradesTable();
+            updateRealtime();
+        }
+
+        // ฟังก์ชันส่งออกสถิติ
+        function exportStatistics() {
+            const filteredStudents = getFilteredStudents();
+            const stats = calculateOverallStats(filteredStudents);
+            
+            const currentDate = new Date().toLocaleDateString('th-TH');
+            let csvContent = `รายงานสถิติการเข้าเรียน\n`;
+            csvContent += `วันที่ส่งออก: ${currentDate}\n`;
+            
+            if (currentUser) {
+                csvContent += `ผู้ใช้งาน: ${currentUser.firstName} ${currentUser.lastName} (${currentUser.roleDisplay})\n`;
+            }
+            
+            csvContent += `\nสรุปสถิติรวม\n`;
+            csvContent += `นักเรียนทั้งหมด: ${stats.total} คน\n`;
+            csvContent += `เข้าเรียน: ${stats.present} คน (${stats.presentPercent}%)\n`;
+            csvContent += `ขาดเรียน: ${stats.absent} คน (${stats.absentPercent}%)\n`;
+            csvContent += `มาสาย: ${stats.late} คน (${stats.latePercent}%)\n`;
+            csvContent += `ลา: ${stats.leave} คน (${stats.leavePercent}%)\n\n`;
+            
+            csvContent += `รายละเอียดนักเรียน\n`;
+            csvContent += `ชื่อ-นามสกุล,ระดับชั้น,รายวิชา,สถานะ,เวลา\n`;
+            
+            filteredStudents.forEach(student => {
+                const statusText = {
+                    'present': 'เข้าเรียน',
+                    'absent': 'ขาดเรียน',
+                    'late': 'มาสาย',
+                    'leave': 'ลา'
+                };
+                
+                csvContent += `${student.name},${student.grade},${student.subjectName},${statusText[student.status] || 'ยังไม่เช็คชื่อ'},${student.statusTime || '-'}\n`;
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `attendance_statistics_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ฟังก์ชันกลับหน้าหลัก (ปลอดภัยสำหรับ GitHub Pages)
+        function goHome() {
+            // ลองเปิด index.html หรือหน้าหลัก
+            const possibleUrls = ['index.html', './', '../index.html'];
+            
+            for (let url of possibleUrls) {
+                try {
+                    window.location.href = url;
+                    break;
+                } catch (error) {
+                    continue;
+                }
+            }
+        }
+
+        // ฟังก์ชันออกจากระบบ
+        function logout() {
+            if (typeof(Storage) !== "undefined") {
+                localStorage.removeItem('userData');
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('username');
+            }
+            goHome();
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // โหลดข้อมูลเริ่มต้น
+            updateAllData();
+            
+            // ตั้งค่า Real-time update ทุก 10 วินาที (เพื่อประสิทธิภาพที่ดีขึ้น)
+            realtimeUpdateInterval = setInterval(() => {
+                if (loadUserData()) {
+                    loadAttendanceData();
+                    updateRealtime();
+                }
+            }, 10000);
+            
+            // Event listener สำหรับตัวกรอง
+            const subjectFilter = document.getElementById('subjectFilter');
+            const gradeFilter = document.getElementById('gradeFilter');
+            const dateRange = document.getElementById('dateRange');
+            const refreshBtn = document.getElementById('refreshBtn');
+            
+            if (subjectFilter) subjectFilter.addEventListener('change', updateAllData);
+            if (gradeFilter) gradeFilter.addEventListener('change', updateAllData);
+            if (dateRange) dateRange.addEventListener('change', updateAllData);
+            if (refreshBtn) refreshBtn.addEventListener('click', updateAllData);
+            
+            // จัดการแท็บ
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // ลบ active class จากแท็บทั้งหมด
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // เพิ่ม active class ให้แท็บที่เลือก
+                    this.classList.add('active');
+                    const targetContent = document.getElementById(targetTab + '-tab');
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+
+            // เพิ่มปุ่มออกจากระบบในหัวข้อ
+            const header = document.querySelector('.header');
+            if (header) {
+                const logoutBtn = document.createElement('button');
+                logoutBtn.innerHTML = '🚪 ออกจากระบบ';
+                logoutBtn.className = 'btn btn-logout';
+                logoutBtn.addEventListener('click', logout);
+                header.style.position = 'relative';
+                header.appendChild(logoutBtn);
+            }
+        });
+
+        // ป้องกัน memory leak เมื่อออกจากหน้า
+        window.addEventListener('beforeunload', function() {
+            if (realtimeUpdateInterval) {
+                clearInterval(realtimeUpdateInterval);
+            }
+            
+            // ทำลาย charts
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+        });
+
+        // ตรวจสอบการเปลี่ยนแปลงของ localStorage (ถ้ามี)
+        if (typeof(Storage) !== "undefined") {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'studentAttendanceData') {
+                    updateAllData();
+                } else if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
+                    goHome();
+                }
+            });
+        }
+
+        // Focus/blur events เพื่ออัพเดทเมื่อกลับมาที่หน้า
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                updateAllData();
+            }
+        });
+
+        // เพิ่มการจัดการ error สำหรับ Chart.js
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('Chart')) {
+                console.error('Chart.js error:', e);
+                // สามารถเพิ่มการจัดการ error เพิ่มเติมได้ที่นี่
+            }
+        });
+
+        // เพิ่มการตรวจสอบ responsive
+        function handleResize() {
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    chart.resize();
+                }
+            });
+        }
+
+        window.addEventListener('resize', handleResize);
+    </script>
+</body>
+</html>
