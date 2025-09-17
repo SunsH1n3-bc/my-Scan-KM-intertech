@@ -272,7 +272,6 @@
 
         .btn-block {
             width: 100%;
-            top: 10px;
         }
 
         .btn:disabled {
@@ -365,34 +364,6 @@
             color: #1f2937;
         }
 
-        /* URL Section - เพิ่มใหม่ */
-        .url-section {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 197, 253, 0.05));
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            margin: 30px 0;
-        }
-
-        .url-textarea {
-            width: 100%;
-            min-height: 120px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid rgba(59, 130, 246, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            color: #1f2937;
-            resize: vertical;
-        }
-
-        .url-textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
         /* Button Groups */
         .btn-group {
             display: flex;
@@ -464,22 +435,40 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* File not found warning */
-        .warning-box {
-            background: rgba(251, 191, 36, 0.1);
-            border: 2px solid rgba(251, 191, 36, 0.3);
+        /* File Not Found Section */
+        .file-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+            border: 2px solid rgba(245, 158, 11, 0.3);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #92400e;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .warning-box ion-icon {
-            font-size: 1.5rem;
+        .file-warning ion-icon {
+            font-size: 2rem;
             color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .file-warning p {
+            color: #d97706;
+            margin-bottom: 15px;
+        }
+
+        /* URL Display */
+        .url-display {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #1f2937;
+            word-break: break-all;
+            margin: 10px 0;
+            max-height: 100px;
+            overflow-y: auto;
         }
 
         /* Responsive Design */
@@ -535,6 +524,26 @@
         /* Hidden utility */
         .hidden {
             display: none !important;
+        }
+
+        /* Copy button styling */
+        .copy-btn {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -671,20 +680,16 @@
                 </div>
             </div>
 
-            <!-- URL Section -->
-            <div class="url-section">
-                <div class="section-header" style="margin-bottom: 20px;">
-                    <ion-icon name="link-outline"></ion-icon>
-                    <h3 style="font-size: 1.2rem;">URL สำหรับเข้าเช็คชื่อ</h3>
-                </div>
-                <textarea id="attendanceURL" class="url-textarea" readonly 
-                          placeholder="URL จะแสดงที่นี่หลังจากสร้างรหัส"></textarea>
-                <div class="btn-group" style="margin-top: 20px;">
-                    <button onclick="copyURL()" class="btn btn-secondary">
-                        <ion-icon name="copy-outline"></ion-icon>
-                        คัดลอก URL
-                    </button>
-                </div>
+            <!-- File warning section -->
+            <div id="fileWarning" class="file-warning hidden">
+                <ion-icon name="warning-outline"></ion-icon>
+                <p><strong>ไม่พบไฟล์ studens.html</strong></p>
+                <p>คุณสามารถคัดลอก URL ด้านล่างและใช้เมื่อมีไฟล์แล้ว</p>
+                <div class="url-display" id="generatedURL"></div>
+                <button class="copy-btn" onclick="copyURL()">
+                    <ion-icon name="copy-outline"></ion-icon>
+                    คัดลอก URL
+                </button>
             </div>
             
             <div class="btn-group">
@@ -692,6 +697,9 @@
                     <ion-icon name="open-outline"></ion-icon>
                     เข้าเช็คชื่อทันที
                 </button>
+            </div>
+            
+            <div class="btn-group">
                 <button onclick="resetForm()" class="btn btn-secondary">
                     <ion-icon name="refresh-outline"></ion-icon>
                     สร้างรหัสใหม่
@@ -721,78 +729,14 @@
                 </button>
             </form>
         </div>
-
-        <!-- GitHub Pages Notice -->
-        <div id="githubNotice" class="glass-card" style="margin-top: 60px;">
-            <div class="section-header">
-                <ion-icon name="information-circle-outline"></ion-icon>
-                <h2 class="section-title">คำแนะนำสำหรับ GitHub Pages</h2>
-            </div>
-            
-            <div class="warning-box">
-                <ion-icon name="warning-outline"></ion-icon>
-                <div>
-                    <strong>สำคัญ:</strong> ให้สร้างไฟล์ <code>students.html</code> หรือ <code>studens.html</code> 
-                    ในโฟลเดอร์เดียวกันเพื่อให้ระบบทำงานได้อย่างสมบูรณ์
-                </div>
-            </div>
-            
-            <p style="color: #6b7280; text-align: center; margin-top: 20px;">
-                ระบบจะพยายามหาไฟล์เช็คชื่ออัตโนมัติ และจะแจ้งเตือนหากไม่พบไฟล์
-            </p>
-        </div>
     </div>
 
     <script>
-        // เก็บข้อมูลรหัสที่สร้าง (ใช้ memory แทน localStorage เพื่อความเข้ากันได้)
+        // เก็บข้อมูลรหัสที่สร้าง
         let generatedCodes = {};
+        let currentGeneratedURL = '';
         
-        // ฟังก์ชันสำหรับ GitHub Pages - ตรวจหา base path
-        function getBasePath() {
-            const path = window.location.pathname;
-            // ถ้าอยู่ใน subfolder ให้ใช้ subfolder เป็น base
-            if (path.includes('/')) {
-                const segments = path.split('/').filter(segment => segment !== '');
-                if (segments.length > 0 && !segments[segments.length - 1].includes('.html')) {
-                    return '/' + segments.join('/') + '/';
-                } else if (segments.length > 1) {
-                    return '/' + segments.slice(0, -1).join('/') + '/';
-                }
-            }
-            return '/';
-        }
-
-        // สร้าง URL สำหรับหน้าเช็คชื่อ - ปรับปรุงให้รองรับ GitHub Pages
-        function createAttendanceURL(data) {
-            const origin = window.location.origin;
-            const basePath = getBasePath();
-            
-            // รายการไฟล์ที่อาจใช้สำหรับหน้าเช็คชื่อ
-            const possibleFiles = [
-                'students.html',
-                'studens.html',  // รองรับ typo ที่มีอยู่
-                'student.html',
-                'attendance.html',
-                'checkin.html'
-            ];
-            
-            // ใช้ไฟล์แรกเป็นค่าเริ่มต้น
-            const targetFile = possibleFiles[0];
-            const baseURL = origin + basePath + targetFile;
-            
-            const params = new URLSearchParams({
-                auto: 'true',
-                code: data.code,
-                name: data.name,
-                grade: data.grade,
-                subjectCode: data.subjectCode,
-                subjectName: data.subjectName
-            });
-            
-            return baseURL + '?' + params.toString();
-        }
-
-        // ตรวจสอบว่าไฟล์เป้าหมายมีอยู่จริงหรือไม่
+        // ตรวจสอบว่าไฟล์ studens.html มีอยู่หรือไม่
         async function checkFileExists(url) {
             try {
                 const response = await fetch(url, { method: 'HEAD' });
@@ -801,33 +745,8 @@
                 return false;
             }
         }
-
-        // หาไฟล์เช็คชื่อที่มีอยู่จริง
-        async function findAttendanceFile() {
-            const origin = window.location.origin;
-            const basePath = getBasePath();
-            
-            const possibleFiles = [
-                'students.html',
-                'studens.html',
-                'student.html', 
-                'attendance.html',
-                'checkin.html'
-            ];
-            
-            for (const file of possibleFiles) {
-                const url = origin + basePath + file;
-                const exists = await checkFileExists(url);
-                if (exists) {
-                    return file;
-                }
-            }
-            
-            // ถ้าไม่พบไฟล์ใดเลย ให้ใช้ไฟล์แรกและแจ้งเตือน
-            return possibleFiles[0];
-        }
-
-        // โหลดข้อมูลรหัสจาก memory
+        
+        // โหลดข้อมูลรหัส
         function loadCodes() {
             if (!generatedCodes) {
                 generatedCodes = {};
@@ -852,6 +771,25 @@
         // สร้างรหัส 6 หลัก
         function generateCode() {
             return Math.random().toString().substr(2, 6);
+        }
+        
+        // สร้าง URL พารามิเตอร์ที่ใช้งานได้กับ GitHub Pages
+        function createAttendanceURL(data) {
+            // ใช้ relative path ที่ปลอดภัยสำหรับ GitHub Pages
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/')) || '';
+            const baseURL = window.location.origin + basePath + '/studens.html';
+            
+            const params = new URLSearchParams({
+                auto: 'true',
+                code: data.code,
+                name: data.name,
+                grade: data.grade,
+                subjectCode: data.subjectCode,
+                subjectName: data.subjectName
+            });
+            
+            return baseURL + '?' + params.toString();
         }
         
         // แสดง toast notification
@@ -884,32 +822,26 @@
                 }, 400);
             }, 4000);
         }
-
+        
         // คัดลอก URL
         function copyURL() {
-            const urlTextarea = document.getElementById('attendanceURL');
-            urlTextarea.select();
-            urlTextarea.setSelectionRange(0, 99999); // สำหรับมือถือ
-
-            try {
-                document.execCommand('copy');
+            const urlText = document.getElementById('generatedURL').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
                 showToast('คัดลอก URL สำเร็จ!', 'success', 'copy-outline');
-            } catch (err) {
-                // ถ้า execCommand ไม่ทำงาน ให้ลองใช้ Clipboard API
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(urlTextarea.value).then(() => {
-                        showToast('คัดลอก URL สำเร็จ!', 'success', 'copy-outline');
-                    }).catch(() => {
-                        showToast('ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง', 'error', 'alert-circle-outline');
-                    });
-                } else {
-                    showToast('ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง', 'error', 'alert-circle-outline');
-                }
-            }
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = urlText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('คัดลอก URL สำเร็จ!', 'success', 'copy-outline');
+            });
         }
         
         // จัดการฟอร์มสร้างรหัส
-        document.getElementById('generateForm').addEventListener('submit', async function(e) {
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const submitBtn = document.querySelector('#generateForm button[type="submit"]');
@@ -953,28 +885,33 @@
                 generatedCodes[code] = codeData;
                 saveCodes();
                 
-                // ตรวจหาไฟล์เช็คชื่อ
-                const attendanceFile = await findAttendanceFile();
-                
                 // สร้าง URL
                 const attendanceURL = createAttendanceURL(codeData);
+                currentGeneratedURL = attendanceURL;
+                
+                // ตรวจสอบว่าไฟล์ studens.html มีอยู่หรือไม่
+                const fileExists = await checkFileExists(attendanceURL);
                 
                 // แสดงผลลัพธ์
                 document.getElementById('codeDisplay').textContent = code;
                 document.getElementById('nameDisplay').textContent = name;
                 document.getElementById('gradeDisplay').textContent = grade;
                 document.getElementById('subjectDisplay').textContent = `${subjectCode} - ${subjectName}`;
-                document.getElementById('attendanceURL').value = attendanceURL;
+                
+                // แสดงหรือซ่อนคำเตือนไฟล์
+                const fileWarning = document.getElementById('fileWarning');
+                const generatedURLDiv = document.getElementById('generatedURL');
+                
+                if (!fileExists) {
+                    fileWarning.classList.remove('hidden');
+                    generatedURLDiv.textContent = attendanceURL;
+                } else {
+                    fileWarning.classList.add('hidden');
+                }
                 
                 // แสดงส่วนผลลัพธ์และซ่อนฟอร์ม
                 document.getElementById('codeGenerator').style.display = 'none';
                 document.getElementById('resultSection').classList.remove('hidden');
-                
-                // ตรวจสอบว่าไฟล์มีอยู่จริงและแจ้งเตือนหากจำเป็น
-                const fileExists = await checkFileExists(attendanceURL.split('?')[0]);
-                if (!fileExists) {
-                    showToast(`ไม่พบไฟล์ ${attendanceFile} กรุณาสร้างไฟล์หน้าเช็คชื่อ`, 'error', 'warning-outline');
-                }
                 
                 // Scroll to result
                 document.getElementById('resultSection').scrollIntoView({ 
@@ -986,12 +923,17 @@
                 btnText.innerHTML = originalText;
                 submitBtn.disabled = false;
                 
-                showToast('สร้างรหัสเข้าเรียนสำเร็จ!', 'success', 'checkmark-circle-outline');
+                if (fileExists) {
+                    showToast('สร้างรหัสเข้าเรียนสำเร็จ!', 'success', 'checkmark-circle-outline');
+                } else {
+                    showToast('สร้างรหัสสำเร็จ แต่ไม่พบไฟล์เป้าหมาย', 'error', 'warning-outline');
+                }
             }, 1500);
         });
         
         // เปิดหน้าเช็คชื่อทันที
         async function openAttendancePage() {
+            // สร้าง URL จากข้อมูลที่แสดงอยู่
             const code = document.getElementById('codeDisplay').textContent;
             const name = document.getElementById('nameDisplay').textContent;
             const grade = document.getElementById('gradeDisplay').textContent;
@@ -999,26 +941,27 @@
             const [subjectCode, subjectName] = subjectInfo.split(' - ');
             
             const codeData = {
-                code, name, grade, subjectCode, subjectName
+                code: code,
+                name: name,
+                grade: grade,
+                subjectCode: subjectCode,
+                subjectName: subjectName
             };
             
-            const attendanceURL = createAttendanceURL(codeData);
+            const url = createAttendanceURL(codeData);
             
-            // ตรวจสอบว่าไฟล์มีอยู่จริงก่อนเปิด
-            const fileExists = await checkFileExists(attendanceURL.split('?')[0]);
+            // ตรวจสอบว่าไฟล์มีอยู่หรือไม่
+            const fileExists = await checkFileExists(url);
             
             if (fileExists) {
-                window.open(attendanceURL, '_blank');
+                window.open(url, '_blank');
                 showToast('เปิดหน้าเช็คชื่อใหม่แล้ว', 'success', 'open-outline');
             } else {
-                // ถ้าไม่พบไฟล์ ให้แสดง URL และแจ้งให้ผู้ใช้สร้างไฟล์
-                showToast('ไม่พบหน้าเช็คชื่อ กรุณาสร้างไฟล์หรือใช้ URL ที่แสดงด้านล่าง', 'error', 'warning-outline');
-                
-                // scroll ไปที่ URL section
-                document.querySelector('.url-section').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
+                showToast('ไม่พบไฟล์ studens.html กรุณาตรวจสอบไฟล์', 'error', 'alert-circle-outline');
+                // แสดงคำเตือนและ URL
+                document.getElementById('fileWarning').classList.remove('hidden');
+                document.getElementById('generatedURL').textContent = url;
+                currentGeneratedURL = url;
             }
         }
         
@@ -1027,6 +970,7 @@
             document.getElementById('generateForm').reset();
             document.getElementById('codeGenerator').style.display = 'block';
             document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('fileWarning').classList.add('hidden');
             
             // Scroll to form
             document.getElementById('codeGenerator').scrollIntoView({ 
@@ -1036,7 +980,7 @@
         }
         
         // จัดการฟอร์มตรวจสอบรหัส
-        document.getElementById('checkCodeForm').addEventListener('submit', async function(e) {
+        document.getElementById('checkCodeForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const inputCode = document.getElementById('inputCode').value.trim();
@@ -1057,11 +1001,9 @@
                 if (generatedCodes[inputCode]) {
                     const codeData = generatedCodes[inputCode];
                     
-                    // สร้าง URL
+                    // สร้าง URL และตรวจสอบไฟล์
                     const attendanceURL = createAttendanceURL(codeData);
-                    
-                    // ตรวจสอบว่าไฟล์มีอยู่จริง
-                    const fileExists = await checkFileExists(attendanceURL.split('?')[0]);
+                    const fileExists = await checkFileExists(attendanceURL);
                     
                     if (fileExists) {
                         // ทำเครื่องหมายว่าใช้แล้ว
@@ -1078,7 +1020,7 @@
                         // รีเซ็ตช่องกรอกรหัส
                         document.getElementById('inputCode').value = '';
                     } else {
-                        showToast('ไม่พบหน้าเช็คชื่อ กรุณาสร้างไฟล์หน้าเช็คชื่อก่อน', 'error', 'warning-outline');
+                        showToast('รหัสถูกต้อง แต่ไม่พบไฟล์เป้าหมาย', 'error', 'warning-outline');
                     }
                 } else {
                     showToast('รหัสไม่ถูกต้องหรือไม่มีอยู่ในระบบ', 'error', 'close-circle-outline');
@@ -1096,94 +1038,66 @@
             e.target.value = value;
         });
         
-        // ฟังก์ชันทำความสะอาดรหัสเก่า (เก็บไว้ 7 วัน)
+        // โหลดข้อมูลเมื่อเริ่มต้น
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCodes();
+            
+            // Add smooth scroll behavior to all internal links
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // ตรวจสอบ URL parameters สำหรับ auto-redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('auto') === 'true') {
+                // ถ้ามีการ redirect มาจากหน้าอื่น ให้แสดงข้อความ
+                showToast('เข้าสู่ระบบผ่านลิงค์อัตโนมัติ', 'success', 'link-outline');
+            }
+        });
+        
+        // ทำความสะอาดรหัสเก่า (เก็บไว้ 7 วัน)
         function cleanOldCodes() {
             const sevenDaysAgo = new Date();
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
             
             Object.keys(generatedCodes).forEach(code => {
                 const codeData = generatedCodes[code];
-                const createdDate = new Date(codeData.createdAt);
-                
-                if (createdDate < sevenDaysAgo) {
-                    delete generatedCodes[code];
+                if (codeData && codeData.createdAt) {
+                    const createdDate = new Date(codeData.createdAt);
+                    
+                    if (createdDate < sevenDaysAgo) {
+                        delete generatedCodes[code];
+                    }
                 }
             });
             
             saveCodes();
         }
-
-        // ตรวจสอบไฟล์เช็คชื่อเมื่อโหลดหน้าเว็บ
-        async function checkAttendanceFilesOnLoad() {
-            const origin = window.location.origin;
-            const basePath = getBasePath();
-            
-            const possibleFiles = [
-                'students.html',
-                'studens.html',
-                'student.html',
-                'attendance.html',
-                'checkin.html'
-            ];
-            
-            let foundFiles = [];
-            
-            for (const file of possibleFiles) {
-                const url = origin + basePath + file;
-                const exists = await checkFileExists(url);
-                if (exists) {
-                    foundFiles.push(file);
+        
+        // ทำความสะอาดรหัสเก่าทุกครั้งที่โหลดหน้า
+        cleanOldCodes();
+        
+        // เพิ่มการจัดการ keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter ในฟอร์มสร้างรหัส
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                if (document.getElementById('codeGenerator').style.display !== 'none') {
+                    document.getElementById('generateForm').dispatchEvent(new Event('submit'));
                 }
             }
             
-            if (foundFiles.length === 0) {
-                // แสดงการแจ้งเตือนถ้าไม่พบไฟล์ใด ๆ
-                setTimeout(() => {
-                    showToast('ไม่พบไฟล์หน้าเช็คชื่อ กรุณาสร้างไฟล์ students.html', 'error', 'warning-outline');
-                }, 2000);
-            } else {
-                console.log('Found attendance files:', foundFiles);
+            // Escape เพื่อรีเซ็ตฟอร์ม
+            if (e.key === 'Escape' && !document.getElementById('resultSection').classList.contains('hidden')) {
+                resetForm();
             }
-        }
-        
-        // โหลดข้อมูลเมื่อเริ่มต้น
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCodes();
-            cleanOldCodes();
-            
-            // Add smooth scroll behavior
-            document.documentElement.style.scrollBehavior = 'smooth';
-            
-            // ตรวจสอบไฟล์เช็คชื่อ
-            checkAttendanceFilesOnLoad();
-            
-            // แสดงข้อมูล path ปัจจุบันใน console เพื่อ debug
-            console.log('Current path:', window.location.pathname);
-            console.log('Base path:', getBasePath());
         });
-
-        // เพิ่มฟังก์ชันสำหรับ handle การเปลี่ยน URL แบบ dynamic
-        function updateAttendanceURL() {
-            const urlTextarea = document.getElementById('attendanceURL');
-            if (urlTextarea && urlTextarea.value) {
-                const code = document.getElementById('codeDisplay').textContent;
-                if (code && generatedCodes[code]) {
-                    const attendanceURL = createAttendanceURL(generatedCodes[code]);
-                    urlTextarea.value = attendanceURL;
-                }
-            }
-        }
-
-        // ฟัง event เมื่อ URL เปลี่ยน (สำหรับ SPA routing)
-        window.addEventListener('popstate', updateAttendanceURL);
         
-        // Export functions สำหรับใช้งานจาก console หรือ external scripts
-        window.AttendanceSystem = {
-            generateCode,
-            createAttendanceURL,
-            getBasePath,
-            checkFileExists,
-            findAttendanceFile,
-            generatedCodes,
-            updateStats
-        };
+        // เพิ่มการแสดงสถานะการเชื่อมต่อ
+        window.addEventListener('online', function() {
+            showToast('เชื่อมต่ออินเทอร์เน็ตแล้ว', 'success', 'wifi-outline');
+        });
+        
+        window.addEventListener('offline', function() {
+            showToast('ขาดการเชื่อมต่ออินเทอร์เน็ต', 'error', 'wifi-outline');
+        });
+    </script>
+</body>
+</html>
