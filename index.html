@@ -1720,46 +1720,46 @@ html {
         <div class="nav-container">
             <ul class="nav-menu">
                 <li class="nav-item" data-tooltip="หน้าแรก">
-                    <a href="./index.html" class="nav-link active" aria-label="หน้าแรก">
+                    <div class="nav-link active" aria-label="หน้าแรก" " onclick="window.location.href='index.html'">
                         <ion-icon name="home" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
-                    </a>
+                    </div>
                 </li>
                 
                 <li class="nav-item" data-tooltip="สแกน QR Code">
-                    <a href="./member.html" class="nav-link" aria-label="สแกน">
+                    <div class="nav-link" aria-label="สแกน" " onclick="window.location.href='member.html'">
                         <ion-icon name="qr-code" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
-                    </a>
+                    </div>
                 </li>
                 
                 <!-- เช็คอิน - จะซ่อนสำหรับนักเรียน -->
                 <li class="nav-item checkin-feature" data-tooltip="เช็คอิน">
-                    <a href="./studens.html" class="nav-link" aria-label="เช็คอิน">
+                    <div class="nav-link" aria-label="เช็คอิน"" onclick="window.location.href='studens.html'">
                         <ion-icon name="checkmark-circle" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
-                    </a>
+                    </div>
                 </li>
                 
                 <li class="nav-item" data-tooltip="ตารางเรียน">
-                    <a href="./ClassRoom.html" class="nav-link" aria-label="ตารางเรียน">
+                    <div class="nav-link" aria-label="ตารางเรียน"" onclick="window.location.href='ClassRoom.html'">
                         <ion-icon name="calendar" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
-                    </a>
+                    </div>
                 </li>
                 
                 <li class="nav-item" data-tooltip="สถิติการเข้าเรียน">
-                    <a href="./User.html" class="nav-link" aria-label="รายงาน">
+                    <div class="nav-link" aria-label="รายงาน"" onclick="window.location.href='User.html'">
                         <ion-icon name="bar-chart" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
-                    </a>
+                    </div>
                 </li>
                 
                 <li class="nav-item" data-tooltip="โปรไฟล์">
-                    <a href="./Nav.html" class="nav-link" aria-label="โปรไฟล์">
+                    <div class="nav-link" aria-label="โปรไฟล์"" onclick="window.location.href='Nav.html'">
                         <ion-icon name="person" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
-                    </a>
+                    </div>
                 </li>
                 
                 <li class="nav-item" data-tooltip="ติดต่อ">
@@ -1860,7 +1860,7 @@ html {
                     </div>
                     <h4>สแกน QR Code</h4>
                     <p>เช็คอินเข้าเรียนด้วย QR Code</p>
-                    <button class="action-btn primary" data-page="./member.html">
+                    <button class="action-btn primary" data-page="member.html">
                         <ion-icon name="camera"></ion-icon>
                         <span>เริ่มสแกน</span>
                         <div class="btn-ripple"></div>
@@ -1873,7 +1873,7 @@ html {
                     </div>
                     <h4>ตารางเรียนวันนี้</h4>
                     <p>ดูตารางเรียนและกิจกรรมวันนี้</p>
-                    <button class="action-btn secondary" data-page="./ClassRoom.html">
+                    <button class="action-btn secondary" data-page="ClassRoom.html">
                         <ion-icon name="time"></ion-icon>
                         <span>ดูตาราง</span>
                         <div class="btn-ripple"></div>
@@ -1887,7 +1887,7 @@ html {
                     </div>
                     <h4>การเช็คอิน</h4>
                     <p>ดูสถิติและการเข้าเรียน</p>
-                    <button class="action-btn tertiary" data-page="./studens.html">
+                    <button class="action-btn tertiary" data-page="studens.html">
                         <ion-icon name="checkmark-circle"></ion-icon>
                         <span>เช็คอิน</span>
                         <div class="btn-ripple"></div>
@@ -1900,7 +1900,7 @@ html {
         <section class="today-schedule">
             <div class="section-header">
                 <h3>ตารางเรียนวันนี้</h3>
-                <button class="view-all-btn" onclick="window.location.href='./ClassRoom.html'">
+                <button class="view-all-btn" onclick="window.location.href='ClassRoom.html'">
                     <span>ดูทั้งหมด</span>
                     <ion-icon name="arrow-forward"></ion-icon>
                 </button>
