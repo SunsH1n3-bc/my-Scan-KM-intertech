@@ -2140,7 +2140,8 @@ html {
     
     <!-- JavaScript -->
     <script>
-        // Enhanced JavaScript for Scan Check In System - GITHUB PAGES COMPATIBLE VERSION
+// Enhanced JavaScript for Scan Check In System - GITHUB PAGES COMPATIBLE VERSION
+// FIXED: Navigation redirection issue
 
 // ===== PATH CONFIGURATION FOR GITHUB PAGES =====
 const PathConfig = {
@@ -2609,10 +2610,14 @@ window.PathConfig = PathConfig;
 // Update existing global functions to use GitHub Pages navigation
 window.handleDirectClick = handleDirectClickGitHubPages;
 
-// ===== FIXED PATH ISSUES FOR GITHUB PAGES =====
+// ===== FIXED: LOGOUT FUNCTION WITHOUT AUTO-REDIRECT =====
 
-// Fix logout function for GitHub Pages
+// Fix logout function - ไม่ให้เด้งไป Profile.html เอง
 function logout() {
+    console.log('=== LOGOUT FUNCTION CALLED ===');
+    console.log('Current location:', window.location.href);
+    console.log('User role before logout:', getUserRole());
+    
     if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
         try {
             // ลบข้อมูลการล็อกอิน
@@ -2621,7 +2626,11 @@ function logout() {
             localStorage.removeItem('userRole');
             localStorage.removeItem('attendanceStatistics');
             
-            console.log('User logged out successfully');
+            // Reset current user role
+            currentUserRole = null;
+            
+            console.log('User data cleared successfully');
+            console.log('Navigating to Nav.html...');
             
             // กลับไปหน้าล็อกอิน using NavigationManager
             NavigationManager.navigateTo('./Nav.html');
@@ -2633,11 +2642,50 @@ function logout() {
     }
 }
 
-// Fix navigation with auth for GitHub Pages
+// ===== FIXED: USER LOGIN CHECK ไม่ให้เด้งไป Profile.html เอง =====
+
+function checkUserLogin() {
+    console.log('=== CHECKING USER LOGIN ===');
+    
+    try {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userData = localStorage.getItem('userData');
+        
+        console.log('isLoggedIn:', isLoggedIn);
+        console.log('userData:', userData);
+        
+        if (isLoggedIn !== 'true' || !userData) {
+            console.log('User not logged in, should redirect to Nav.html');
+            return false; // ไม่ redirect เอง ให้หน้าอื่นจัดการ
+        }
+        
+        const parsedUserData = JSON.parse(userData);
+        currentUserRole = parsedUserData.role || localStorage.getItem('userRole') || 'student';
+        console.log('User login verified:', parsedUserData.username, 'Role:', currentUserRole);
+        return true;
+        
+    } catch (error) {
+        console.error('Error parsing user data:', error);
+        return false; // ไม่ redirect เอง ให้หน้าอื่นจัดการ
+    }
+}
+
+// ===== FIXED: NAVIGATION WITH AUTH =====
+
 function navigateWithAuth(page) {
+    console.log('=== NAVIGATE WITH AUTH ===');
+    console.log('Target page:', page);
+    console.log('Current user role:', currentUserRole);
+    
     if (!currentUserRole) {
-        console.warn('User role not set, cannot navigate');
-        return;
+        console.warn('User role not set, checking login status...');
+        const isLoggedIn = checkUserLogin();
+        
+        if (!isLoggedIn) {
+            console.log('User not logged in, redirecting to Nav.html');
+            NavigationManager.navigateTo('./Nav.html');
+            return;
+        }
     }
     
     // ตรวจสอบสิทธิ์สำหรับหน้าต่างๆ
@@ -2654,32 +2702,54 @@ function navigateWithAuth(page) {
     NavigationManager.navigateTo(page);
 }
 
-// Fix user management initialization for GitHub Pages
-function checkUserLogin() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const userData = localStorage.getItem('userData');
+// ===== ADD DEBUGGING FOR REDIRECTION ISSUES =====
+
+// เพิ่ม function สำหรับ debug การ redirect
+function debugRedirection() {
+    console.log('=== REDIRECTION DEBUG INFO ===');
+    console.log('Current URL:', window.location.href);
+    console.log('Document referrer:', document.referrer);
+    console.log('History length:', history.length);
     
-    if (isLoggedIn !== 'true' || !userData) {
-        console.log('User not logged in, redirecting to login page');
-        NavigationManager.navigateTo('./Nav.html');
-        return false;
+    // ตรวจสอบ localStorage
+    try {
+        console.log('LocalStorage contents:');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            console.log(`  ${key}: ${localStorage.getItem(key)}`);
+        }
+    } catch (e) {
+        console.log('Cannot access localStorage:', e);
     }
     
+    // ตรวจสอบ sessionStorage
     try {
-        const parsedUserData = JSON.parse(userData);
-        currentUserRole = parsedUserData.role || localStorage.getItem('userRole') || 'student';
-        console.log('User login verified:', parsedUserData.username, 'Role:', currentUserRole);
-        return true;
-    } catch (error) {
-        console.error('Error parsing user data:', error);
-        NavigationManager.navigateTo('./Nav.html');
-        return false;
+        console.log('SessionStorage contents:');
+        for (let i = 0; i < sessionStorage.length; i++) {
+            const key = sessionStorage.key(i);
+            console.log(`  ${key}: ${sessionStorage.getItem(key)}`);
+        }
+    } catch (e) {
+        console.log('Cannot access sessionStorage:', e);
     }
 }
 
-// ===== REST OF THE FUNCTIONS REMAIN THE SAME =====
+// เพิ่ม event listener สำหรับ beforeunload
+window.addEventListener('beforeunload', function(e) {
+    console.log('=== PAGE UNLOADING ===');
+    console.log('Current page:', window.location.href);
+    console.log('User role:', getUserRole());
+    debugRedirection();
+});
 
-function createRipple(element) {
+// เพิ่ม event listener สำหรับ popstate
+window.addEventListener('popstate', function(e) {
+    console.log('=== POPSTATE EVENT ===');
+    console.log('State:', e.state);
+    console.log('Current URL:', window.location.href);
+});
+
+createRipple = function(element) {
     const ripple = element.querySelector('.nav-ripple, .btn-ripple');
     if (ripple) {
         ripple.classList.remove('active');
@@ -2881,7 +2951,8 @@ window.CheckInSystem = {
     updateUIByRole,
     initializeUserRole,
     NavigationManager,
-    PathConfig
+    PathConfig,
+    debugRedirection
 };
 
 // Make additional functions globally available
@@ -2889,9 +2960,140 @@ window.logout = logout;
 window.navigateWithAuth = navigateWithAuth;
 window.closeAccessDeniedAlert = closeAccessDeniedAlert;
 window.checkUserLogin = checkUserLogin;
+window.debugRedirection = debugRedirection;
 
 console.log('GitHub Pages Compatible Enhanced Script loaded successfully!');
 console.log('GitHub Pages Mode:', PathConfig.isGitHubPages);
 console.log('Base Path:', PathConfig.getBasePath());
+
+// ===== ADDITIONAL DEBUGGING AND FIXES =====
+
+// เพิ่มการตรวจสอบ redirect ที่อาจเกิดจาก HTML meta tags หรือ JavaScript อื่น
+function checkForAutoRedirects() {
+    console.log('=== CHECKING FOR AUTO REDIRECTS ===');
+    
+    // ตรวจสอบ meta refresh tags
+    const metaRefresh = document.querySelectorAll('meta[http-equiv="refresh"]');
+    if (metaRefresh.length > 0) {
+        console.log('Found meta refresh tags:', metaRefresh);
+        metaRefresh.forEach(meta => {
+            console.log('Meta refresh content:', meta.getAttribute('content'));
+        });
+    }
+    
+    // ตรวจสอบ script tags ที่อาจมี window.location
+    const scripts = document.querySelectorAll('script');
+    scripts.forEach((script, index) => {
+        if (script.innerHTML && script.innerHTML.includes('window.location')) {
+            console.log(`Script ${index} contains window.location:`, script.innerHTML);
+        }
+    });
+    
+    // ตรวจสอบ inline onclick handlers
+    const elementsWithOnclick = document.querySelectorAll('[onclick]');
+    elementsWithOnclick.forEach((element, index) => {
+        const onclick = element.getAttribute('onclick');
+        if (onclick.includes('Profile.html')) {
+            console.log(`Element ${index} has onclick to Profile.html:`, element, onclick);
+        }
+    });
+}
+
+// เรียกใช้การตรวจสอบหลังจาก DOM โหลดเสร็จ
+setTimeout(() => {
+    checkForAutoRedirects();
+}, 2000);
+
+// ===== FIX สำหรับปัญหาเฉพาะที่อาจเกิดขึ้น =====
+
+// Override window.location.href setter เพื่อ debug
+const originalLocationSetter = Object.getOwnPropertyDescriptor(window.location, 'href').set;
+Object.defineProperty(window.location, 'href', {
+    set: function(value) {
+        console.log('=== LOCATION.HREF BEING SET ===');
+        console.log('New URL:', value);
+        console.log('Stack trace:', new Error().stack);
+        
+        // ถ้าพยายาม redirect ไป Profile.html โดยไม่ได้ตั้งใจ
+        if (value.includes('Profile.html') && !value.includes('Nav.html')) {
+            console.warn('SUSPICIOUS REDIRECT TO PROFILE.HTML DETECTED!');
+            console.log('Blocking redirect and showing debug info...');
+            debugRedirection();
+            
+            // ถ้าต้องการบล็อกการ redirect (uncomment บรรทัดนี้)
+            // return;
+        }
+        
+        originalLocationSetter.call(this, value);
+    },
+    get: function() {
+        return window.location.href;
+    }
+});
+
+// เพิ่ม function เพื่อ force navigation ไป Nav.html
+function forceNavigateToLogin() {
+    console.log('=== FORCE NAVIGATE TO LOGIN ===');
+    
+    // ลบข้อมูลทั้งหมดที่อาจทำให้เกิด redirect
+    try {
+        localStorage.clear();
+        sessionStorage.clear();
+    } catch (e) {
+        console.log('Cannot clear storage:', e);
+    }
+    
+    // Reset user role
+    currentUserRole = null;
+    
+    // Navigate โดยใช้ NavigationManager
+    const targetUrl = PathConfig.resolvePath('./Nav.html');
+    console.log('Forcing navigation to:', targetUrl);
+    
+    // ใช้ replace แทน href เพื่อไม่ให้กลับมาหน้าเดิมได้
+    window.location.replace(targetUrl);
+}
+
+// เพิ่ม function สำหรับ clear และ reset ทุกอย่าง
+function clearAllDataAndRedirect() {
+    console.log('=== CLEARING ALL DATA AND REDIRECTING ===');
+    
+    try {
+        // ลบข้อมูลจาก localStorage
+        const keysToRemove = [
+            'isLoggedIn',
+            'userData', 
+            'userRole',
+            'attendanceStatistics',
+            'lastVisitedPage',
+            'userPreferences'
+        ];
+        
+        keysToRemove.forEach(key => {
+            localStorage.removeItem(key);
+            console.log('Removed:', key);
+        });
+        
+        // ลบข้อมูลจาก sessionStorage
+        sessionStorage.clear();
+        
+        // Reset global variables
+        currentUserRole = null;
+        currentNotifications = 3;
+        
+        console.log('All data cleared successfully');
+        
+    } catch (error) {
+        console.error('Error clearing data:', error);
+    }
+    
+    // Navigate to login page
+    forceNavigateToLogin();
+}
+
+// Export additional functions
+window.forceNavigateToLogin = forceNavigateToLogin;
+window.clearAllDataAndRedirect = clearAllDataAndRedirect;
+window.checkForAutoRedirects = checkForAutoRedirects;
     </script>
 </html>
