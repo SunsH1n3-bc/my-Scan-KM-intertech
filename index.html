@@ -2661,7 +2661,7 @@ function checkUserLogin() {
     
     if (isLoggedIn !== 'true' || !userData) {
         console.log('User not logged in, redirecting to login page');
-        NavigationManager.navigateTo('./Profile.html');
+        NavigationManager.navigateTo('./Nav.html');
         return false;
     }
     
@@ -2672,7 +2672,7 @@ function checkUserLogin() {
         return true;
     } catch (error) {
         console.error('Error parsing user data:', error);
-        NavigationManager.navigateTo('./Profile.html');
+        NavigationManager.navigateTo('./Nav.html');
         return false;
     }
 }
