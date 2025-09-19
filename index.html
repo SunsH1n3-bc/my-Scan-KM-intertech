@@ -1677,7 +1677,7 @@ html {
 
 <!-- Body Content Only for GitHub Pages -->
 <body>
-    <!-- Floating Background Elements -->
+   <!-- Floating Background Elements -->
     <div class="floating-bg">
         <div class="floating-element element-1"></div>
         <div class="floating-element element-2"></div>
@@ -1720,14 +1720,14 @@ html {
         <div class="nav-container">
             <ul class="nav-menu">
                 <li class="nav-item" data-tooltip="หน้าแรก">
-                    <a href="#home" class="nav-link active" aria-label="หน้าแรก" data-page="home">
+                    <a href="./index.html" class="nav-link active" aria-label="หน้าแรก">
                         <ion-icon name="home" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
                 </li>
                 
                 <li class="nav-item" data-tooltip="สแกน QR Code">
-                    <a href="./member.html" class="nav-link" aria-label="สแกน" data-page="scan">
+                    <a href="./member.html" class="nav-link" aria-label="สแกน">
                         <ion-icon name="qr-code" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
@@ -1735,35 +1735,35 @@ html {
                 
                 <!-- เช็คอิน - จะซ่อนสำหรับนักเรียน -->
                 <li class="nav-item checkin-feature" data-tooltip="เช็คอิน">
-                    <a href="./studens.html" class="nav-link" aria-label="เช็คอิน" data-page="checkin">
+                    <a href="./studens.html" class="nav-link" aria-label="เช็คอิน">
                         <ion-icon name="checkmark-circle" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
                 </li>
                 
                 <li class="nav-item" data-tooltip="ตารางเรียน">
-                    <a href="./ClassRoom.html" class="nav-link" aria-label="ตารางเรียน" data-page="schedule">
+                    <a href="./ClassRoom.html" class="nav-link" aria-label="ตารางเรียน">
                         <ion-icon name="calendar" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
                 </li>
                 
                 <li class="nav-item" data-tooltip="สถิติการเข้าเรียน">
-                    <a href="./User.html" class="nav-link" aria-label="รายงาน" data-page="statistics">
+                    <a href="./User.html" class="nav-link" aria-label="รายงาน">
                         <ion-icon name="bar-chart" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
                 </li>
                 
                 <li class="nav-item" data-tooltip="โปรไฟล์">
-                    <a href="./Nav.html" class="nav-link" aria-label="โปรไฟล์" data-page="profile">
+                    <a href="./Nav.html" class="nav-link" aria-label="โปรไฟล์">
                         <ion-icon name="person" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
                 </li>
                 
                 <li class="nav-item" data-tooltip="ติดต่อ">
-                    <a href="https://www.facebook.com/profile.php?id=100087243115176" class="nav-link" aria-label="ติดต่อ" data-page="contact">
+                    <a href="https://www.facebook.com/profile.php?id=100087243115176" class="nav-link" aria-label="ติดต่อ">
                         <ion-icon name="help-circle" class="nav-icon"></ion-icon>
                         <span class="nav-ripple"></span>
                     </a>
@@ -1773,9 +1773,9 @@ html {
     </nav>
 
     <!-- Main Content -->
-    <main class="main-content" id="main-content">
+    <main class="main-content">
         <!-- Welcome Section -->
-        <section class="welcome-section" id="home-section">
+        <section class="welcome-section">
             <div class="welcome-card">
                 <div class="welcome-content">
                     <div class="welcome-badge">
@@ -1835,7 +1835,7 @@ html {
                 </div>
             </div>
             
-            <div class="status-card info" data-page="news">
+            <div class="status-card info" onclick="window.location.href='new.html'">
                 <div class="status-icon">
                     <ion-icon name="information-circle"></ion-icon>
                 </div>
@@ -1887,7 +1887,7 @@ html {
                     </div>
                     <h4>การเช็คอิน</h4>
                     <p>ดูสถิติและการเข้าเรียน</p>
-                    <button class="action-btn tertiary" data-page="./studen.html">
+                    <button class="action-btn tertiary" data-page="./studens.html">
                         <ion-icon name="checkmark-circle"></ion-icon>
                         <span>เช็คอิน</span>
                         <div class="btn-ripple"></div>
@@ -1897,10 +1897,10 @@ html {
         </section>
 
         <!-- Today's Schedule -->
-        <section class="today-schedule" id="schedule-section" style="display: none;">
+        <section class="today-schedule">
             <div class="section-header">
                 <h3>ตารางเรียนวันนี้</h3>
-                <button class="view-all-btn" data-page="./ClassRoom.html">
+                <button class="view-all-btn" onclick="window.location.href='./ClassRoom.html'">
                     <span>ดูทั้งหมด</span>
                     <ion-icon name="arrow-forward"></ion-icon>
                 </button>
@@ -1971,8 +1971,8 @@ html {
             </div>
         </section>
 
-        <!-- Statistics -->
-        <section class="statistics" id="statistics-section" style="display: none;">
+        <!-- Statistics - อัพเดทจาก Scan.html -->
+        <section class="statistics">
             <div class="section-header">
                 <h3>สถิติการเข้าเรียน</h3>
                 <select class="period-selector">
@@ -2052,700 +2052,846 @@ html {
             </div>
         </section>
 
-        <!-- QR Code Scanner Section -->
-        <section class="qr-scanner-section" id="scan-section" style="display: none;">
+        <!-- Recent Activities -->
+        <section class="recent-activities">
             <div class="section-header">
-                <h3>สแกน QR Code</h3>
-                <button class="close-section-btn" onclick="showSection('home')">
-                    <ion-icon name="close"></ion-icon>
+                <h3>กิจกรรมล่าสุด</h3>
+                <button class="view-all-btn">
+                    <span>ดูทั้งหมด</span>
+                    <ion-icon name="arrow-forward"></ion-icon>
                 </button>
             </div>
-            <div class="scanner-container">
-                <div class="scanner-frame">
-                    <div class="scanner-overlay">
-                        <div class="scan-area"></div>
-                        <div class="scan-corners">
-                            <div class="corner corner-tl"></div>
-                            <div class="corner corner-tr"></div>
-                            <div class="corner corner-bl"></div>
-                            <div class="corner corner-br"></div>
-                        </div>
+            <div class="activities-timeline">
+                <!-- เช็คอินสำเร็จ - จะซ่อนสำหรับนักเรียน -->
+                <div class="activity-item checkin-feature">
+                    <div class="activity-icon success">
+                        <ion-icon name="checkmark"></ion-icon>
                     </div>
-                    <div class="scanner-message">
-                        <ion-icon name="qr-code-outline"></ion-icon>
-                        <p>กำลังรอการสแกน QR Code...</p>
-                        <small>วาง QR Code ให้อยู่ในกรอบสี่เหลี่ยม</small>
+                    <div class="activity-content">
+                        <h4>เช็คอินเข้าเรียนสำเร็จ</h4>
+                        <p>คณิตศาสตร์ - ห้อง A-101</p>
+                        <span class="activity-time">10 นาทีที่แล้ว</span>
                     </div>
                 </div>
-                <div class="scanner-controls">
-                    <button class="scanner-btn" onclick="startScanning()">
-                        <ion-icon name="camera"></ion-icon>
-                        <span>เริ่มสแกน</span>
-                    </button>
-                    <button class="scanner-btn secondary" onclick="showSection('home')">
-                        <ion-icon name="home"></ion-icon>
-                        <span>กลับหน้าหลัก</span>
-                    </button>
+                
+                <div class="activity-item">
+                    <div class="activity-icon info">
+                        <ion-icon name="document"></ion-icon>
+                    </div>
+                    <div class="activity-content">
+                        <h4>ได้รับใบงานใหม่</h4>
+                        <p>แบบฝึกหัดวิทยาการคอมพิวเตอร์</p>
+                        <span class="activity-time">1 ชั่วโมงที่แล้ว</span>
+                    </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Profile Section -->
-        <section class="profile-section" id="profile-section" style="display: none;">
-            <div class="section-header">
-                <h3>โปรไฟล์ของฉัน</h3>
-                <button class="close-section-btn" onclick="showSection('home')">
-                    <ion-icon name="close"></ion-icon>
-                </button>
-            </div>
-            <div class="profile-container">
-                <div class="profile-card">
-                    <div class="profile-avatar">
-                        <ion-icon name="person"></ion-icon>
+                
+                <div class="activity-item">
+                    <div class="activity-icon warning">
+                        <ion-icon name="alert-circle"></ion-icon>
                     </div>
-                    <div class="profile-info">
-                        <h3 id="profileName">สมชาย ใจดี</h3>
-                        <p id="profileRole">นักเรียน</p>
-                        <p id="profileId">รหัส: STU2024001</p>
-                        <p id="profileClass">ชั้น: ม.6/1</p>
-                    </div>
-                    <div class="profile-stats">
-                        <div class="profile-stat">
-                            <span class="stat-number">90%</span>
-                            <span class="stat-label">เปอร์เซ็นต์การเข้าเรียน</span>
-                        </div>
-                        <div class="profile-stat">
-                            <span class="stat-number">18</span>
-                            <span class="stat-label">วันที่เข้าเรียน</span>
-                        </div>
-                        <div class="profile-stat">
-                            <span class="stat-number">2</span>
-                            <span class="stat-label">วันที่ขาดเรียน</span>
-                        </div>
+                    <div class="activity-content">
+                        <h4>แจ้งเตือนตารางเรียน</h4>
+                        <p>มีการเปลี่ยนแปลงตารางเรียนวันพรุ่งนี้</p>
+                        <span class="activity-time">3 ชั่วโมงที่แล้ว</span>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>เกี่ยวกับเรา</h4>
+                    <p>ระบบเช็คอินเรียนออนไลน์ที่ทันสมัยและใช้งานง่าย</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ติดต่อเรา</h4>
+                    <p>โทร: 061-060-7931</p>
+                    <p>อีเมล: Siributwicha015@Gmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ลิงก์ด่วน</h4>
+                    <div class="footer-links">
+                        <a href="about.html">เกี่ยวกับเรา</a>
+                        <a href="N.html">เงื่อนไขการใช้งาน</a>
+                        <a href="help.html">ช่วยเหลือ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ระบบเช็คอินเรียนออนไลน์. สงวนลิขสิทธิ์.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- Statistics Update Notification -->
     <div class="statistics-notification" id="statisticsNotification" style="display: none;">
         <div class="notification-content">
             <ion-icon name="bar-chart-outline"></ion-icon>
-            <span>ข้อมูลได้รับการอัพเดท</span>
+            <span>สถิติการเข้าเรียนได้รับการอัพเดท</span>
             <button class="close-notification" onclick="hideStatisticsNotification()">
                 <ion-icon name="close"></ion-icon>
             </button>
         </div>
     </div>
-
+    
     <!-- JavaScript -->
     <script>
-        // Global variables
-        let currentSection = 'home';
-        let currentUser = {
-            name: 'สมชาย ใจดี',
-            role: 'student',
-            id: 'STU2024001',
-            class: 'ม.6/1',
-            statistics: {
-                present: 18,
-                absent: 2,
-                late: 1,
-                percentage: 90
-            }
-        };
+        // Enhanced JavaScript for Scan Check In System - GITHUB PAGES COMPATIBLE VERSION
 
-        // Initialize app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('App initializing...');
-            initializeApp();
-        });
-
-        function initializeApp() {
-            updateDateTime();
-            setupEventListeners();
-            setupUserRole();
-            setupNavigationSystem();
-            
-            // Update time every second
-            setInterval(updateDateTime, 1000);
-            
-            console.log('App initialized successfully');
+// ===== PATH CONFIGURATION FOR GITHUB PAGES =====
+const PathConfig = {
+    // ตรวจสอบว่าอยู่ใน GitHub Pages หรือไม่
+    isGitHubPages: window.location.hostname.includes('github.io'),
+    
+    // Base path สำหรับ GitHub Pages
+    getBasePath: function() {
+        if (this.isGitHubPages) {
+            // สำหรับ GitHub Pages จะมี repository name ใน path
+            const pathSegments = window.location.pathname.split('/').filter(s => s);
+            return pathSegments.length > 0 ? `/${pathSegments[0]}` : '';
         }
-
-        // Update date and time
-        function updateDateTime() {
-            const now = new Date();
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            const timeOptions = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
-            };
-            
-            const dateElement = document.getElementById('current-date');
-            const timeElement = document.getElementById('current-time');
-            
-            if (dateElement) {
-                dateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
-            }
-            if (timeElement) {
-                timeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
-            }
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Navigation links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', handleNavClick);
-            });
-
-            // Action buttons
-            document.querySelectorAll('.action-btn, .view-all-btn').forEach(btn => {
-                btn.addEventListener('click', handleActionClick);
-            });
-
-            // Status cards
-            document.querySelectorAll('.status-card[data-page]').forEach(card => {
-                card.addEventListener('click', handleCardClick);
-            });
-
-            // Period selector
-            const periodSelector = document.querySelector('.period-selector');
-            if (periodSelector) {
-                periodSelector.addEventListener('change', handlePeriodChange);
-            }
-
-            // Add ripple effects
-            setupRippleEffects();
-        }
-
-        // Handle navigation clicks
-        function handleNavClick(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            if (page) {
-                showSection(page);
-                updateActiveNav(this);
-                createRipple(this);
-            }
-        }
-
-        // Handle action button clicks
-        function handleActionClick(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            if (page) {
-                showSection(page);
-                createRipple(this);
-            }
-        }
-
-        // Handle status card clicks
-        function handleCardClick(e) {
-            const page = this.getAttribute('data-page');
-            if (page) {
-                showSection(page);
-            }
-        }
-
-        // Handle period change
-        function handlePeriodChange(e) {
-            const period = e.target.value;
-            console.log('Period changed to:', period);
-            // Update statistics based on period
-            // This would normally fetch data from a server
-        }
-
-        // Show specific section
-        function showSection(sectionName) {
-            console.log('Showing section:', sectionName);
-            
-            // Hide all sections
-            document.querySelectorAll('.welcome-section, .today-schedule, .statistics, .qr-scanner-section, .profile-section').forEach(section => {
-                section.style.display = 'none';
-            });
-
-            // Show requested section
-            let targetSection;
-            switch(sectionName) {
-                case 'home':
-                    targetSection = document.querySelector('.welcome-section');
-                    break;
-                case 'scan':
-                    targetSection = document.getElementById('scan-section');
-                    break;
-                case 'schedule':
-                    targetSection = document.getElementById('schedule-section');
-                    break;
-                case 'statistics':
-                    targetSection = document.getElementById('statistics-section');
-                    break;
-                case 'profile':
-                    targetSection = document.getElementById('profile-section');
-                    break;
-                case 'checkin':
-                    if (currentUser.role === 'student') {
-                        showNotification('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้', 'error');
-                        return;
-                    }
-                    targetSection = document.getElementById('statistics-section');
-                    break;
-                default:
-                    targetSection = document.querySelector('.welcome-section');
-                    sectionName = 'home';
-            }
-
-            if (targetSection) {
-                targetSection.style.display = 'block';
-                currentSection = sectionName;
-            }
-
-            // Show status cards and quick actions only on home page
-            const statusCards = document.querySelector('.status-cards');
-            const quickActions = document.querySelector('.quick-actions');
-            
-            if (sectionName === 'home') {
-                if (statusCards) statusCards.style.display = 'grid';
-                if (quickActions) quickActions.style.display = 'block';
-            } else {
-                if (statusCards) statusCards.style.display = 'none';
-                if (quickActions) quickActions.style.display = 'none';
-            }
-
-            // Update navigation active state
-            updateNavigationForSection(sectionName);
-        }
-
-        // Update active navigation
-        function updateActiveNav(clickedElement) {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            clickedElement.classList.add('active');
-        }
-
-        // Update navigation for section
-        function updateNavigationForSection(sectionName) {
-            const navLink = document.querySelector(`[data-page="${sectionName}"]`);
-            if (navLink) {
-                updateActiveNav(navLink);
-            }
-        }
-
-        // Setup user role
-        function setupUserRole() {
-            const role = currentUser.role;
-            console.log('Setting up user role:', role);
-            
-            const checkinElements = document.querySelectorAll('.checkin-feature');
-            
-            if (role === 'student') {
-                checkinElements.forEach(element => {
-                    element.style.display = 'none';
-                });
-                console.log('Hidden checkin features for student role');
-            } else {
-                checkinElements.forEach(element => {
-                    element.style.display = '';
-                });
-                console.log('Shown checkin features for teacher/admin role');
-            }
-        }
-
-        // Setup navigation system
-        function setupNavigationSystem() {
-            // Handle hash changes for back/forward navigation
-            window.addEventListener('hashchange', function() {
-                const hash = window.location.hash.substring(1);
-                if (hash && ['home', 'scan', 'schedule', 'statistics', 'profile', 'checkin', 'contact'].includes(hash)) {
-                    showSection(hash);
-                }
-            });
-
-            // Set initial section from hash
-            const initialHash = window.location.hash.substring(1);
-            if (initialHash) {
-                showSection(initialHash);
-            }
-        }
-
-        // Setup ripple effects
-        function setupRippleEffects() {
-            document.querySelectorAll('.action-btn, .nav-link, .scanner-btn').forEach(element => {
-                element.addEventListener('click', function(e) {
-                    createRipple(this, e);
-                });
-            });
-        }
-
-        // Create ripple effect
-        function createRipple(element, e = null) {
-            const ripple = element.querySelector('.btn-ripple, .nav-ripple');
-            if (ripple) {
-                if (e) {
-                    const rect = element.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    ripple.style.left = `${x}px`;
-                    ripple.style.top = `${y}px`;
-                }
-                
-                ripple.classList.remove('active');
-                ripple.offsetHeight; // Force reflow
-                ripple.classList.add('active');
-                
-                setTimeout(() => {
-                    ripple.classList.remove('active');
-                }, 600);
-            }
-        }
-
-        // QR Scanner functions
-        function startScanning() {
-            const scannerMessage = document.querySelector('.scanner-message');
-            const scanArea = document.querySelector('.scan-area');
-            
-            if (scannerMessage && scanArea) {
-                scannerMessage.innerHTML = `
-                    <ion-icon name="scan-outline"></ion-icon>
-                    <p>กำลังสแกน...</p>
-                    <small>กรุณารอสักครู่</small>
-                `;
-                
-                scanArea.classList.add('scanning');
-                
-                // Simulate scanning process
-                setTimeout(() => {
-                    simulateSuccessfulScan();
-                }, 3000);
-            }
-        }
-
-        function simulateSuccessfulScan() {
-            const scannerMessage = document.querySelector('.scanner-message');
-            const scanArea = document.querySelector('.scan-area');
-            
-            if (scannerMessage && scanArea) {
-                scanArea.classList.remove('scanning');
-                scanArea.classList.add('success');
-                
-                scannerMessage.innerHTML = `
-                    <ion-icon name="checkmark-circle" style="color: #10b981;"></ion-icon>
-                    <p style="color: #10b981;">สแกนสำเร็จ!</p>
-                    <small>บันทึกการเข้าเรียนเรียบร้อยแล้ว</small>
-                `;
-                
-                // Show success notification
-                showNotification('สแกน QR Code สำเร็จ! บันทึกการเข้าเรียนแล้ว', 'success');
-                
-                // Update statistics
-                updateAttendanceStats();
-                
-                // Return to home after 2 seconds
-                setTimeout(() => {
-                    showSection('home');
-                    resetScanner();
-                }, 2000);
-            }
-        }
-
-        function resetScanner() {
-            const scannerMessage = document.querySelector('.scanner-message');
-            const scanArea = document.querySelector('.scan-area');
-            
-            if (scannerMessage && scanArea) {
-                scanArea.classList.remove('scanning', 'success');
-                
-                scannerMessage.innerHTML = `
-                    <ion-icon name="qr-code-outline"></ion-icon>
-                    <p>กำลังรอการสแกน QR Code...</p>
-                    <small>วาง QR Code ให้อยู่ในกรอบสี่เหลี่ยม</small>
-                `;
-            }
-        }
-
-        // Update attendance statistics
-        function updateAttendanceStats() {
-            currentUser.statistics.present += 1;
-            const total = currentUser.statistics.present + currentUser.statistics.absent + currentUser.statistics.late;
-            currentUser.statistics.percentage = Math.round((currentUser.statistics.present / total) * 100);
-            
-            // Update display
-            const presentElement = document.getElementById('totalPresentDisplay');
-            const percentageElement = document.getElementById('attendanceRateDisplay');
-            
-            if (presentElement) {
-                animateNumber(presentElement, currentUser.statistics.present);
-            }
-            if (percentageElement) {
-                percentageElement.textContent = `${currentUser.statistics.percentage}%`;
-            }
-            
-            // Save to localStorage for persistence
-            try {
-                localStorage.setItem('userStats', JSON.stringify(currentUser.statistics));
-            } catch (e) {
-                console.warn('Cannot save to localStorage');
-            }
-        }
-
-        // Animate number changes
-        function animateNumber(element, targetValue) {
-            const currentValue = parseInt(element.textContent) || 0;
-            if (currentValue === targetValue) return;
-            
-            const duration = 1000;
-            const steps = 30;
-            const stepValue = (targetValue - currentValue) / steps;
-            let currentStep = 0;
-            
-            const interval = setInterval(() => {
-                currentStep++;
-                const value = Math.round(currentValue + (stepValue * currentStep));
-                element.textContent = value;
-                
-                if (currentStep >= steps) {
-                    clearInterval(interval);
-                    element.textContent = targetValue;
-                }
-            }, duration / steps);
-        }
-
-        // Notification system
-        function showNotification(message, type = 'info') {
-            const notification = document.getElementById('statisticsNotification');
-            const messageSpan = notification.querySelector('span');
-            
-            if (messageSpan) {
-                messageSpan.textContent = message;
-            }
-            
-            // Update notification style based on type
-            notification.className = `statistics-notification ${type}`;
-            
-            notification.style.display = 'flex';
-            notification.style.transform = 'translateY(-100%)';
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateY(0)';
-            }, 100);
-            
-            // Auto hide after 4 seconds
-            setTimeout(() => {
-                hideStatisticsNotification();
-            }, 4000);
-        }
-
-        function hideStatisticsNotification() {
-            const notification = document.getElementById('statisticsNotification');
-            notification.style.transform = 'translateY(-100%)';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 300);
-        }
-
-        // Load saved user data
-        function loadUserData() {
-            try {
-                const savedStats = localStorage.getItem('userStats');
-                if (savedStats) {
-                    currentUser.statistics = { ...currentUser.statistics, ...JSON.parse(savedStats) };
-                }
-                
-                const savedUser = localStorage.getItem('currentUser');
-                if (savedUser) {
-                    currentUser = { ...currentUser, ...JSON.parse(savedUser) };
-                }
-                
-                // Update display with loaded data
-                updateUserDisplay();
-                
-            } catch (e) {
-                console.warn('Cannot load from localStorage');
-            }
-        }
-
-        // Save user data
-        function saveUserData() {
-            try {
-                localStorage.setItem('userStats', JSON.stringify(currentUser.statistics));
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            } catch (e) {
-                console.warn('Cannot save to localStorage');
-            }
-        }
-
-        // Update user display
-        function updateUserDisplay() {
-            // Update header display
-            const userNameElement = document.getElementById('displayUserName');
-            const userRoleElement = document.getElementById('displayUserRole');
-            
-            if (userNameElement) {
-                userNameElement.textContent = currentUser.name;
-            }
-            if (userRoleElement) {
-                userRoleElement.textContent = getRoleDisplayName(currentUser.role);
-            }
-            
-            // Update profile section
-            const profileName = document.getElementById('profileName');
-            const profileRole = document.getElementById('profileRole');
-            const profileId = document.getElementById('profileId');
-            const profileClass = document.getElementById('profileClass');
-            
-            if (profileName) profileName.textContent = currentUser.name;
-            if (profileRole) profileRole.textContent = getRoleDisplayName(currentUser.role);
-            if (profileId) profileId.textContent = `รหัส: ${currentUser.id}`;
-            if (profileClass) profileClass.textContent = `ชั้น: ${currentUser.class}`;
-            
-            // Update statistics display
-            const presentElement = document.getElementById('totalPresentDisplay');
-            const absentElement = document.getElementById('totalAbsentDisplay');
-            const lateElement = document.getElementById('totalLateDisplay');
-            const percentageElement = document.getElementById('attendanceRateDisplay');
-            
-            if (presentElement) presentElement.textContent = currentUser.statistics.present;
-            if (absentElement) absentElement.textContent = currentUser.statistics.absent;
-            if (lateElement) lateElement.textContent = currentUser.statistics.late;
-            if (percentageElement) percentageElement.textContent = `${currentUser.statistics.percentage}%`;
-        }
-
-        // Get role display name in Thai
-        function getRoleDisplayName(role) {
-            const roleNames = {
-                'student': 'นักเรียน',
-                'teacher': 'ครู',
-                'admin': 'ผู้ดูแลระบบ'
-            };
-            return roleNames[role] || role;
-        }
-
-        // Handle contact page
-        function handleContactClick() {
-            window.open('https://www.facebook.com/profile.php?id=100087243115176', '_blank');
-        }
-
-        // Handle window resize for responsive design
-        function handleWindowResize() {
-            const isMobile = window.innerWidth <= 768;
-            
-            // Adjust layout for mobile
-            if (isMobile) {
-                document.body.classList.add('mobile-layout');
-            } else {
-                document.body.classList.remove('mobile-layout');
-            }
-        }
-
-        // Add window resize listener
-        window.addEventListener('resize', handleWindowResize);
+        return '';
+    },
+    
+    // แปลง relative path เป็น absolute path ที่ถูกต้องสำหรับ GitHub Pages
+    resolvePath: function(originalPath) {
+        if (!originalPath) return '#';
         
-        // Initial resize check
-        handleWindowResize();
-
-        // Initialize tooltips for navigation
-        function initializeTooltips() {
-            const navItems = document.querySelectorAll('.nav-item[data-tooltip]');
-            
-            navItems.forEach(item => {
-                const tooltip = item.getAttribute('data-tooltip');
-                
-                item.addEventListener('mouseenter', function() {
-                    showTooltip(this, tooltip);
-                });
-                
-                item.addEventListener('mouseleave', function() {
-                    hideTooltip();
-                });
-            });
+        // ถ้าเป็น external link หรือ anchor ให้ return ตามเดิม
+        if (originalPath.startsWith('http') || originalPath.startsWith('#') || originalPath.startsWith('javascript:')) {
+            return originalPath;
         }
-
-        function showTooltip(element, text) {
-            const existingTooltip = document.querySelector('.nav-tooltip');
-            if (existingTooltip) {
-                existingTooltip.remove();
-            }
-            
-            const tooltip = document.createElement('div');
-            tooltip.className = 'nav-tooltip';
-            tooltip.textContent = text;
-            tooltip.style.cssText = `
-                position: fixed;
-                background: rgba(26, 26, 26, 0.9);
-                color: white;
-                padding: 8px 12px;
-                border-radius: 6px;
-                font-size: 12px;
-                font-weight: 500;
-                pointer-events: none;
-                z-index: 10000;
-                white-space: nowrap;
-                backdrop-filter: blur(10px);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            `;
-            
-            document.body.appendChild(tooltip);
-            
-            const rect = element.getBoundingClientRect();
-            tooltip.style.left = `${rect.right + 15}px`;
-            tooltip.style.top = `${rect.top + (rect.height / 2) - (tooltip.offsetHeight / 2)}px`;
+        
+        const basePath = this.getBasePath();
+        
+        // ลบ ./ ออกจากหน้า path
+        let cleanPath = originalPath.replace(/^\.\//, '');
+        
+        // สำหรับ GitHub Pages ให้เพิ่ม base path
+        if (this.isGitHubPages) {
+            return `${basePath}/${cleanPath}`;
         }
-
-        function hideTooltip() {
-            const tooltip = document.querySelector('.nav-tooltip');
-            if (tooltip) {
-                tooltip.remove();
-            }
-        }
-
-        // Initialize tooltips when app loads
-        setTimeout(initializeTooltips, 100);
-
-        // Auto-save user data periodically
-        setInterval(saveUserData, 30000); // Save every 30 seconds
-
-        // Load user data when app initializes
-        loadUserData();
-
-        // Handle page visibility change
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                saveUserData();
-            } else {
-                loadUserData();
-            }
-        });
-
-        // Handle before page unload
-        window.addEventListener('beforeunload', function() {
-            saveUserData();
-        });
-
-        // Export functions for global use
-        window.ScanCheckInApp = {
-            showSection: showSection,
-            startScanning: startScanning,
-            showNotification: showNotification,
-            updateAttendanceStats: updateAttendanceStats,
-            getCurrentUser: () => currentUser,
-            setUserRole: (role) => {
-                currentUser.role = role;
-                setupUserRole();
-                updateUserDisplay();
-            }
+        
+        return originalPath;
+    },
+    
+    // สร้าง path mapping สำหรับหน้าต่างๆ
+    getPathMapping: function() {
+        const basePath = this.getBasePath();
+        
+        return {
+            // Navigation paths
+            './index.html': this.isGitHubPages ? `${basePath}/index.html` : './index.html',
+            './member.html': this.isGitHubPages ? `${basePath}/member.html` : './member.html',
+            './studens.html': this.isGitHubPages ? `${basePath}/studens.html` : './studens.html',
+            './ClassRoom.html': this.isGitHubPages ? `${basePath}/ClassRoom.html` : './ClassRoom.html',
+            './User.html': this.isGitHubPages ? `${basePath}/User.html` : './User.html',
+            './Nav.html': this.isGitHubPages ? `${basePath}/Nav.html` : './Nav.html',
+            './Profile.html': this.isGitHubPages ? `${basePath}/Profile.html` : './Profile.html',
+            './new.html': this.isGitHubPages ? `${basePath}/new.html` : './new.html',
+            './about.html': this.isGitHubPages ? `${basePath}/about.html` : './about.html',
+            './N.html': this.isGitHubPages ? `${basePath}/N.html` : './N.html',
+            './help.html': this.isGitHubPages ? `${basePath}/help.html` : './help.html',
+            
+            // External links
+            'https://www.facebook.com/profile.php?id=100087243115176': 'https://www.facebook.com/profile.php?id=100087243115176'
         };
+    }
+};
 
-        console.log('Scan Check In App loaded successfully for GitHub Pages!');
+// DOM Elements
+const currentDateElement = document.getElementById('current-date');
+const currentTimeElement = document.getElementById('current-time');
+const navLinks = document.querySelectorAll('.nav-link');
+const actionButtons = document.querySelectorAll('.action-btn');
+const periodSelector = document.querySelector('.period-selector');
+const notificationIcon = document.querySelector('.notification-icon');
+const notificationBadge = document.querySelector('.notification-badge');
+
+// State Management
+let currentNotifications = 3;
+let weatherData = null;
+let scheduleData = null;
+let currentUserRole = null;
+let statisticsUpdateInterval = null;
+
+// ===== GITHUB PAGES COMPATIBLE NAVIGATION SYSTEM =====
+const NavigationManager = {
+    pathMapping: null,
+    
+    initialize: function() {
+        this.pathMapping = PathConfig.getPathMapping();
+        this.updateAllLinks();
+        console.log('Navigation initialized for GitHub Pages:', PathConfig.isGitHubPages);
+        console.log('Base path:', PathConfig.getBasePath());
+        console.log('Path mapping:', this.pathMapping);
+    },
+    
+    // อัพเดทลิงก์ทั้งหมดในหน้า
+    updateAllLinks: function() {
+        // อัพเดท navigation links
+        document.querySelectorAll('.nav-link[href]').forEach(link => {
+            const originalHref = link.getAttribute('href');
+            const newHref = this.pathMapping[originalHref] || PathConfig.resolvePath(originalHref);
+            link.setAttribute('href', newHref);
+            console.log('Updated nav link:', originalHref, '->', newHref);
+        });
+        
+        // อัพเดท action buttons
+        document.querySelectorAll('[data-page]').forEach(button => {
+            const originalPath = button.getAttribute('data-page');
+            const newPath = this.pathMapping[originalPath] || PathConfig.resolvePath(originalPath);
+            button.setAttribute('data-page', newPath);
+            console.log('Updated button path:', originalPath, '->', newPath);
+        });
+        
+        // อัพเดท onclick events ที่มี window.location.href
+        this.updateOnClickEvents();
+    },
+    
+    // อัพเดท onclick events
+    updateOnClickEvents: function() {
+        // Status card onclick
+        const statusCards = document.querySelectorAll('[onclick*="window.location.href"]');
+        statusCards.forEach(card => {
+            const onclick = card.getAttribute('onclick');
+            if (onclick && onclick.includes('./new.html')) {
+                const newPath = this.pathMapping['./new.html'] || PathConfig.resolvePath('./new.html');
+                card.setAttribute('onclick', `window.location.href='${newPath}'`);
+                console.log('Updated status card onclick:', newPath);
+            }
+        });
+        
+        // View all button
+        const viewAllBtn = document.querySelector('.view-all-btn[onclick*="ClassRoom.html"]');
+        if (viewAllBtn) {
+            const newPath = this.pathMapping['./ClassRoom.html'] || PathConfig.resolvePath('./ClassRoom.html');
+            viewAllBtn.setAttribute('onclick', `window.location.href='${newPath}'`);
+            console.log('Updated view all button:', newPath);
+        }
+    },
+    
+    // Navigate function ที่ใช้ path ที่ถูกต้อง
+    navigateTo: function(originalPath) {
+        const targetPath = this.pathMapping[originalPath] || PathConfig.resolvePath(originalPath);
+        console.log('Navigating from', originalPath, 'to', targetPath);
+        
+        try {
+            window.location.href = targetPath;
+        } catch (error) {
+            console.error('Navigation error:', error);
+            // Fallback - try original path
+            window.location.href = originalPath;
+        }
+    }
+};
+
+// User Role Management
+function setUserRole(role) {
+    currentUserRole = role;
+    console.log('User role set to:', role);
+    
+    try {
+        localStorage.setItem('userRole', role);
+    } catch (e) {
+        console.warn('Cannot save to localStorage:', e);
+    }
+    
+    updateUIByRole(role);
+}
+
+function getUserRole() {
+    if (currentUserRole) {
+        return currentUserRole;
+    }
+    
+    try {
+        const savedRole = localStorage.getItem('userRole');
+        if (savedRole) {
+            currentUserRole = savedRole;
+            return savedRole;
+        }
+    } catch (e) {
+        console.warn('Cannot read from localStorage:', e);
+    }
+    
+    const userRoleElement = document.getElementById('displayUserRole');
+    if (userRoleElement) {
+        const roleText = userRoleElement.textContent.trim();
+        if (roleText === 'นักเรียน' || roleText === 'student') {
+            currentUserRole = 'student';
+            return 'student';
+        } else if (roleText === 'ครู' || roleText === 'teacher') {
+            currentUserRole = 'teacher';
+            return 'teacher';
+        } else if (roleText === 'แอดมิน' || roleText === 'admin') {
+            currentUserRole = 'admin';
+            return 'admin';
+        }
+    }
+    
+    return 'student';
+}
+
+function updateUIByRole(role) {
+    const checkinElements = document.querySelectorAll('.checkin-feature');
+    
+    if (role === 'student' || role === 'นักเรียน') {
+        checkinElements.forEach(element => {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.setAttribute('aria-hidden', 'true');
+        });
+        
+        document.body.classList.add('role-student');
+        document.body.classList.remove('role-teacher', 'role-admin');
+        
+        console.log('Hidden checkin features for student role');
+    } else {
+        checkinElements.forEach(element => {
+            element.style.display = '';
+            element.style.visibility = '';
+            element.removeAttribute('aria-hidden');
+        });
+        
+        document.body.classList.remove('role-student');
+        if (role === 'teacher' || role === 'ครู') {
+            document.body.classList.add('role-teacher');
+            document.body.classList.remove('role-admin');
+        } else if (role === 'admin' || role === 'แอดมิน') {
+            document.body.classList.add('role-admin');
+            document.body.classList.remove('role-teacher');
+        }
+        
+        console.log('Shown checkin features for role:', role);
+    }
+    
+    updateNavigationByRole(role);
+}
+
+function updateNavigationByRole(role) {
+    const checkinNavItem = document.querySelector('.nav-item.checkin-feature');
+    
+    if (role === 'student' || role === 'นักเรียน') {
+        if (checkinNavItem) {
+            checkinNavItem.style.display = 'none';
+        }
+    } else {
+        if (checkinNavItem) {
+            checkinNavItem.style.display = '';
+        }
+    }
+}
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Initializing GitHub Pages compatible app...');
+    initializeApp();
+});
+
+function initializeApp() {
+    // Initialize navigation first
+    NavigationManager.initialize();
+    
+    updateDateTime();
+    setupEventListeners();
+    setActiveNavigation();
+    loadUserData();
+    setupFloatingAnimations();
+    initializeTooltips();
+    setupRippleEffects();
+    loadWeatherData();
+    setupScheduleUpdates();
+    setupNotifications();
+    setupProgressBars();
+    setupCardAnimations();
+    
+    // Initialize user role management
+    initializeUserRole();
+    
+    // Initialize statistics sync (ถ้ามี StatisticsSync)
+    if (typeof window.StatisticsSync !== 'undefined') {
+        initializeStatisticsSync();
+    }
+    
+    // Debug buttons after initialization
+    setTimeout(() => {
+        debugButtons();
+        testButtonClicks();
+    }, 1000);
+}
+
+function initializeUserRole() {
+    const role = getUserRole();
+    console.log('Detected user role:', role);
+    updateUIByRole(role);
+}
+
+// Event Listeners Setup - GitHub Pages Compatible
+function setupEventListeners() {
+    console.log('Setting up GitHub Pages compatible event listeners...');
+    
+    // Navigation links - ใช้ NavigationManager
+    navLinks.forEach(link => {
+        link.addEventListener('click', handleNavClickGitHubPages);
+        link.addEventListener('mouseenter', showTooltip);
+        link.addEventListener('mouseleave', hideTooltip);
+    });
+
+    // Action buttons - ใช้ NavigationManager
+    actionButtons.forEach((btn, index) => {
+        console.log(`Setting up GitHub Pages compatible button ${index + 1}:`, btn);
+        
+        btn.addEventListener('click', handleActionClickGitHubPages);
+        btn.onclick = function(e) {
+            handleActionClickGitHubPages.call(this, e);
+        };
+        btn.setAttribute('onclick', 'handleDirectClickGitHubPages(this)');
+        
+        btn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleActionClickGitHubPages.call(this, e);
+            }
+        });
+    });
+
+    // Period selector
+    if (periodSelector) {
+        periodSelector.addEventListener('change', handlePeriodChange);
+    }
+
+    // Notification icon
+    if (notificationIcon) {
+        notificationIcon.addEventListener('click', handleNotificationClick);
+    }
+
+    // Window resize
+    window.addEventListener('resize', handleWindowResize);
+    
+    // Visibility change
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+// GitHub Pages Compatible Action Button Click Handler
+function handleActionClickGitHubPages(e) {
+    console.log('GitHub Pages compatible button clicked!', this);
+    
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    const button = this;
+    const targetPage = button.getAttribute('data-page');
+    
+    console.log('Target page (GitHub Pages):', targetPage);
+    
+    if (!targetPage) {
+        console.error('No data-page attribute found on button');
+        showErrorMessage('ไม่พบลิงก์ที่ต้องการ');
+        return;
+    }
+    
+    // Check user role for checkin features
+    const userRole = getUserRole();
+    if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
+        console.log('Blocking checkin feature for student role');
+        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        return;
+    }
+    
+    // Disable button to prevent multiple clicks
+    button.disabled = true;
+    
+    // Animation effect
+    button.style.transform = 'scale(0.95)';
+    button.style.transition = 'transform 0.1s ease';
+    
+    const originalContent = button.innerHTML;
+    
+    button.innerHTML = `
+        <ion-icon name="hourglass"></ion-icon>
+        <span>กำลังโหลด...</span>
+        <div class="btn-ripple"></div>
+    `;
+    
+    createRipple(button);
+    
+    setTimeout(() => {
+        try {
+            console.log('Attempting GitHub Pages navigation to:', targetPage);
+            NavigationManager.navigateTo(targetPage);
+        } catch (error) {
+            console.error('GitHub Pages navigation error:', error);
+            showErrorMessage('ไม่สามารถเปิดหน้านี้ได้ กรุณาลองใหม่อีกครั้ง');
+            
+            button.style.transform = 'scale(1)';
+            button.innerHTML = originalContent;
+            button.disabled = false;
+        }
+    }, 800);
+}
+
+// GitHub Pages Compatible Navigation Click Handler
+function handleNavClickGitHubPages(e) {
+    e.preventDefault();
+    
+    const href = this.getAttribute('href');
+    const userRole = getUserRole();
+    
+    if (isCheckinFeature(href) && (userRole === 'student' || userRole === 'นักเรียน')) {
+        console.log('Blocking navigation to checkin feature for student role');
+        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
+        return;
+    }
+    
+    navLinks.forEach(navLink => navLink.classList.remove('active'));
+    this.classList.add('active');
+    createRipple(this);
+    
+    setTimeout(() => {
+        if (href && href !== '#') {
+            console.log('GitHub Pages navigation to:', href);
+            NavigationManager.navigateTo(href);
+        }
+    }, 200);
+}
+
+// Global function for direct onclick - GitHub Pages Compatible
+function handleDirectClickGitHubPages(button) {
+    console.log('Direct click function called (GitHub Pages)');
+    const targetPage = button.getAttribute('data-page');
+    
+    if (!targetPage) {
+        console.error('No data-page attribute found');
+        return;
+    }
+    
+    const userRole = getUserRole();
+    if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
+        console.log('Blocking direct click to checkin feature for student role');
+        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        return;
+    }
+    
+    console.log('Direct GitHub Pages navigation to:', targetPage);
+    NavigationManager.navigateTo(targetPage);
+}
+
+// Helper functions
+function isCheckinFeature(targetPage) {
+    const checkinPages = [
+        './studens.html',
+        './students.html', 
+        './checkin.html'
+    ];
+    
+    // Check both original and resolved paths
+    return checkinPages.some(page => 
+        targetPage.includes('studens.html') || 
+        targetPage.includes('students.html') || 
+        targetPage.includes('checkin.html')
+    );
+}
+
+// Make functions globally available
+window.handleDirectClickGitHubPages = handleDirectClickGitHubPages;
+window.setUserRole = setUserRole;
+window.getUserRole = getUserRole;
+window.NavigationManager = NavigationManager;
+window.PathConfig = PathConfig;
+
+// Update existing global functions to use GitHub Pages navigation
+window.handleDirectClick = handleDirectClickGitHubPages;
+
+// ===== FIXED PATH ISSUES FOR GITHUB PAGES =====
+
+// Fix logout function for GitHub Pages
+function logout() {
+    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+        try {
+            // ลบข้อมูลการล็อกอิน
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('attendanceStatistics');
+            
+            console.log('User logged out successfully');
+            
+            // กลับไปหน้าล็อกอิน using NavigationManager
+            NavigationManager.navigateTo('./Profile.html');
+            
+        } catch (error) {
+            console.error('Error during logout:', error);
+            alert('เกิดข้อผิดพลาดในการออกจากระบบ');
+        }
+    }
+}
+
+// Fix navigation with auth for GitHub Pages
+function navigateWithAuth(page) {
+    if (!currentUserRole) {
+        console.warn('User role not set, cannot navigate');
+        return;
+    }
+    
+    // ตรวจสอบสิทธิ์สำหรับหน้าต่างๆ
+    const restrictedPages = ['studens.html', 'students.html', 'User.html'];
+    
+    if (restrictedPages.some(p => page.includes(p)) && 
+        (currentUserRole === 'student' || currentUserRole === 'นักเรียน')) {
+        
+        showAccessDeniedMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
+        return;
+    }
+    
+    // Navigation ผ่าน NavigationManager
+    NavigationManager.navigateTo(page);
+}
+
+// Fix user management initialization for GitHub Pages
+function checkUserLogin() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userData = localStorage.getItem('userData');
+    
+    if (isLoggedIn !== 'true' || !userData) {
+        console.log('User not logged in, redirecting to login page');
+        NavigationManager.navigateTo('./Profile.html');
+        return false;
+    }
+    
+    try {
+        const parsedUserData = JSON.parse(userData);
+        currentUserRole = parsedUserData.role || localStorage.getItem('userRole') || 'student';
+        console.log('User login verified:', parsedUserData.username, 'Role:', currentUserRole);
+        return true;
+    } catch (error) {
+        console.error('Error parsing user data:', error);
+        NavigationManager.navigateTo('./Profile.html');
+        return false;
+    }
+}
+
+// ===== REST OF THE FUNCTIONS REMAIN THE SAME =====
+
+function createRipple(element) {
+    const ripple = element.querySelector('.nav-ripple, .btn-ripple');
+    if (ripple) {
+        ripple.classList.remove('active');
+        ripple.offsetHeight;
+        ripple.classList.add('active');
+        
+        setTimeout(() => {
+            ripple.classList.remove('active');
+        }, 600);
+    }
+}
+
+function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff4757;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 9999;
+        font-size: 14px;
+        max-width: 300px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    errorDiv.innerHTML = `
+        <ion-icon name="alert-circle" style="margin-right: 8px;"></ion-icon>
+        ${message}
+    `;
+    
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        errorDiv.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        errorDiv.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 300);
+    }, 4000);
+}
+
+function showAccessDeniedMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'access-denied-alert';
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 2px solid #ef4444;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        z-index: 10000;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    `;
+    
+    alertDiv.innerHTML = `
+        <div style="color: #ef4444; font-size: 48px; margin-bottom: 16px;">
+            <ion-icon name="lock-closed"></ion-icon>
+        </div>
+        <h3 style="color: #ef4444; margin-bottom: 12px;">ไม่มีสิทธิ์เข้าถึง</h3>
+        <p style="color: #64748b; margin-bottom: 20px;">${message}</p>
+        <button onclick="closeAccessDeniedAlert()" style="
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        ">ตกลง</button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto close after 5 seconds
+    setTimeout(() => {
+        closeAccessDeniedAlert();
+    }, 5000);
+}
+
+function closeAccessDeniedAlert() {
+    const alert = document.querySelector('.access-denied-alert');
+    if (alert) {
+        alert.remove();
+    }
+}
+
+function testButtonClicks() {
+    console.log('=== Testing GitHub Pages Compatible Button Clicks ===');
+    
+    actionButtons.forEach((btn, index) => {
+        const dataPage = btn.getAttribute('data-page');
+        console.log(`Button ${index + 1}:`, {
+            element: btn,
+            dataPage: dataPage,
+            hasClickListener: btn.onclick !== null,
+            hasEventListener: btn.addEventListener !== undefined
+        });
+        
+        btn.addEventListener('mousedown', function() {
+            console.log(`Button ${index + 1} mousedown detected`);
+        });
+    });
+}
+
+function debugButtons() {
+    console.log('=== GitHub Pages Button Debug Info ===');
+    console.log('Total action buttons found:', actionButtons.length);
+    console.log('Current user role:', getUserRole());
+    console.log('Is GitHub Pages:', PathConfig.isGitHubPages);
+    console.log('Base Path:', PathConfig.getBasePath());
+    
+    actionButtons.forEach((btn, index) => {
+        const dataPage = btn.getAttribute('data-page');
+        console.log(`Button ${index + 1}:`, {
+            element: btn,
+            dataPage: dataPage,
+            hasOnclick: btn.onclick !== null,
+            classList: btn.classList.toString(),
+            innerHTML: btn.innerHTML.substring(0, 50) + '...'
+        });
+    });
+}
+
+// Date and Time Management
+function updateDateTime() {
+    const now = new Date();
+    const dateOptions = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    const timeOptions = { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+    };
+    
+    if (currentDateElement) {
+        currentDateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
+    }
+    if (currentTimeElement) {
+        currentTimeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
+    }
+}
+
+// Placeholder functions (implement as needed)
+function setActiveNavigation() {}
+function loadUserData() {}
+function setupFloatingAnimations() {}
+function initializeTooltips() {}
+function setupRippleEffects() {}
+function loadWeatherData() {}
+function setupScheduleUpdates() {}
+function setupNotifications() {}
+function setupProgressBars() {}
+function setupCardAnimations() {}
+function showTooltip() {}
+function hideTooltip() {}
+function handlePeriodChange() {}
+function handleNotificationClick() {}
+function handleWindowResize() {}
+function handleVisibilityChange() {}
+
+// Statistics Sync (if needed)
+function initializeStatisticsSync() {
+    console.log('Statistics sync initialized for GitHub Pages');
+}
+
+// Update time every second
+setInterval(updateDateTime, 1000);
+
+// Export functions for external use
+window.CheckInSystem = {
+    updateDateTime,
+    debugButtons,
+    handleActionClick: handleActionClickGitHubPages,
+    handleDirectClick: handleDirectClickGitHubPages,
+    testButtonClicks,
+    setUserRole,
+    getUserRole,
+    updateUIByRole,
+    initializeUserRole,
+    NavigationManager,
+    PathConfig
+};
+
+// Make additional functions globally available
+window.logout = logout;
+window.navigateWithAuth = navigateWithAuth;
+window.closeAccessDeniedAlert = closeAccessDeniedAlert;
+window.checkUserLogin = checkUserLogin;
+
+console.log('GitHub Pages Compatible Enhanced Script loaded successfully!');
+console.log('GitHub Pages Mode:', PathConfig.isGitHubPages);
+console.log('Base Path:', PathConfig.getBasePath());
     </script>
 </html>
