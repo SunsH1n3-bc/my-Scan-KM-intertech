@@ -2140,8 +2140,7 @@ html {
     
     <!-- JavaScript -->
     <script>
-// Enhanced JavaScript for Scan Check In System - GITHUB PAGES COMPATIBLE VERSION
-// FIXED: Navigation redirection issue
+// Enhanced JavaScript for Scan Check In System - FIXED VERSION (NO PROFILE.HTML REDIRECT)
 
 // ===== PATH CONFIGURATION FOR GITHUB PAGES =====
 const PathConfig = {
@@ -2180,19 +2179,18 @@ const PathConfig = {
         return originalPath;
     },
     
-    // สร้าง path mapping สำหรับหน้าต่างๆ
+    // สร้าง path mapping สำหรับหน้าต่างๆ - ลบ Profile.html ออกแล้ว
     getPathMapping: function() {
         const basePath = this.getBasePath();
         
         return {
-            // Navigation paths
+            // Navigation paths - ไม่มี Profile.html
             './index.html': this.isGitHubPages ? `${basePath}/index.html` : './index.html',
             './member.html': this.isGitHubPages ? `${basePath}/member.html` : './member.html',
             './studens.html': this.isGitHubPages ? `${basePath}/studens.html` : './studens.html',
             './ClassRoom.html': this.isGitHubPages ? `${basePath}/ClassRoom.html` : './ClassRoom.html',
             './User.html': this.isGitHubPages ? `${basePath}/User.html` : './User.html',
             './Nav.html': this.isGitHubPages ? `${basePath}/Nav.html` : './Nav.html',
-            './Profile.html': this.isGitHubPages ? `${basePath}/Profile.html` : './Profile.html',
             './new.html': this.isGitHubPages ? `${basePath}/new.html` : './new.html',
             './about.html': this.isGitHubPages ? `${basePath}/about.html` : './about.html',
             './N.html': this.isGitHubPages ? `${basePath}/N.html` : './N.html',
@@ -2220,26 +2218,30 @@ let scheduleData = null;
 let currentUserRole = null;
 let statisticsUpdateInterval = null;
 
-// ===== GITHUB PAGES COMPATIBLE NAVIGATION SYSTEM =====
+// ===== NAVIGATION SYSTEM - ลบการ redirect ไป Profile.html =====
 const NavigationManager = {
     pathMapping: null,
     
     initialize: function() {
         this.pathMapping = PathConfig.getPathMapping();
         this.updateAllLinks();
-        console.log('Navigation initialized for GitHub Pages:', PathConfig.isGitHubPages);
-        console.log('Base path:', PathConfig.getBasePath());
+        console.log('Navigation initialized - Profile.html redirect REMOVED');
         console.log('Path mapping:', this.pathMapping);
     },
     
     // อัพเดทลิงก์ทั้งหมดในหน้า
     updateAllLinks: function() {
         // อัพเดท navigation links
-        document.querySelectorAll('.nav-link[href]').forEach(link => {
-            const originalHref = link.getAttribute('href');
-            const newHref = this.pathMapping[originalHref] || PathConfig.resolvePath(originalHref);
-            link.setAttribute('href', newHref);
-            console.log('Updated nav link:', originalHref, '->', newHref);
+        document.querySelectorAll('.nav-link[onclick*="Nav.html"]').forEach(link => {
+            // ตรวจสอบว่าเป็น profile button หรือไม่
+            const tooltip = link.closest('.nav-item')?.getAttribute('data-tooltip');
+            if (tooltip === 'โปรไฟล์') {
+                console.log('Found profile button - setting to Nav.html');
+                const newPath = this.pathMapping['./Nav.html'] || PathConfig.resolvePath('./Nav.html');
+                const newOnclick = `window.location.href='${newPath}'`;
+                link.setAttribute('onclick', newOnclick);
+                console.log('Profile button onclick set to:', newOnclick);
+            }
         });
         
         // อัพเดท action buttons
@@ -2247,10 +2249,8 @@ const NavigationManager = {
             const originalPath = button.getAttribute('data-page');
             const newPath = this.pathMapping[originalPath] || PathConfig.resolvePath(originalPath);
             button.setAttribute('data-page', newPath);
-            console.log('Updated button path:', originalPath, '->', newPath);
         });
         
-        // อัพเดท onclick events ที่มี window.location.href
         this.updateOnClickEvents();
     },
     
@@ -2263,7 +2263,6 @@ const NavigationManager = {
             if (onclick && onclick.includes('./new.html')) {
                 const newPath = this.pathMapping['./new.html'] || PathConfig.resolvePath('./new.html');
                 card.setAttribute('onclick', `window.location.href='${newPath}'`);
-                console.log('Updated status card onclick:', newPath);
             }
         });
         
@@ -2272,12 +2271,17 @@ const NavigationManager = {
         if (viewAllBtn) {
             const newPath = this.pathMapping['./ClassRoom.html'] || PathConfig.resolvePath('./ClassRoom.html');
             viewAllBtn.setAttribute('onclick', `window.location.href='${newPath}'`);
-            console.log('Updated view all button:', newPath);
         }
     },
     
-    // Navigate function ที่ใช้ path ที่ถูกต้อง
+    // Navigate function - บล็อกการไป Profile.html
     navigateTo: function(originalPath) {
+        // บล็อกการไป Profile.html - redirect ไป Nav.html แทน
+        if (originalPath && originalPath.includes('Profile.html')) {
+            console.log('BLOCKED: Redirect to Profile.html detected, redirecting to Nav.html instead');
+            originalPath = './Nav.html';
+        }
+        
         const targetPath = this.pathMapping[originalPath] || PathConfig.resolvePath(originalPath);
         console.log('Navigating from', originalPath, 'to', targetPath);
         
@@ -2285,8 +2289,12 @@ const NavigationManager = {
             window.location.href = targetPath;
         } catch (error) {
             console.error('Navigation error:', error);
-            // Fallback - try original path
-            window.location.href = originalPath;
+            // Fallback - try Nav.html instead of Profile.html
+            if (originalPath.includes('Profile.html')) {
+                window.location.href = './Nav.html';
+            } else {
+                window.location.href = originalPath;
+            }
         }
     }
 };
@@ -2390,7 +2398,7 @@ function updateNavigationByRole(role) {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - Initializing GitHub Pages compatible app...');
+    console.log('DOM Content Loaded - Initializing app with Profile.html redirect BLOCKED...');
     initializeApp();
 });
 
@@ -2432,31 +2440,30 @@ function initializeUserRole() {
     updateUIByRole(role);
 }
 
-// Event Listeners Setup - GitHub Pages Compatible
+// Event Listeners Setup
 function setupEventListeners() {
-    console.log('Setting up GitHub Pages compatible event listeners...');
+    console.log('Setting up event listeners with Profile.html redirect BLOCKED...');
     
-    // Navigation links - ใช้ NavigationManager
+    // Navigation links
     navLinks.forEach(link => {
-        link.addEventListener('click', handleNavClickGitHubPages);
+        link.addEventListener('click', handleNavClick);
         link.addEventListener('mouseenter', showTooltip);
         link.addEventListener('mouseleave', hideTooltip);
     });
 
-    // Action buttons - ใช้ NavigationManager
+    // Action buttons
     actionButtons.forEach((btn, index) => {
-        console.log(`Setting up GitHub Pages compatible button ${index + 1}:`, btn);
+        console.log(`Setting up button ${index + 1}:`, btn);
         
-        btn.addEventListener('click', handleActionClickGitHubPages);
+        btn.addEventListener('click', handleActionClick);
         btn.onclick = function(e) {
-            handleActionClickGitHubPages.call(this, e);
+            handleActionClick.call(this, e);
         };
-        btn.setAttribute('onclick', 'handleDirectClickGitHubPages(this)');
         
         btn.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                handleActionClickGitHubPages.call(this, e);
+                handleActionClick.call(this, e);
             }
         });
     });
@@ -2478,9 +2485,9 @@ function setupEventListeners() {
     document.addEventListener('visibilitychange', handleVisibilityChange);
 }
 
-// GitHub Pages Compatible Action Button Click Handler
-function handleActionClickGitHubPages(e) {
-    console.log('GitHub Pages compatible button clicked!', this);
+// Action Button Click Handler - บล็อก Profile.html
+function handleActionClick(e) {
+    console.log('Button clicked!', this);
     
     if (e) {
         e.preventDefault();
@@ -2490,11 +2497,18 @@ function handleActionClickGitHubPages(e) {
     const button = this;
     const targetPage = button.getAttribute('data-page');
     
-    console.log('Target page (GitHub Pages):', targetPage);
+    console.log('Target page:', targetPage);
     
     if (!targetPage) {
         console.error('No data-page attribute found on button');
         showErrorMessage('ไม่พบลิงก์ที่ต้องการ');
+        return;
+    }
+    
+    // บล็อกการไป Profile.html
+    if (targetPage.includes('Profile.html')) {
+        console.log('BLOCKED: Attempt to navigate to Profile.html, redirecting to Nav.html');
+        NavigationManager.navigateTo('./Nav.html');
         return;
     }
     
@@ -2525,10 +2539,10 @@ function handleActionClickGitHubPages(e) {
     
     setTimeout(() => {
         try {
-            console.log('Attempting GitHub Pages navigation to:', targetPage);
+            console.log('Attempting navigation to:', targetPage);
             NavigationManager.navigateTo(targetPage);
         } catch (error) {
-            console.error('GitHub Pages navigation error:', error);
+            console.error('Navigation error:', error);
             showErrorMessage('ไม่สามารถเปิดหน้านี้ได้ กรุณาลองใหม่อีกครั้ง');
             
             button.style.transform = 'scale(1)';
@@ -2538,11 +2552,28 @@ function handleActionClickGitHubPages(e) {
     }, 800);
 }
 
-// GitHub Pages Compatible Navigation Click Handler
-function handleNavClickGitHubPages(e) {
+// Navigation Click Handler - บล็อก Profile.html
+function handleNavClick(e) {
     e.preventDefault();
     
-    const href = this.getAttribute('href');
+    let href = this.getAttribute('href');
+    
+    // ถ้าไม่มี href ให้ดูจาก onclick
+    if (!href) {
+        const onclick = this.getAttribute('onclick');
+        if (onclick && onclick.includes('window.location.href=')) {
+            href = onclick.match(/window\.location\.href='([^']*)'/)?.[1];
+        }
+    }
+    
+    console.log('Navigation click - href:', href);
+    
+    // บล็อกการไป Profile.html
+    if (href && href.includes('Profile.html')) {
+        console.log('BLOCKED: Navigation to Profile.html, redirecting to Nav.html');
+        href = './Nav.html';
+    }
+    
     const userRole = getUserRole();
     
     if (isCheckinFeature(href) && (userRole === 'student' || userRole === 'นักเรียน')) {
@@ -2557,20 +2588,26 @@ function handleNavClickGitHubPages(e) {
     
     setTimeout(() => {
         if (href && href !== '#') {
-            console.log('GitHub Pages navigation to:', href);
+            console.log('Navigation to:', href);
             NavigationManager.navigateTo(href);
         }
     }, 200);
 }
 
-// Global function for direct onclick - GitHub Pages Compatible
-function handleDirectClickGitHubPages(button) {
-    console.log('Direct click function called (GitHub Pages)');
-    const targetPage = button.getAttribute('data-page');
+// Global function for direct onclick - บล็อก Profile.html
+function handleDirectClick(button) {
+    console.log('Direct click function called');
+    let targetPage = button.getAttribute('data-page');
     
     if (!targetPage) {
         console.error('No data-page attribute found');
         return;
+    }
+    
+    // บล็อกการไป Profile.html
+    if (targetPage.includes('Profile.html')) {
+        console.log('BLOCKED: Direct click to Profile.html, redirecting to Nav.html');
+        targetPage = './Nav.html';
     }
     
     const userRole = getUserRole();
@@ -2580,7 +2617,7 @@ function handleDirectClickGitHubPages(button) {
         return;
     }
     
-    console.log('Direct GitHub Pages navigation to:', targetPage);
+    console.log('Direct navigation to:', targetPage);
     NavigationManager.navigateTo(targetPage);
 }
 
@@ -2592,27 +2629,14 @@ function isCheckinFeature(targetPage) {
         './checkin.html'
     ];
     
-    // Check both original and resolved paths
     return checkinPages.some(page => 
-        targetPage.includes('studens.html') || 
+        targetPage && (targetPage.includes('studens.html') || 
         targetPage.includes('students.html') || 
-        targetPage.includes('checkin.html')
+        targetPage.includes('checkin.html'))
     );
 }
 
-// Make functions globally available
-window.handleDirectClickGitHubPages = handleDirectClickGitHubPages;
-window.setUserRole = setUserRole;
-window.getUserRole = getUserRole;
-window.NavigationManager = NavigationManager;
-window.PathConfig = PathConfig;
-
-// Update existing global functions to use GitHub Pages navigation
-window.handleDirectClick = handleDirectClickGitHubPages;
-
-// ===== FIXED: LOGOUT FUNCTION WITHOUT AUTO-REDIRECT =====
-
-// Fix logout function - ไม่ให้เด้งไป Profile.html เอง
+// ===== LOGOUT FUNCTION - ไป Nav.html แทน Profile.html =====
 function logout() {
     console.log('=== LOGOUT FUNCTION CALLED ===');
     console.log('Current location:', window.location.href);
@@ -2632,7 +2656,7 @@ function logout() {
             console.log('User data cleared successfully');
             console.log('Navigating to Nav.html...');
             
-            // กลับไปหน้าล็อกอิน using NavigationManager
+            // กลับไปหน้าล็อกอิน
             NavigationManager.navigateTo('./Nav.html');
             
         } catch (error) {
@@ -2642,8 +2666,7 @@ function logout() {
     }
 }
 
-// ===== FIXED: USER LOGIN CHECK ไม่ให้เด้งไป Profile.html เอง =====
-
+// ===== USER LOGIN CHECK - ไม่ redirect ไป Profile.html =====
 function checkUserLogin() {
     console.log('=== CHECKING USER LOGIN ===');
     
@@ -2656,7 +2679,7 @@ function checkUserLogin() {
         
         if (isLoggedIn !== 'true' || !userData) {
             console.log('User not logged in, should redirect to Nav.html');
-            return false; // ไม่ redirect เอง ให้หน้าอื่นจัดการ
+            return false;
         }
         
         const parsedUserData = JSON.parse(userData);
@@ -2666,16 +2689,21 @@ function checkUserLogin() {
         
     } catch (error) {
         console.error('Error parsing user data:', error);
-        return false; // ไม่ redirect เอง ให้หน้าอื่นจัดการ
+        return false;
     }
 }
 
-// ===== FIXED: NAVIGATION WITH AUTH =====
-
+// ===== NAVIGATION WITH AUTH - ไป Nav.html แทน Profile.html =====
 function navigateWithAuth(page) {
     console.log('=== NAVIGATE WITH AUTH ===');
     console.log('Target page:', page);
     console.log('Current user role:', currentUserRole);
+    
+    // บล็อกการไป Profile.html
+    if (page && page.includes('Profile.html')) {
+        console.log('BLOCKED: NavigateWithAuth to Profile.html, redirecting to Nav.html');
+        page = './Nav.html';
+    }
     
     if (!currentUserRole) {
         console.warn('User role not set, checking login status...');
@@ -2702,53 +2730,101 @@ function navigateWithAuth(page) {
     NavigationManager.navigateTo(page);
 }
 
-// ===== ADD DEBUGGING FOR REDIRECTION ISSUES =====
-
-// เพิ่ม function สำหรับ debug การ redirect
-function debugRedirection() {
-    console.log('=== REDIRECTION DEBUG INFO ===');
-    console.log('Current URL:', window.location.href);
-    console.log('Document referrer:', document.referrer);
-    console.log('History length:', history.length);
+// ===== FORCE NAVIGATE TO LOGIN - ไป Nav.html =====
+function forceNavigateToLogin() {
+    console.log('=== FORCE NAVIGATE TO LOGIN ===');
     
-    // ตรวจสอบ localStorage
+    // ลบข้อมูลทั้งหมดที่อาจทำให้เกิด redirect
     try {
-        console.log('LocalStorage contents:');
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            console.log(`  ${key}: ${localStorage.getItem(key)}`);
-        }
+        localStorage.clear();
+        sessionStorage.clear();
     } catch (e) {
-        console.log('Cannot access localStorage:', e);
+        console.log('Cannot clear storage:', e);
     }
     
-    // ตรวจสอบ sessionStorage
-    try {
-        console.log('SessionStorage contents:');
-        for (let i = 0; i < sessionStorage.length; i++) {
-            const key = sessionStorage.key(i);
-            console.log(`  ${key}: ${sessionStorage.getItem(key)}`);
-        }
-    } catch (e) {
-        console.log('Cannot access sessionStorage:', e);
-    }
+    // Reset user role
+    currentUserRole = null;
+    
+    // Navigate ไป Nav.html
+    const targetUrl = PathConfig.resolvePath('./Nav.html');
+    console.log('Forcing navigation to:', targetUrl);
+    
+    // ใช้ replace แทน href เพื่อไม่ให้กลับมาหน้าเดิมได้
+    window.location.replace(targetUrl);
 }
 
-// เพิ่ม event listener สำหรับ beforeunload
-window.addEventListener('beforeunload', function(e) {
-    console.log('=== PAGE UNLOADING ===');
-    console.log('Current page:', window.location.href);
-    console.log('User role:', getUserRole());
-    debugRedirection();
+// ===== CLEAR ALL DATA AND REDIRECT - ไป Nav.html =====
+function clearAllDataAndRedirect() {
+    console.log('=== CLEARING ALL DATA AND REDIRECTING TO NAV.HTML ===');
+    
+    try {
+        // ลบข้อมูลจาก localStorage
+        const keysToRemove = [
+            'isLoggedIn',
+            'userData', 
+            'userRole',
+            'attendanceStatistics',
+            'lastVisitedPage',
+            'userPreferences'
+        ];
+        
+        keysToRemove.forEach(key => {
+            localStorage.removeItem(key);
+            console.log('Removed:', key);
+        });
+        
+        // ลบข้อมูลจาก sessionStorage
+        sessionStorage.clear();
+        
+        // Reset global variables
+        currentUserRole = null;
+        currentNotifications = 3;
+        
+        console.log('All data cleared successfully');
+        
+    } catch (error) {
+        console.error('Error clearing data:', error);
+    }
+    
+    // Navigate to Nav.html
+    forceNavigateToLogin();
+}
+
+// ===== BLOCK PROFILE.HTML REDIRECTS =====
+// Override window.location.href setter เพื่อบล็อก Profile.html
+const originalLocationSetter = Object.getOwnPropertyDescriptor(window.location, 'href').set;
+Object.defineProperty(window.location, 'href', {
+    set: function(value) {
+        console.log('=== LOCATION.HREF BEING SET ===');
+        console.log('Target URL:', value);
+        
+        // บล็อกการไป Profile.html
+        if (value && value.includes('Profile.html')) {
+            console.warn('BLOCKED: Redirect to Profile.html detected, redirecting to Nav.html instead');
+            value = value.replace('Profile.html', 'Nav.html');
+            console.log('Redirected to:', value);
+        }
+        
+        originalLocationSetter.call(this, value);
+    },
+    get: function() {
+        return window.location.href;
+    }
 });
 
-// เพิ่ม event listener สำหรับ popstate
-window.addEventListener('popstate', function(e) {
-    console.log('=== POPSTATE EVENT ===');
-    console.log('State:', e.state);
-    console.log('Current URL:', window.location.href);
-});
+// Make functions globally available
+window.handleDirectClick = handleDirectClick;
+window.setUserRole = setUserRole;
+window.getUserRole = getUserRole;
+window.NavigationManager = NavigationManager;
+window.PathConfig = PathConfig;
+window.logout = logout;
+window.navigateWithAuth = navigateWithAuth;
+window.forceNavigateToLogin = forceNavigateToLogin;
+window.clearAllDataAndRedirect = clearAllDataAndRedirect;
+window.checkUserLogin = checkUserLogin;
 
+// Utility functions
 createRipple = function(element) {
     const ripple = element.querySelector('.nav-ripple, .btn-ripple');
     if (ripple) {
@@ -2854,29 +2930,22 @@ function closeAccessDeniedAlert() {
 }
 
 function testButtonClicks() {
-    console.log('=== Testing GitHub Pages Compatible Button Clicks ===');
+    console.log('=== Testing Button Clicks (Profile.html redirect BLOCKED) ===');
     
     actionButtons.forEach((btn, index) => {
         const dataPage = btn.getAttribute('data-page');
         console.log(`Button ${index + 1}:`, {
             element: btn,
             dataPage: dataPage,
-            hasClickListener: btn.onclick !== null,
-            hasEventListener: btn.addEventListener !== undefined
-        });
-        
-        btn.addEventListener('mousedown', function() {
-            console.log(`Button ${index + 1} mousedown detected`);
+            hasClickListener: btn.onclick !== null
         });
     });
 }
 
 function debugButtons() {
-    console.log('=== GitHub Pages Button Debug Info ===');
+    console.log('=== Button Debug Info (Profile.html redirect BLOCKED) ===');
     console.log('Total action buttons found:', actionButtons.length);
     console.log('Current user role:', getUserRole());
-    console.log('Is GitHub Pages:', PathConfig.isGitHubPages);
-    console.log('Base Path:', PathConfig.getBasePath());
     
     actionButtons.forEach((btn, index) => {
         const dataPage = btn.getAttribute('data-page');
@@ -2884,8 +2953,7 @@ function debugButtons() {
             element: btn,
             dataPage: dataPage,
             hasOnclick: btn.onclick !== null,
-            classList: btn.classList.toString(),
-            innerHTML: btn.innerHTML.substring(0, 50) + '...'
+            classList: btn.classList.toString()
         });
     });
 }
@@ -2933,7 +3001,7 @@ function handleVisibilityChange() {}
 
 // Statistics Sync (if needed)
 function initializeStatisticsSync() {
-    console.log('Statistics sync initialized for GitHub Pages');
+    console.log('Statistics sync initialized');
 }
 
 // Update time every second
@@ -2943,157 +3011,17 @@ setInterval(updateDateTime, 1000);
 window.CheckInSystem = {
     updateDateTime,
     debugButtons,
-    handleActionClick: handleActionClickGitHubPages,
-    handleDirectClick: handleDirectClickGitHubPages,
+    handleActionClick: handleActionClick,
+    handleDirectClick: handleDirectClick,
     testButtonClicks,
     setUserRole,
     getUserRole,
     updateUIByRole,
     initializeUserRole,
     NavigationManager,
-    PathConfig,
-    debugRedirection
+    PathConfig
 };
 
-// Make additional functions globally available
-window.logout = logout;
-window.navigateWithAuth = navigateWithAuth;
-window.closeAccessDeniedAlert = closeAccessDeniedAlert;
-window.checkUserLogin = checkUserLogin;
-window.debugRedirection = debugRedirection;
-
-console.log('GitHub Pages Compatible Enhanced Script loaded successfully!');
-console.log('GitHub Pages Mode:', PathConfig.isGitHubPages);
-console.log('Base Path:', PathConfig.getBasePath());
-
-// ===== ADDITIONAL DEBUGGING AND FIXES =====
-
-// เพิ่มการตรวจสอบ redirect ที่อาจเกิดจาก HTML meta tags หรือ JavaScript อื่น
-function checkForAutoRedirects() {
-    console.log('=== CHECKING FOR AUTO REDIRECTS ===');
-    
-    // ตรวจสอบ meta refresh tags
-    const metaRefresh = document.querySelectorAll('meta[http-equiv="refresh"]');
-    if (metaRefresh.length > 0) {
-        console.log('Found meta refresh tags:', metaRefresh);
-        metaRefresh.forEach(meta => {
-            console.log('Meta refresh content:', meta.getAttribute('content'));
-        });
-    }
-    
-    // ตรวจสอบ script tags ที่อาจมี window.location
-    const scripts = document.querySelectorAll('script');
-    scripts.forEach((script, index) => {
-        if (script.innerHTML && script.innerHTML.includes('window.location')) {
-            console.log(`Script ${index} contains window.location:`, script.innerHTML);
-        }
-    });
-    
-    // ตรวจสอบ inline onclick handlers
-    const elementsWithOnclick = document.querySelectorAll('[onclick]');
-    elementsWithOnclick.forEach((element, index) => {
-        const onclick = element.getAttribute('onclick');
-        if (onclick.includes('Profile.html')) {
-            console.log(`Element ${index} has onclick to Profile.html:`, element, onclick);
-        }
-    });
-}
-
-// เรียกใช้การตรวจสอบหลังจาก DOM โหลดเสร็จ
-setTimeout(() => {
-    checkForAutoRedirects();
-}, 2000);
-
-// ===== FIX สำหรับปัญหาเฉพาะที่อาจเกิดขึ้น =====
-
-// Override window.location.href setter เพื่อ debug
-const originalLocationSetter = Object.getOwnPropertyDescriptor(window.location, 'href').set;
-Object.defineProperty(window.location, 'href', {
-    set: function(value) {
-        console.log('=== LOCATION.HREF BEING SET ===');
-        console.log('New URL:', value);
-        console.log('Stack trace:', new Error().stack);
-        
-        // ถ้าพยายาม redirect ไป Profile.html โดยไม่ได้ตั้งใจ
-        if (value.includes('Profile.html') && !value.includes('Nav.html')) {
-            console.warn('SUSPICIOUS REDIRECT TO PROFILE.HTML DETECTED!');
-            console.log('Blocking redirect and showing debug info...');
-            debugRedirection();
-            
-            // ถ้าต้องการบล็อกการ redirect (uncomment บรรทัดนี้)
-            // return;
-        }
-        
-        originalLocationSetter.call(this, value);
-    },
-    get: function() {
-        return window.location.href;
-    }
-});
-
-// เพิ่ม function เพื่อ force navigation ไป Nav.html
-function forceNavigateToLogin() {
-    console.log('=== FORCE NAVIGATE TO LOGIN ===');
-    
-    // ลบข้อมูลทั้งหมดที่อาจทำให้เกิด redirect
-    try {
-        localStorage.clear();
-        sessionStorage.clear();
-    } catch (e) {
-        console.log('Cannot clear storage:', e);
-    }
-    
-    // Reset user role
-    currentUserRole = null;
-    
-    // Navigate โดยใช้ NavigationManager
-    const targetUrl = PathConfig.resolvePath('./Nav.html');
-    console.log('Forcing navigation to:', targetUrl);
-    
-    // ใช้ replace แทน href เพื่อไม่ให้กลับมาหน้าเดิมได้
-    window.location.replace(targetUrl);
-}
-
-// เพิ่ม function สำหรับ clear และ reset ทุกอย่าง
-function clearAllDataAndRedirect() {
-    console.log('=== CLEARING ALL DATA AND REDIRECTING ===');
-    
-    try {
-        // ลบข้อมูลจาก localStorage
-        const keysToRemove = [
-            'isLoggedIn',
-            'userData', 
-            'userRole',
-            'attendanceStatistics',
-            'lastVisitedPage',
-            'userPreferences'
-        ];
-        
-        keysToRemove.forEach(key => {
-            localStorage.removeItem(key);
-            console.log('Removed:', key);
-        });
-        
-        // ลบข้อมูลจาก sessionStorage
-        sessionStorage.clear();
-        
-        // Reset global variables
-        currentUserRole = null;
-        currentNotifications = 3;
-        
-        console.log('All data cleared successfully');
-        
-    } catch (error) {
-        console.error('Error clearing data:', error);
-    }
-    
-    // Navigate to login page
-    forceNavigateToLogin();
-}
-
-// Export additional functions
-window.forceNavigateToLogin = forceNavigateToLogin;
-window.clearAllDataAndRedirect = clearAllDataAndRedirect;
-window.checkForAutoRedirects = checkForAutoRedirects;
+console.log('Fixed JavaScript loaded - Profile.html redirect COMPLETELY BLOCKED!');
     </script>
 </html>
