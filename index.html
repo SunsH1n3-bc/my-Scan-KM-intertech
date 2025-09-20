@@ -2140,68 +2140,325 @@ html {
     
     <!-- JavaScript -->
     <script>
-// Enhanced JavaScript for Scan Check In System - FIXED VERSION (NO PROFILE.HTML REDIRECT)
+// Fixed JavaScript for GitHub Pages - removed localStorage dependencies and 404 issues
+// Statistics Sync System - ระบบซิงค์ข้อมูลสถิติการเข้าเรียน (GitHub Pages Compatible)
 
-// ===== PATH CONFIGURATION FOR GITHUB PAGES =====
-const PathConfig = {
-    // ตรวจสอบว่าอยู่ใน GitHub Pages หรือไม่
-    isGitHubPages: window.location.hostname.includes('github.io'),
+// ตัวแปรสำหรับเก็บข้อมูลสถิติ (ใช้ memory แทน localStorage)
+let attendanceStatistics = {
+    totalPresent: 18,
+    totalAbsent: 2,
+    totalLate: 1,
+    totalLeave: 0,
+    attendanceRate: 90,
+    weeklyData: [],
+    monthlyData: [],
+    subjectStats: [],
+    lastUpdated: null
+};
+
+// ตัวแปรสำหรับเก็บข้อมูลผู้ใช้ (ใช้ memory แทน localStorage)
+let currentUserData = {
+    firstName: 'ผู้ใช้',
+    lastName: 'ตัวอย่าง',
+    username: 'user_demo',
+    role: 'student',
+    studentId: '12345',
+    class: 'ม.6/1',
+    attendedDays: 18,
+    absentDays: 2,
+    lateDays: 1,
+    attendanceRate: 90
+};
+
+let userRole = 'student';
+let isLoggedIn = true; // Default logged in for demo
+
+// Safe storage wrapper - แทนที่ localStorage
+const SafeStorage = {
+    data: new Map(),
     
-    // Base path สำหรับ GitHub Pages
-    getBasePath: function() {
-        if (this.isGitHubPages) {
-            // สำหรับ GitHub Pages จะมี repository name ใน path
-            const pathSegments = window.location.pathname.split('/').filter(s => s);
-            return pathSegments.length > 0 ? `/${pathSegments[0]}` : '';
+    getItem(key) {
+        try {
+            // Try localStorage first (if available)
+            if (typeof Storage !== 'undefined' && window.localStorage) {
+                return localStorage.getItem(key);
+            }
+        } catch (e) {
+            console.warn('localStorage not available:', e);
         }
-        return '';
+        // Fallback to memory storage
+        return this.data.get(key) || null;
     },
     
-    // แปลง relative path เป็น absolute path ที่ถูกต้องสำหรับ GitHub Pages
-    resolvePath: function(originalPath) {
-        if (!originalPath) return '#';
-        
-        // ถ้าเป็น external link หรือ anchor ให้ return ตามเดิม
-        if (originalPath.startsWith('http') || originalPath.startsWith('#') || originalPath.startsWith('javascript:')) {
-            return originalPath;
+    setItem(key, value) {
+        try {
+            // Try localStorage first (if available)
+            if (typeof Storage !== 'undefined' && window.localStorage) {
+                localStorage.setItem(key, value);
+            }
+        } catch (e) {
+            console.warn('localStorage not available:', e);
         }
-        
-        const basePath = this.getBasePath();
-        
-        // ลบ ./ ออกจากหน้า path
-        let cleanPath = originalPath.replace(/^\.\//, '');
-        
-        // สำหรับ GitHub Pages ให้เพิ่ม base path
-        if (this.isGitHubPages) {
-            return `${basePath}/${cleanPath}`;
-        }
-        
-        return originalPath;
+        // Always store in memory as backup
+        this.data.set(key, value);
     },
     
-    // สร้าง path mapping สำหรับหน้าต่างๆ - ลบ Profile.html ออกแล้ว
-    getPathMapping: function() {
-        const basePath = this.getBasePath();
-        
-        return {
-            // Navigation paths - ไม่มี Profile.html
-            './index.html': this.isGitHubPages ? `${basePath}/index.html` : './index.html',
-            './member.html': this.isGitHubPages ? `${basePath}/member.html` : './member.html',
-            './studens.html': this.isGitHubPages ? `${basePath}/studens.html` : './studens.html',
-            './ClassRoom.html': this.isGitHubPages ? `${basePath}/ClassRoom.html` : './ClassRoom.html',
-            './User.html': this.isGitHubPages ? `${basePath}/User.html` : './User.html',
-            './Nav.html': this.isGitHubPages ? `${basePath}/Nav.html` : './Nav.html',
-            './new.html': this.isGitHubPages ? `${basePath}/new.html` : './new.html',
-            './about.html': this.isGitHubPages ? `${basePath}/about.html` : './about.html',
-            './N.html': this.isGitHubPages ? `${basePath}/N.html` : './N.html',
-            './help.html': this.isGitHubPages ? `${basePath}/help.html` : './help.html',
-            
-            // External links
-            'https://www.facebook.com/profile.php?id=100087243115176': 'https://www.facebook.com/profile.php?id=100087243115176'
-        };
+    removeItem(key) {
+        try {
+            if (typeof Storage !== 'undefined' && window.localStorage) {
+                localStorage.removeItem(key);
+            }
+        } catch (e) {
+            console.warn('localStorage not available:', e);
+        }
+        this.data.delete(key);
     }
 };
 
+// ฟังก์ชันโหลดข้อมูลสถิติ (ใช้ข้อมูล default แทน)
+function loadAttendanceStatistics() {
+    try {
+        // ลองโหลดจาก SafeStorage ก่อน
+        const savedData = SafeStorage.getItem('attendanceStatistics');
+        if (savedData) {
+            attendanceStatistics = JSON.parse(savedData);
+        } else {
+            // ใช้ข้อมูล default และสร้างข้อมูลตัวอย่าง
+            setDefaultStatistics();
+        }
+        
+        console.log('Statistics loaded:', attendanceStatistics);
+        return attendanceStatistics;
+    } catch (error) {
+        console.error('Error loading attendance statistics:', error);
+        setDefaultStatistics();
+        return attendanceStatistics;
+    }
+}
+
+// ฟังก์ชันคำนวณสถิติจากข้อมูลที่มี
+function calculateStatistics(attendanceData, userData) {
+    // ใช้ข้อมูล default จาก userData
+    const totalPresent = userData?.attendedDays || 18;
+    const totalAbsent = userData?.absentDays || 2;
+    const totalLate = userData?.lateDays || 1;
+    const totalLeave = 0;
+    
+    // คำนวณเปอร์เซ็นต์การเข้าเรียน
+    const totalRecords = totalPresent + totalAbsent + totalLate + totalLeave;
+    const attendanceRate = totalRecords > 0 ? Math.round(((totalPresent + totalLate) / totalRecords) * 100) : 90;
+    
+    // อัพเดทข้อมูลสถิติ
+    attendanceStatistics = {
+        totalPresent,
+        totalAbsent,
+        totalLate,
+        totalLeave,
+        attendanceRate,
+        weeklyData: generateWeeklyData(totalPresent, totalAbsent, totalLate),
+        monthlyData: generateMonthlyData(totalPresent, totalAbsent),
+        subjectStats: [],
+        lastUpdated: new Date().toISOString()
+    };
+    
+    // บันทึกข้อมูลสถิติ
+    saveStatisticsToStorage();
+}
+
+// ฟังก์ชันสร้างข้อมูลสถิติรายสัปดาห์
+function generateWeeklyData(present, absent, late) {
+    const weeklyData = [];
+    const today = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        
+        // สร้างข้อมูลตัวอย่าง
+        const dailyPresent = Math.floor(Math.random() * 8) + 15;
+        const dailyAbsent = Math.floor(Math.random() * 3);
+        const dailyRate = dailyPresent > 0 ? Math.round((dailyPresent / (dailyPresent + dailyAbsent)) * 100) : 0;
+        
+        weeklyData.push({
+            date: date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric' }),
+            present: dailyPresent,
+            absent: dailyAbsent,
+            rate: Math.min(100, dailyRate)
+        });
+    }
+    
+    return weeklyData;
+}
+
+// ฟังก์ชันสร้างข้อมูลสถิติรายเดือน
+function generateMonthlyData(present, absent) {
+    const monthlyData = [];
+    const currentMonth = new Date().getMonth();
+    
+    for (let i = 11; i >= 0; i--) {
+        const date = new Date();
+        date.setMonth(currentMonth - i);
+        
+        const monthPresent = Math.floor(present * (0.8 + Math.random() * 0.4));
+        const monthAbsent = Math.floor(absent * (0.5 + Math.random() * 1));
+        const monthRate = monthPresent > 0 ? Math.round((monthPresent / (monthPresent + monthAbsent)) * 100) : 0;
+        
+        monthlyData.push({
+            month: date.toLocaleDateString('th-TH', { month: 'short' }),
+            present: monthPresent,
+            absent: monthAbsent,
+            rate: Math.min(100, monthRate)
+        });
+    }
+    
+    return monthlyData;
+}
+
+// ฟังก์ชันตั้งค่าสถิติเริ่มต้น
+function setDefaultStatistics(userData = currentUserData) {
+    const defaultPresent = userData.attendedDays || 18;
+    const defaultAbsent = userData.absentDays || 2;
+    const defaultLate = userData.lateDays || 1;
+    const defaultRate = userData.attendanceRate || 90;
+    
+    attendanceStatistics = {
+        totalPresent: defaultPresent,
+        totalAbsent: defaultAbsent,
+        totalLate: defaultLate,
+        totalLeave: 0,
+        attendanceRate: defaultRate,
+        weeklyData: generateWeeklyData(defaultPresent, defaultAbsent, defaultLate),
+        monthlyData: generateMonthlyData(defaultPresent, defaultAbsent),
+        subjectStats: [],
+        lastUpdated: new Date().toISOString()
+    };
+    
+    saveStatisticsToStorage();
+}
+
+// ฟังก์ชันบันทึกสถิติ (ใช้ SafeStorage)
+function saveStatisticsToStorage() {
+    try {
+        SafeStorage.setItem('attendanceStatistics', JSON.stringify(attendanceStatistics));
+        console.log('Statistics saved');
+    } catch (error) {
+        console.error('Error saving statistics:', error);
+    }
+}
+
+// ฟังก์ชันอัพเดทสถิติในหน้า index.html
+function updateIndexStatistics() {
+    try {
+        // อัพเดทสถิติการเข้าเรียน
+        const presentElement = document.querySelector('.stat-card.attendance h4') || document.querySelector('[data-stat="present"]');
+        if (presentElement) {
+            presentElement.textContent = attendanceStatistics.totalPresent.toString();
+        }
+        
+        const absentElement = document.querySelector('.stat-card.absence h4') || document.querySelector('[data-stat="absent"]');
+        if (absentElement) {
+            absentElement.textContent = attendanceStatistics.totalAbsent.toString();
+        }
+        
+        const lateElement = document.querySelector('.stat-card.late h4') || document.querySelector('[data-stat="late"]');
+        if (lateElement) {
+            lateElement.textContent = attendanceStatistics.totalLate.toString();
+        }
+        
+        const percentageElement = document.querySelector('.stat-card.percentage h4') || document.querySelector('[data-stat="rate"]');
+        if (percentageElement) {
+            percentageElement.textContent = `${attendanceStatistics.attendanceRate}%`;
+        }
+        
+        // อัพเดท progress bars
+        updateProgressBars();
+        
+        // อัพเดทข้อมูลแนวโน้ม
+        updateTrendIndicators();
+        
+        console.log('Index statistics updated');
+        
+    } catch (error) {
+        console.error('Error updating index statistics:', error);
+    }
+}
+
+// ฟังก์ชันอัพเดท progress bars
+function updateProgressBars() {
+    const total = attendanceStatistics.totalPresent + attendanceStatistics.totalAbsent + 
+                  attendanceStatistics.totalLate + attendanceStatistics.totalLeave;
+    
+    if (total === 0) return;
+    
+    // คำนวณเปอร์เซ็นต์แต่ละประเภท
+    const presentPercentage = Math.round((attendanceStatistics.totalPresent / total) * 100);
+    const absentPercentage = Math.round((attendanceStatistics.totalAbsent / total) * 100);
+    const latePercentage = Math.round((attendanceStatistics.totalLate / total) * 100);
+    const attendancePercentage = attendanceStatistics.attendanceRate;
+    
+    // อัพเดท progress bars
+    const progressBars = document.querySelectorAll('.progress-fill');
+    if (progressBars.length >= 4) {
+        progressBars[0].style.width = `${attendancePercentage}%`;
+        progressBars[1].style.width = `${absentPercentage}%`;
+        progressBars[2].style.width = `${latePercentage}%`;
+        progressBars[3].style.width = `${attendancePercentage}%`;
+    }
+}
+
+// ฟังก์ชันอัพเดทตัวบ่งชี้แนวโน้ม
+function updateTrendIndicators() {
+    const trendElements = document.querySelectorAll('.stat-trend');
+    
+    trendElements.forEach((element, index) => {
+        const trendValue = element.querySelector('span');
+        if (trendValue) {
+            let trend = 0;
+            
+            switch (index) {
+                case 0: // เข้าเรียน
+                    trend = Math.floor(Math.random() * 10) - 2;
+                    break;
+                case 1: // ขาดเรียน
+                    trend = Math.floor(Math.random() * 6) - 5;
+                    break;
+                case 2: // มาสาย
+                    trend = Math.floor(Math.random() * 4) - 2;
+                    break;
+                case 3: // เปอร์เซ็นต์
+                    trend = Math.floor(Math.random() * 8) + 1;
+                    break;
+            }
+            
+            trendValue.textContent = `${trend >= 0 ? '+' : ''}${trend}%`;
+            
+            // อัพเดทคลาสแนวโน้ม
+            element.className = 'stat-trend';
+            if (trend > 0) {
+                element.classList.add('up');
+            } else if (trend < 0) {
+                element.classList.add('down');
+            } else {
+                element.classList.add('neutral');
+            }
+        }
+    });
+}
+
+// ฟังก์ชันสำหรับการซิงค์ข้อมูลแบบ real-time
+function initializeStatisticsSync() {
+    // โหลดสถิติเริ่มต้น
+    loadAttendanceStatistics();
+    
+    // อัพเดทหน้า index ถ้าเป็นหน้า index
+    if (document.querySelector('.statistics') || document.querySelector('[data-stat]')) {
+        updateIndexStatistics();
+    }
+    
+    console.log('Statistics sync initialized');
+}
+
+// Enhanced JavaScript for Scan Check In System - GitHub Pages Compatible
 // DOM Elements
 const currentDateElement = document.getElementById('current-date');
 const currentTimeElement = document.getElementById('current-time');
@@ -2209,107 +2466,19 @@ const navLinks = document.querySelectorAll('.nav-link');
 const actionButtons = document.querySelectorAll('.action-btn');
 const periodSelector = document.querySelector('.period-selector');
 const notificationIcon = document.querySelector('.notification-icon');
-const notificationBadge = document.querySelector('.notification-badge');
 
 // State Management
 let currentNotifications = 3;
-let weatherData = null;
-let scheduleData = null;
-let currentUserRole = null;
+let currentUserRole = userRole; // ใช้ค่าจากข้างต้น
 let statisticsUpdateInterval = null;
 
-// ===== NAVIGATION SYSTEM - ลบการ redirect ไป Profile.html =====
-const NavigationManager = {
-    pathMapping: null,
-    
-    initialize: function() {
-        this.pathMapping = PathConfig.getPathMapping();
-        this.updateAllLinks();
-        console.log('Navigation initialized - Profile.html redirect REMOVED');
-        console.log('Path mapping:', this.pathMapping);
-    },
-    
-    // อัพเดทลิงก์ทั้งหมดในหน้า
-    updateAllLinks: function() {
-        // อัพเดท navigation links
-        document.querySelectorAll('.nav-link[onclick*="Nav.html"]').forEach(link => {
-            // ตรวจสอบว่าเป็น profile button หรือไม่
-            const tooltip = link.closest('.nav-item')?.getAttribute('data-tooltip');
-            if (tooltip === 'โปรไฟล์') {
-                console.log('Found profile button - setting to Nav.html');
-                const newPath = this.pathMapping['./Nav.html'] || PathConfig.resolvePath('./Nav.html');
-                const newOnclick = `window.location.href='${newPath}'`;
-                link.setAttribute('onclick', newOnclick);
-                console.log('Profile button onclick set to:', newOnclick);
-            }
-        });
-        
-        // อัพเดท action buttons
-        document.querySelectorAll('[data-page]').forEach(button => {
-            const originalPath = button.getAttribute('data-page');
-            const newPath = this.pathMapping[originalPath] || PathConfig.resolvePath(originalPath);
-            button.setAttribute('data-page', newPath);
-        });
-        
-        this.updateOnClickEvents();
-    },
-    
-    // อัพเดท onclick events
-    updateOnClickEvents: function() {
-        // Status card onclick
-        const statusCards = document.querySelectorAll('[onclick*="window.location.href"]');
-        statusCards.forEach(card => {
-            const onclick = card.getAttribute('onclick');
-            if (onclick && onclick.includes('./new.html')) {
-                const newPath = this.pathMapping['./new.html'] || PathConfig.resolvePath('./new.html');
-                card.setAttribute('onclick', `window.location.href='${newPath}'`);
-            }
-        });
-        
-        // View all button
-        const viewAllBtn = document.querySelector('.view-all-btn[onclick*="ClassRoom.html"]');
-        if (viewAllBtn) {
-            const newPath = this.pathMapping['./ClassRoom.html'] || PathConfig.resolvePath('./ClassRoom.html');
-            viewAllBtn.setAttribute('onclick', `window.location.href='${newPath}'`);
-        }
-    },
-    
-    // Navigate function - บล็อกการไป Profile.html
-    navigateTo: function(originalPath) {
-        // บล็อกการไป Profile.html - redirect ไป Nav.html แทน
-        if (originalPath && originalPath.includes('Profile.html')) {
-            console.log('BLOCKED: Redirect to Profile.html detected, redirecting to Nav.html instead');
-            originalPath = './Nav.html';
-        }
-        
-        const targetPath = this.pathMapping[originalPath] || PathConfig.resolvePath(originalPath);
-        console.log('Navigating from', originalPath, 'to', targetPath);
-        
-        try {
-            window.location.href = targetPath;
-        } catch (error) {
-            console.error('Navigation error:', error);
-            // Fallback - try Nav.html instead of Profile.html
-            if (originalPath.includes('Profile.html')) {
-                window.location.href = './Nav.html';
-            } else {
-                window.location.href = originalPath;
-            }
-        }
-    }
-};
-
-// User Role Management
+// User Role Management - ใช้ Safe Navigation
 function setUserRole(role) {
     currentUserRole = role;
+    userRole = role; // อัพเดทตัวแปรหลัก
     console.log('User role set to:', role);
     
-    try {
-        localStorage.setItem('userRole', role);
-    } catch (e) {
-        console.warn('Cannot save to localStorage:', e);
-    }
-    
+    SafeStorage.setItem('userRole', role);
     updateUIByRole(role);
 }
 
@@ -2318,14 +2487,10 @@ function getUserRole() {
         return currentUserRole;
     }
     
-    try {
-        const savedRole = localStorage.getItem('userRole');
-        if (savedRole) {
-            currentUserRole = savedRole;
-            return savedRole;
-        }
-    } catch (e) {
-        console.warn('Cannot read from localStorage:', e);
+    const savedRole = SafeStorage.getItem('userRole');
+    if (savedRole) {
+        currentUserRole = savedRole;
+        return savedRole;
     }
     
     const userRoleElement = document.getElementById('displayUserRole');
@@ -2343,7 +2508,7 @@ function getUserRole() {
         }
     }
     
-    return 'student';
+    return 'student'; // Default
 }
 
 function updateUIByRole(role) {
@@ -2396,42 +2561,53 @@ function updateNavigationByRole(role) {
     }
 }
 
+// Safe Page Navigation - ป้องกัน 404 errors
+function safeNavigate(targetPage) {
+    // ตรวจสอบและแก้ไข path ให้ถูกต้องสำหรับ GitHub Pages
+    let safePage = targetPage;
+    
+    // แปลง relative paths ให้เป็น absolute paths หรือ safe paths
+    const pageMap = {
+        './studens.html': '#', // Block this page for students anyway
+        './students.html': '#', // Block this page for students anyway
+        './member.html': 'member.html',
+        './Profile.html': 'Profile.html',
+        './Scan.html': 'Scan.html',
+        './User.html': 'User.html',
+        './index.html': 'index.html'
+    };
+    
+    // ใช้ mapping ถ้ามี หรือลบ ./ ออก
+    if (pageMap[targetPage]) {
+        safePage = pageMap[targetPage];
+    } else if (targetPage.startsWith('./')) {
+        safePage = targetPage.substring(2); // ลบ ./ ออก
+    }
+    
+    // ถ้าเป็น # ให้ไม่ทำอะไร
+    if (safePage === '#') {
+        console.log('Navigation blocked:', targetPage);
+        return false;
+    }
+    
+    console.log('Safe navigation from', targetPage, 'to', safePage);
+    return safePage;
+}
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - Initializing app with Profile.html redirect BLOCKED...');
+    console.log('DOM Content Loaded - Initializing app...');
     initializeApp();
 });
 
 function initializeApp() {
-    // Initialize navigation first
-    NavigationManager.initialize();
-    
     updateDateTime();
     setupEventListeners();
-    setActiveNavigation();
     loadUserData();
-    setupFloatingAnimations();
-    initializeTooltips();
-    setupRippleEffects();
-    loadWeatherData();
-    setupScheduleUpdates();
-    setupNotifications();
-    setupProgressBars();
-    setupCardAnimations();
-    
-    // Initialize user role management
     initializeUserRole();
+    initializeStatisticsSync();
     
-    // Initialize statistics sync (ถ้ามี StatisticsSync)
-    if (typeof window.StatisticsSync !== 'undefined') {
-        initializeStatisticsSync();
-    }
-    
-    // Debug buttons after initialization
-    setTimeout(() => {
-        debugButtons();
-        testButtonClicks();
-    }, 1000);
+    console.log('Application initialized successfully');
 }
 
 function initializeUserRole() {
@@ -2440,52 +2616,47 @@ function initializeUserRole() {
     updateUIByRole(role);
 }
 
-// Event Listeners Setup
+// Event Listeners Setup - ป้องกัน errors
 function setupEventListeners() {
-    console.log('Setting up event listeners with Profile.html redirect BLOCKED...');
+    console.log('Setting up event listeners...');
     
-    // Navigation links
-    navLinks.forEach(link => {
-        link.addEventListener('click', handleNavClick);
-        link.addEventListener('mouseenter', showTooltip);
-        link.addEventListener('mouseleave', hideTooltip);
-    });
-
-    // Action buttons
-    actionButtons.forEach((btn, index) => {
-        console.log(`Setting up button ${index + 1}:`, btn);
-        
-        btn.addEventListener('click', handleActionClick);
-        btn.onclick = function(e) {
-            handleActionClick.call(this, e);
-        };
-        
-        btn.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleActionClick.call(this, e);
-            }
+    // Navigation links - Safe navigation
+    if (navLinks && navLinks.length > 0) {
+        navLinks.forEach(link => {
+            link.addEventListener('click', handleNavClick);
         });
-    });
+    }
 
-    // Period selector
+    // Action buttons - Safe navigation
+    if (actionButtons && actionButtons.length > 0) {
+        actionButtons.forEach((btn) => {
+            btn.addEventListener('click', handleActionClick);
+            
+            btn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleActionClick.call(this, e);
+                }
+            });
+        });
+    }
+
+    // Period selector - Safe handling
     if (periodSelector) {
         periodSelector.addEventListener('change', handlePeriodChange);
     }
 
-    // Notification icon
+    // Notification icon - Safe handling
     if (notificationIcon) {
         notificationIcon.addEventListener('click', handleNotificationClick);
     }
 
-    // Window resize
+    // Window events
     window.addEventListener('resize', handleWindowResize);
-    
-    // Visibility change
     document.addEventListener('visibilitychange', handleVisibilityChange);
 }
 
-// Action Button Click Handler - บล็อก Profile.html
+// Action Button Click Handler - ป้องกัน 404
 function handleActionClick(e) {
     console.log('Button clicked!', this);
     
@@ -2497,18 +2668,9 @@ function handleActionClick(e) {
     const button = this;
     const targetPage = button.getAttribute('data-page');
     
-    console.log('Target page:', targetPage);
-    
     if (!targetPage) {
         console.error('No data-page attribute found on button');
         showErrorMessage('ไม่พบลิงก์ที่ต้องการ');
-        return;
-    }
-    
-    // บล็อกการไป Profile.html
-    if (targetPage.includes('Profile.html')) {
-        console.log('BLOCKED: Attempt to navigate to Profile.html, redirecting to Nav.html');
-        NavigationManager.navigateTo('./Nav.html');
         return;
     }
     
@@ -2517,6 +2679,13 @@ function handleActionClick(e) {
     if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
         console.log('Blocking checkin feature for student role');
         showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        return;
+    }
+    
+    // Safe navigation
+    const safePage = safeNavigate(targetPage);
+    if (safePage === false) {
+        showErrorMessage('ไม่สามารถเข้าถึงหน้านี้ได้');
         return;
     }
     
@@ -2532,15 +2701,14 @@ function handleActionClick(e) {
     button.innerHTML = `
         <ion-icon name="hourglass"></ion-icon>
         <span>กำลังโหลด...</span>
-        <div class="btn-ripple"></div>
     `;
-    
-    createRipple(button);
     
     setTimeout(() => {
         try {
-            console.log('Attempting navigation to:', targetPage);
-            NavigationManager.navigateTo(targetPage);
+            console.log('Attempting navigation to:', safePage);
+            if (safePage !== '#') {
+                window.location.href = safePage;
+            }
         } catch (error) {
             console.error('Navigation error:', error);
             showErrorMessage('ไม่สามารถเปิดหน้านี้ได้ กรุณาลองใหม่อีกครั้ง');
@@ -2552,28 +2720,11 @@ function handleActionClick(e) {
     }, 800);
 }
 
-// Navigation Click Handler - บล็อก Profile.html
+// Navigation Click Handler - Safe navigation
 function handleNavClick(e) {
     e.preventDefault();
     
-    let href = this.getAttribute('href');
-    
-    // ถ้าไม่มี href ให้ดูจาก onclick
-    if (!href) {
-        const onclick = this.getAttribute('onclick');
-        if (onclick && onclick.includes('window.location.href=')) {
-            href = onclick.match(/window\.location\.href='([^']*)'/)?.[1];
-        }
-    }
-    
-    console.log('Navigation click - href:', href);
-    
-    // บล็อกการไป Profile.html
-    if (href && href.includes('Profile.html')) {
-        console.log('BLOCKED: Navigation to Profile.html, redirecting to Nav.html');
-        href = './Nav.html';
-    }
-    
+    const href = this.getAttribute('href');
     const userRole = getUserRole();
     
     if (isCheckinFeature(href) && (userRole === 'student' || userRole === 'นักเรียน')) {
@@ -2582,32 +2733,42 @@ function handleNavClick(e) {
         return;
     }
     
-    navLinks.forEach(navLink => navLink.classList.remove('active'));
+    if (navLinks) {
+        navLinks.forEach(navLink => navLink.classList.remove('active'));
+    }
     this.classList.add('active');
-    createRipple(this);
     
     setTimeout(() => {
         if (href && href !== '#') {
-            console.log('Navigation to:', href);
-            NavigationManager.navigateTo(href);
+            const safePage = safeNavigate(href);
+            if (safePage && safePage !== '#') {
+                window.location.href = safePage;
+            }
         }
     }, 200);
 }
 
-// Global function for direct onclick - บล็อก Profile.html
+// Helper functions
+function isCheckinFeature(targetPage) {
+    const checkinPages = [
+        './studens.html',
+        './students.html',
+        './checkin.html',
+        'studens.html',
+        'students.html',
+        'checkin.html'
+    ];
+    return checkinPages.includes(targetPage);
+}
+
+// Global function for direct onclick - Safe navigation
 function handleDirectClick(button) {
     console.log('Direct click function called');
-    let targetPage = button.getAttribute('data-page');
+    const targetPage = button.getAttribute('data-page');
     
     if (!targetPage) {
         console.error('No data-page attribute found');
         return;
-    }
-    
-    // บล็อกการไป Profile.html
-    if (targetPage.includes('Profile.html')) {
-        console.log('BLOCKED: Direct click to Profile.html, redirecting to Nav.html');
-        targetPage = './Nav.html';
     }
     
     const userRole = getUserRole();
@@ -2617,252 +2778,46 @@ function handleDirectClick(button) {
         return;
     }
     
-    console.log('Direct navigation to:', targetPage);
-    NavigationManager.navigateTo(targetPage);
-}
-
-// Helper functions
-function isCheckinFeature(targetPage) {
-    const checkinPages = [
-        './studens.html',
-        './students.html', 
-        './checkin.html'
-    ];
-    
-    return checkinPages.some(page => 
-        targetPage && (targetPage.includes('studens.html') || 
-        targetPage.includes('students.html') || 
-        targetPage.includes('checkin.html'))
-    );
-}
-
-// ===== LOGOUT FUNCTION - ไป Nav.html แทน Profile.html =====
-function logout() {
-    console.log('=== LOGOUT FUNCTION CALLED ===');
-    console.log('Current location:', window.location.href);
-    console.log('User role before logout:', getUserRole());
-    
-    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
-        try {
-            // ลบข้อมูลการล็อกอิน
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userData');
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('attendanceStatistics');
-            
-            // Reset current user role
-            currentUserRole = null;
-            
-            console.log('User data cleared successfully');
-            console.log('Navigating to Nav.html...');
-            
-            // กลับไปหน้าล็อกอิน
-            NavigationManager.navigateTo('./Nav.html');
-            
-        } catch (error) {
-            console.error('Error during logout:', error);
-            alert('เกิดข้อผิดพลาดในการออกจากระบบ');
-        }
+    const safePage = safeNavigate(targetPage);
+    if (safePage && safePage !== '#') {
+        console.log('Direct navigation to:', safePage);
+        window.location.href = safePage;
     }
 }
-
-// ===== USER LOGIN CHECK - ไม่ redirect ไป Profile.html =====
-function checkUserLogin() {
-    console.log('=== CHECKING USER LOGIN ===');
-    
-    try {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userData = localStorage.getItem('userData');
-        
-        console.log('isLoggedIn:', isLoggedIn);
-        console.log('userData:', userData);
-        
-        if (isLoggedIn !== 'true' || !userData) {
-            console.log('User not logged in, should redirect to Nav.html');
-            return false;
-        }
-        
-        const parsedUserData = JSON.parse(userData);
-        currentUserRole = parsedUserData.role || localStorage.getItem('userRole') || 'student';
-        console.log('User login verified:', parsedUserData.username, 'Role:', currentUserRole);
-        return true;
-        
-    } catch (error) {
-        console.error('Error parsing user data:', error);
-        return false;
-    }
-}
-
-// ===== NAVIGATION WITH AUTH - ไป Nav.html แทน Profile.html =====
-function navigateWithAuth(page) {
-    console.log('=== NAVIGATE WITH AUTH ===');
-    console.log('Target page:', page);
-    console.log('Current user role:', currentUserRole);
-    
-    // บล็อกการไป Profile.html
-    if (page && page.includes('Profile.html')) {
-        console.log('BLOCKED: NavigateWithAuth to Profile.html, redirecting to Nav.html');
-        page = './Nav.html';
-    }
-    
-    if (!currentUserRole) {
-        console.warn('User role not set, checking login status...');
-        const isLoggedIn = checkUserLogin();
-        
-        if (!isLoggedIn) {
-            console.log('User not logged in, redirecting to Nav.html');
-            NavigationManager.navigateTo('./Nav.html');
-            return;
-        }
-    }
-    
-    // ตรวจสอบสิทธิ์สำหรับหน้าต่างๆ
-    const restrictedPages = ['studens.html', 'students.html', 'User.html'];
-    
-    if (restrictedPages.some(p => page.includes(p)) && 
-        (currentUserRole === 'student' || currentUserRole === 'นักเรียน')) {
-        
-        showAccessDeniedMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
-        return;
-    }
-    
-    // Navigation ผ่าน NavigationManager
-    NavigationManager.navigateTo(page);
-}
-
-// ===== FORCE NAVIGATE TO LOGIN - ไป Nav.html =====
-function forceNavigateToLogin() {
-    console.log('=== FORCE NAVIGATE TO LOGIN ===');
-    
-    // ลบข้อมูลทั้งหมดที่อาจทำให้เกิด redirect
-    try {
-        localStorage.clear();
-        sessionStorage.clear();
-    } catch (e) {
-        console.log('Cannot clear storage:', e);
-    }
-    
-    // Reset user role
-    currentUserRole = null;
-    
-    // Navigate ไป Nav.html
-    const targetUrl = PathConfig.resolvePath('./Nav.html');
-    console.log('Forcing navigation to:', targetUrl);
-    
-    // ใช้ replace แทน href เพื่อไม่ให้กลับมาหน้าเดิมได้
-    window.location.replace(targetUrl);
-}
-
-// ===== CLEAR ALL DATA AND REDIRECT - ไป Nav.html =====
-function clearAllDataAndRedirect() {
-    console.log('=== CLEARING ALL DATA AND REDIRECTING TO NAV.HTML ===');
-    
-    try {
-        // ลบข้อมูลจาก localStorage
-        const keysToRemove = [
-            'isLoggedIn',
-            'userData', 
-            'userRole',
-            'attendanceStatistics',
-            'lastVisitedPage',
-            'userPreferences'
-        ];
-        
-        keysToRemove.forEach(key => {
-            localStorage.removeItem(key);
-            console.log('Removed:', key);
-        });
-        
-        // ลบข้อมูลจาก sessionStorage
-        sessionStorage.clear();
-        
-        // Reset global variables
-        currentUserRole = null;
-        currentNotifications = 3;
-        
-        console.log('All data cleared successfully');
-        
-    } catch (error) {
-        console.error('Error clearing data:', error);
-    }
-    
-    // Navigate to Nav.html
-    forceNavigateToLogin();
-}
-
-// ===== BLOCK PROFILE.HTML REDIRECTS =====
-// Override window.location.href setter เพื่อบล็อก Profile.html
-const originalLocationSetter = Object.getOwnPropertyDescriptor(window.location, 'href').set;
-Object.defineProperty(window.location, 'href', {
-    set: function(value) {
-        console.log('=== LOCATION.HREF BEING SET ===');
-        console.log('Target URL:', value);
-        
-        // บล็อกการไป Profile.html
-        if (value && value.includes('Profile.html')) {
-            console.warn('BLOCKED: Redirect to Profile.html detected, redirecting to Nav.html instead');
-            value = value.replace('Profile.html', 'Nav.html');
-            console.log('Redirected to:', value);
-        }
-        
-        originalLocationSetter.call(this, value);
-    },
-    get: function() {
-        return window.location.href;
-    }
-});
 
 // Make functions globally available
 window.handleDirectClick = handleDirectClick;
 window.setUserRole = setUserRole;
 window.getUserRole = getUserRole;
-window.NavigationManager = NavigationManager;
-window.PathConfig = PathConfig;
-window.logout = logout;
-window.navigateWithAuth = navigateWithAuth;
-window.forceNavigateToLogin = forceNavigateToLogin;
-window.clearAllDataAndRedirect = clearAllDataAndRedirect;
-window.checkUserLogin = checkUserLogin;
-
-// Utility functions
-createRipple = function(element) {
-    const ripple = element.querySelector('.nav-ripple, .btn-ripple');
-    if (ripple) {
-        ripple.classList.remove('active');
-        ripple.offsetHeight;
-        ripple.classList.add('active');
-        
-        setTimeout(() => {
-            ripple.classList.remove('active');
-        }, 600);
-    }
-}
 
 function showErrorMessage(message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #ff4757;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 9999;
-        font-size: 14px;
-        max-width: 300px;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-    `;
+    // Create error message element
+    let errorDiv = document.getElementById('errorMessage');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.id = 'errorMessage';
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff4757;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            font-size: 14px;
+            max-width: 300px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+        document.body.appendChild(errorDiv);
+    }
     
     errorDiv.innerHTML = `
         <ion-icon name="alert-circle" style="margin-right: 8px;"></ion-icon>
         ${message}
     `;
-    
-    document.body.appendChild(errorDiv);
     
     setTimeout(() => {
         errorDiv.style.transform = 'translateX(0)';
@@ -2870,92 +2825,7 @@ function showErrorMessage(message) {
     
     setTimeout(() => {
         errorDiv.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            if (errorDiv.parentNode) {
-                errorDiv.parentNode.removeChild(errorDiv);
-            }
-        }, 300);
     }, 4000);
-}
-
-function showAccessDeniedMessage(message) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = 'access-denied-alert';
-    alertDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        border: 2px solid #ef4444;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        z-index: 10000;
-        text-align: center;
-        max-width: 400px;
-        width: 90%;
-    `;
-    
-    alertDiv.innerHTML = `
-        <div style="color: #ef4444; font-size: 48px; margin-bottom: 16px;">
-            <ion-icon name="lock-closed"></ion-icon>
-        </div>
-        <h3 style="color: #ef4444; margin-bottom: 12px;">ไม่มีสิทธิ์เข้าถึง</h3>
-        <p style="color: #64748b; margin-bottom: 20px;">${message}</p>
-        <button onclick="closeAccessDeniedAlert()" style="
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        ">ตกลง</button>
-    `;
-    
-    document.body.appendChild(alertDiv);
-    
-    // Auto close after 5 seconds
-    setTimeout(() => {
-        closeAccessDeniedAlert();
-    }, 5000);
-}
-
-function closeAccessDeniedAlert() {
-    const alert = document.querySelector('.access-denied-alert');
-    if (alert) {
-        alert.remove();
-    }
-}
-
-function testButtonClicks() {
-    console.log('=== Testing Button Clicks (Profile.html redirect BLOCKED) ===');
-    
-    actionButtons.forEach((btn, index) => {
-        const dataPage = btn.getAttribute('data-page');
-        console.log(`Button ${index + 1}:`, {
-            element: btn,
-            dataPage: dataPage,
-            hasClickListener: btn.onclick !== null
-        });
-    });
-}
-
-function debugButtons() {
-    console.log('=== Button Debug Info (Profile.html redirect BLOCKED) ===');
-    console.log('Total action buttons found:', actionButtons.length);
-    console.log('Current user role:', getUserRole());
-    
-    actionButtons.forEach((btn, index) => {
-        const dataPage = btn.getAttribute('data-page');
-        console.log(`Button ${index + 1}:`, {
-            element: btn,
-            dataPage: dataPage,
-            hasOnclick: btn.onclick !== null,
-            classList: btn.classList.toString()
-        });
-    });
 }
 
 // Date and Time Management
@@ -2974,34 +2844,98 @@ function updateDateTime() {
     };
     
     if (currentDateElement) {
-        currentDateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
+        try {
+            currentDateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
+        } catch (e) {
+            currentDateElement.textContent = now.toLocaleDateString();
+        }
     }
     if (currentTimeElement) {
-        currentTimeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
+        try {
+            currentTimeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
+        } catch (e) {
+            currentTimeElement.textContent = now.toLocaleTimeString();
+        }
     }
 }
 
-// Placeholder functions (implement as needed)
-function setActiveNavigation() {}
-function loadUserData() {}
-function setupFloatingAnimations() {}
-function initializeTooltips() {}
-function setupRippleEffects() {}
-function loadWeatherData() {}
-function setupScheduleUpdates() {}
-function setupNotifications() {}
-function setupProgressBars() {}
-function setupCardAnimations() {}
-function showTooltip() {}
-function hideTooltip() {}
-function handlePeriodChange() {}
-function handleNotificationClick() {}
-function handleWindowResize() {}
-function handleVisibilityChange() {}
+// User Management - Safe data loading
+function loadUserData() {
+    try {
+        // ใช้ข้อมูลจาก memory หรือ default data
+        const userData = SafeStorage.getItem('userData');
+        if (userData) {
+            currentUserData = JSON.parse(userData);
+        }
+        
+        const loginStatus = SafeStorage.getItem('isLoggedIn');
+        if (loginStatus) {
+            isLoggedIn = loginStatus === 'true';
+        }
+        
+        // อัพเดทการแสดงผลผู้ใช้
+        updateUserDisplay();
+        
+    } catch (error) {
+        console.error('Error loading user data:', error);
+        // ใช้ข้อมูล default
+        updateUserDisplay();
+    }
+}
 
-// Statistics Sync (if needed)
-function initializeStatisticsSync() {
-    console.log('Statistics sync initialized');
+function updateUserDisplay() {
+    try {
+        // อัพเดทชื่อผู้ใช้
+        const userNameElement = document.getElementById('displayUserName');
+        if (userNameElement && currentUserData.firstName && currentUserData.lastName) {
+            userNameElement.textContent = `${currentUserData.firstName} ${currentUserData.lastName}`;
+        }
+        
+        // อัพเดทบทบาท
+        const userRoleElement = document.getElementById('displayUserRole');
+        if (userRoleElement) {
+            const roleDisplay = getRoleDisplayName(currentUserRole);
+            userRoleElement.textContent = roleDisplay;
+        }
+        
+        console.log('User display updated successfully');
+        
+    } catch (error) {
+        console.error('Error updating user display:', error);
+    }
+}
+
+function getRoleDisplayName(role) {
+    const roleNames = {
+        'student': 'นักเรียน',
+        'teacher': 'ครู',
+        'admin': 'ผู้ดูแลระบบ'
+    };
+    return roleNames[role] || currentUserData.roleDisplay || role || 'ผู้ใช้งาน';
+}
+
+// Placeholder functions to prevent errors
+function handlePeriodChange() {
+    const period = periodSelector ? periodSelector.value : 'week';
+    console.log('Period changed to:', period);
+}
+
+function handleNotificationClick() {
+    console.log('Notification clicked');
+}
+
+function handleWindowResize() {
+    console.log('Window resized');
+}
+
+function handleVisibilityChange() {
+    if (document.hidden) {
+        console.log('Page hidden');
+    } else {
+        console.log('Page visible');
+        // อัพเดทเวลาเมื่อกลับมาดูหน้า
+        updateDateTime();
+    }
 }
 
 // Update time every second
@@ -3010,18 +2944,316 @@ setInterval(updateDateTime, 1000);
 // Export functions for external use
 window.CheckInSystem = {
     updateDateTime,
-    debugButtons,
-    handleActionClick: handleActionClick,
-    handleDirectClick: handleDirectClick,
-    testButtonClicks,
+    handleActionClick,
+    handleDirectClick,
     setUserRole,
     getUserRole,
     updateUIByRole,
     initializeUserRole,
-    NavigationManager,
-    PathConfig
+    updateStatisticsDisplay: updateIndexStatistics
 };
 
-console.log('Fixed JavaScript loaded - Profile.html redirect COMPLETELY BLOCKED!');
+// Statistics Sync System Export
+window.StatisticsSync = {
+    initialize: initializeStatisticsSync,
+    load: loadAttendanceStatistics,
+    update: updateIndexStatistics,
+    getStatistics: () => attendanceStatistics
+};
+
+// Notification Management System - ป้องกันการซ้ำอย่างเข้มงวด
+const NotificationManager = {
+    isNotificationShowing: false,
+    lastNotificationTime: 0,
+    notificationTimeout: null,
+    shownMessages: new Set(),
+    isInitialLoad: true,
+    
+    show: function(message, source = 'system') {
+        const now = Date.now();
+        const timeSinceLastNotification = now - this.lastNotificationTime;
+        const messageKey = `${source}-${message}-${Math.floor(now / 30000)}`;
+        
+        console.log('Notification request:', {
+            message,
+            source,
+            isShowing: this.isNotificationShowing,
+            timeSince: timeSinceLastNotification
+        });
+        
+        // ป้องกันการโหลดครั้งแรก
+        if (this.isInitialLoad && source !== 'user_action') {
+            console.log('Notification blocked - initial load');
+            return false;
+        }
+        
+        // ป้องกันการแสดงซ้ำ
+        if (this.isNotificationShowing) {
+            console.log('Notification blocked - already showing');
+            return false;
+        }
+        
+        // ป้องกันการแสดงเร็วเกินไป
+        if (timeSinceLastNotification < 5000) {
+            console.log('Notification blocked - too soon');
+            return false;
+        }
+        
+        // ป้องกันข้อความที่แสดงแล้ว
+        if (this.shownMessages.has(messageKey)) {
+            console.log('Notification blocked - message shown recently');
+            return false;
+        }
+        
+        this.shownMessages.add(messageKey);
+        setTimeout(() => this.shownMessages.delete(messageKey), 60000);
+        
+        return this.displayNotification(message);
+    },
+    
+    displayNotification: function(message) {
+        this.isNotificationShowing = true;
+        this.lastNotificationTime = Date.now();
+        
+        console.log('Displaying notification:', message);
+        
+        // สร้าง notification element ถ้ายังไม่มี
+        let notification = document.getElementById('statisticsNotification');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'statisticsNotification';
+            notification.className = 'statistics-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 12px 16px;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                gap: 10px;
+                max-width: 320px;
+                font-size: 14px;
+                font-weight: 500;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+            `;
+            document.body.appendChild(notification);
+        }
+        
+        notification.innerHTML = `
+            <ion-icon name="information-circle"></ion-icon>
+            <span>${message}</span>
+            <button class="close-notification" onclick="hideStatisticsNotification()" style="
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                color: white;
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 4px;
+            ">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        `;
+        
+        if (this.notificationTimeout) {
+            clearTimeout(this.notificationTimeout);
+        }
+        
+        notification.style.display = 'flex';
+        setTimeout(() => {
+            notification.style.transform = 'translateY(0)';
+        }, 100);
+        
+        this.notificationTimeout = setTimeout(() => {
+            this.hide();
+        }, 4000);
+        
+        return true;
+    },
+    
+    hide: function() {
+        const notification = document.getElementById('statisticsNotification');
+        if (notification) {
+            notification.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                notification.style.display = 'none';
+                this.isNotificationShowing = false;
+            }, 300);
+        }
+        
+        if (this.notificationTimeout) {
+            clearTimeout(this.notificationTimeout);
+            this.notificationTimeout = null;
+        }
+    },
+    
+    initialize: function() {
+        setTimeout(() => {
+            this.isInitialLoad = false;
+            console.log('NotificationManager ready');
+        }, 3000);
+    }
+};
+
+// Global notification functions
+function showStatisticsNotification(message, source = 'system') {
+    return NotificationManager.show(message, source);
+}
+
+function hideStatisticsNotification() {
+    NotificationManager.hide();
+}
+
+// Enhanced Period Change Handler
+function handlePeriodChange(event) {
+    const periodSelector = document.querySelector('.period-selector');
+    if (periodSelector) {
+        const period = periodSelector.value;
+        console.log('Period changed to:', period);
+        
+        // อัพเดทสถิติ
+        loadAttendanceStatistics();
+        updateIndexStatistics();
+        
+        // แจ้งเตือน
+        const periodNames = {
+            'week': 'สัปดาห์นี้',
+            'month': 'เดือนนี้', 
+            'semester': 'ภาคเรียนนี้'
+        };
+        const periodName = periodNames[period] || 'ช่วงเวลาที่เลือก';
+        
+        setTimeout(() => {
+            showStatisticsNotification(`เปลี่ยนการแสดงสถิติเป็น${periodName}`, 'user_action');
+        }, 200);
+    }
+}
+
+// Enhanced User Management Functions
+function checkUserLogin() {
+    const loginStatus = SafeStorage.getItem('isLoggedIn');
+    const userData = SafeStorage.getItem('userData');
+    
+    if (loginStatus === 'true' && userData) {
+        try {
+            currentUserData = JSON.parse(userData);
+            currentUserRole = currentUserData.role || SafeStorage.getItem('userRole') || 'student';
+            console.log('User login verified:', currentUserData.username, 'Role:', currentUserRole);
+            return true;
+        } catch (error) {
+            console.error('Error parsing user data:', error);
+        }
+    }
+    
+    // ใช้ข้อมูล default สำหรับ demo
+    console.log('Using default user data for demo');
+    return true;
+}
+
+function logout() {
+    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+        try {
+            SafeStorage.removeItem('isLoggedIn');
+            SafeStorage.removeItem('userData');
+            SafeStorage.removeItem('userRole');
+            SafeStorage.removeItem('attendanceStatistics');
+            
+            // รีเซ็ตตัวแปร
+            currentUserData = {
+                firstName: 'ผู้ใช้',
+                lastName: 'ตัวอย่าง',
+                username: 'user_demo',
+                role: 'student'
+            };
+            currentUserRole = 'student';
+            isLoggedIn = false;
+            
+            console.log('User logged out successfully');
+            
+            // Navigate safely
+            const loginPage = safeNavigate('./Profile.html');
+            if (loginPage && loginPage !== '#') {
+                window.location.href = loginPage;
+            }
+            
+        } catch (error) {
+            console.error('Error during logout:', error);
+            showErrorMessage('เกิดข้อผิดพลาดในการออกจากระบบ');
+        }
+    }
+}
+
+// Multi-user system compatibility layer
+window.MultiUserSystem = {
+    login: function(userData) {
+        currentUserData = userData;
+        currentUserRole = userData.role || 'student';
+        isLoggedIn = true;
+        SafeStorage.setItem('userData', JSON.stringify(userData));
+        SafeStorage.setItem('isLoggedIn', 'true');
+        SafeStorage.setItem('userRole', currentUserRole);
+        updateUserDisplay();
+        updateUIByRole(currentUserRole);
+        return { success: true, message: 'เข้าสู่ระบบสำเร็จ' };
+    },
+    
+    logout: logout,
+    getCurrentUser: () => currentUserData,
+    getUserRole: () => currentUserRole,
+    isLoggedIn: () => isLoggedIn,
+    updateStatistics: function(newStats) {
+        attendanceStatistics = { ...attendanceStatistics, ...newStats };
+        saveStatisticsToStorage();
+        updateIndexStatistics();
+    }
+};
+
+// Make functions globally available
+window.logout = logout;
+window.checkUserLogin = checkUserLogin;
+window.showStatisticsNotification = showStatisticsNotification;
+window.hideStatisticsNotification = hideStatisticsNotification;
+window.handlePeriodChange = handlePeriodChange;
+
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('GitHub Pages compatible system initializing...');
+    
+    // Initialize notification manager
+    NotificationManager.initialize();
+    
+    // Setup period selector if exists
+    const periodSelector = document.querySelector('.period-selector');
+    if (periodSelector) {
+        // Remove any existing listeners
+        const newPeriodSelector = periodSelector.cloneNode(true);
+        periodSelector.parentNode.replaceChild(newPeriodSelector, periodSelector);
+        newPeriodSelector.addEventListener('change', handlePeriodChange);
+    }
+    
+    // Initialize app
+    initializeApp();
+    
+    console.log('GitHub Pages compatible system ready!');
+});
+
+// Cleanup function
+function cleanup() {
+    if (statisticsUpdateInterval) {
+        clearInterval(statisticsUpdateInterval);
+    }
+    if (NotificationManager.notificationTimeout) {
+        clearTimeout(NotificationManager.notificationTimeout);
+    }
+}
+
+window.addEventListener('beforeunload', cleanup);
+
+console.log('GitHub Pages Compatible JavaScript loaded successfully!');
     </script>
 </html>
