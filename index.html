@@ -2115,9 +2115,9 @@ html {
                 <div class="footer-section">
                     <h4>ลิงก์ด่วน</h4>
                     <div class="footer-links">
-                        <a href="#" onclick="navigateToPage('about.html')">เกี่ยวกับเรา</a>
-                        <a href="#" onclick="navigateToPage('terms.html')">เงื่อนไขการใช้งาน</a>
-                        <a href="#" onclick="navigateToPage('help.html')">ช่วยเหลือ</a>
+                        <a href="./about.html" onclick="navigateToPage('about.html')">เกี่ยวกับเรา</a>
+                        <a href="./N.html" onclick="navigateToPage('terms.html')">เงื่อนไขการใช้งาน</a>
+                        <a href="./help.html" onclick="navigateToPage('help.html')">ช่วยเหลือ</a>
                     </div>
                 </div>
             </div>
@@ -2974,12 +2974,12 @@ function loadUserData() {
         } else {
             console.log('User not logged in, redirecting...');
             // สำหรับ GitHub Pages อาจต้องเปลี่ยนเส้นทาง
-            const profilePath = PathConfig.fixPath('Profile.html');
+            const profilePath = PathConfig.fixPath('./Profile.html');
             window.location.href = profilePath;
         }
     } catch (error) {
         console.error('Error loading user data:', error);
-        const profilePath = PathConfig.fixPath('Profile.html');
+        const profilePath = PathConfig.fixPath('./Profile.html');
         window.location.href = profilePath;
     }
 }
@@ -3172,7 +3172,7 @@ function debugInfo() {
     console.log('Statistics:', attendanceStatistics);
     
     // Test path fixing
-    const testPaths = ['member.html', './studens.html', '/ClassRoom.html'];
+    const testPaths = ['member.html', './studens.html', './ClassRoom.html'];
     testPaths.forEach(path => {
         console.log(`Path "${path}" -> "${PathConfig.fixPath(path)}"`);
     });
@@ -3203,7 +3203,7 @@ window.addEventListener('storage', function(e) {
     
     if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
         console.log('User logged out from another tab');
-        const profilePath = PathConfig.fixPath('Profile.html');
+        const profilePath = PathConfig.fixPath('./Profile.html');
         window.location.href = profilePath;
     }
 });
