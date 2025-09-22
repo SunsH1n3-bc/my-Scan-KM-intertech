@@ -2825,6 +2825,99 @@ if (document.readyState === 'loading') {
     setTimeout(initializeApp, 100);
 }
 
+// เพิ่มใน global click handler เพื่อจัดการ external links
+function globalClickHandler(e) {
+    const target = e.target.closest('[data-page], [data-external], .nav-link, .action-btn, .clickable');
+    if (!target) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // จัดการ external links
+    if (target.hasAttribute('data-external')) {
+        const externalUrl = target.getAttribute('data-external');
+        window.open(externalUrl, '_blank');
+        return;
+    }
+    
+    // จัดการ clickable elements
+    if (target.classList.contains('clickable')) {
+        const targetPage = target.getAttribute('data-page');
+        if (targetPage) {
+            NavigationManager.navigateToPage(targetPage);
+        }
+        return;
+    }
+    
+    let targetPage = null;
+    
+    // หา target page
+    if (target.hasAttribute('data-page')) {
+        targetPage = target.getAttribute('data-page');
+    } else if (target.classList.contains('nav-link')) {
+        // จาก navigation links
+        const navItem = target.closest('.nav-item');
+        if (navItem) {
+            const tooltip = navItem.getAttribute('data-tooltip');
+            switch (tooltip) {
+                case 'หน้าแรก':
+                    targetPage = 'index.html';
+                    break;
+                case 'สแกน QR Code':
+                    targetPage = 'member.html';
+                    break;
+                case 'เช็คอิน':
+                    targetPage = 'students.html';
+                    break;
+                case 'ตารางเรียน':
+                    targetPage = 'classroom.html';
+                    break;
+                case 'สถิติการเข้าเรียน':
+                    targetPage = 'user.html';
+                    break;
+                case 'โปรไฟล์':
+                    targetPage = 'profile.html';
+                    break;
+                case 'ติดต่อ':
+                    // จัดการใน data-external แล้ว
+                    return;
+            }
+        }
+    }
+    
+    if (!targetPage) {
+        console.warn('No target page found for:', target);
+        return;
+    }
+    
+    // Update active nav state
+    if (target.classList.contains('nav-link')) {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        target.classList.add('active');
+    }
+    
+    // ป้องกันการ click ซ้ำ
+    if (target.disabled) return;
+    target.disabled = true;
+    
+    // Navigate
+    NavigationManager.navigateToPage(targetPage).finally(() => {
+        setTimeout(() => {
+            target.disabled = false;
+        }, 1000);
+    });
+}
+
+// เพิ่ม keyboard support
+document.addEventListener('keydown', function(e) {
+    if (e.target.matches('[role="button"]') && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        e.target.click();
+    }
+});
+
 console.log('Fixed Navigation JavaScript loaded successfully!');
     </script>
 </html>
