@@ -2140,7 +2140,7 @@ html {
     
     <!-- JavaScript -->
     <script>
-// Fixed JavaScript for GitHub Pages - removed localStorage dependencies and 404 issues
+// Fixed JavaScript for Scan Check In System - GitHub Pages Compatible
 // Statistics Sync System - ระบบซิงค์ข้อมูลสถิติการเข้าเรียน (GitHub Pages Compatible)
 
 // ตัวแปรสำหรับเก็บข้อมูลสถิติ (ใช้ memory แทน localStorage)
@@ -2572,9 +2572,11 @@ function safeNavigate(targetPage) {
         './students.html': '#', // Block this page for students anyway
         './member.html': 'member.html',
         './Profile.html': 'Profile.html',
+        './Nav.html': 'Nav.html',
         './Scan.html': 'Scan.html',
         './User.html': 'User.html',
-        './index.html': 'index.html'
+        './index.html': 'index.html',
+        './ClassRoom.html': 'ClassRoom.html'
     };
     
     // ใช้ mapping ถ้ามี หรือลบ ./ ออก
@@ -2720,14 +2722,31 @@ function handleActionClick(e) {
     }, 800);
 }
 
-// Navigation Click Handler - Safe navigation
+// Navigation Click Handler - FIXED FOR PROFILE PAGE
 function handleNavClick(e) {
     e.preventDefault();
     
-    const href = this.getAttribute('href');
+    // Get the onclick attribute or href
+    const onclickValue = this.getAttribute('onclick');
+    const hrefValue = this.getAttribute('href');
+    
+    // Check if this is the profile navigation
+    if (onclickValue && onclickValue.includes('Nav.html')) {
+        console.log('Profile navigation clicked - going to Nav.html');
+        window.location.href = 'Nav.html';
+        return;
+    }
+    
+    if (hrefValue && hrefValue.includes('Nav.html')) {
+        console.log('Profile navigation clicked via href - going to Nav.html');
+        window.location.href = 'Nav.html';
+        return;
+    }
+    
+    const targetPage = hrefValue || onclickValue;
     const userRole = getUserRole();
     
-    if (isCheckinFeature(href) && (userRole === 'student' || userRole === 'นักเรียน')) {
+    if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
         console.log('Blocking navigation to checkin feature for student role');
         showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
         return;
@@ -2739,8 +2758,8 @@ function handleNavClick(e) {
     this.classList.add('active');
     
     setTimeout(() => {
-        if (href && href !== '#') {
-            const safePage = safeNavigate(href);
+        if (targetPage && targetPage !== '#' && !targetPage.includes('Nav.html')) {
+            const safePage = safeNavigate(targetPage);
             if (safePage && safePage !== '#') {
                 window.location.href = safePage;
             }
@@ -2750,6 +2769,8 @@ function handleNavClick(e) {
 
 // Helper functions
 function isCheckinFeature(targetPage) {
+    if (!targetPage) return false;
+    
     const checkinPages = [
         './studens.html',
         './students.html',
@@ -2758,13 +2779,20 @@ function isCheckinFeature(targetPage) {
         'students.html',
         'checkin.html'
     ];
-    return checkinPages.includes(targetPage);
+    return checkinPages.includes(targetPage) || targetPage.includes('studens') || targetPage.includes('checkin');
 }
 
-// Global function for direct onclick - Safe navigation
+// Global function for direct onclick - FIXED FOR PROFILE PAGE
 function handleDirectClick(button) {
     console.log('Direct click function called');
-    const targetPage = button.getAttribute('data-page');
+    const targetPage = button.getAttribute('data-page') || button.getAttribute('onclick');
+    
+    // Special handling for Nav.html
+    if (targetPage && targetPage.includes('Nav.html')) {
+        console.log('Direct click to profile page');
+        window.location.href = 'Nav.html';
+        return;
+    }
     
     if (!targetPage) {
         console.error('No data-page attribute found');
@@ -2785,10 +2813,17 @@ function handleDirectClick(button) {
     }
 }
 
+// Navigation helper for profile page
+function navigateToProfile() {
+    console.log('Navigating to profile page (Nav.html)');
+    window.location.href = 'Nav.html';
+}
+
 // Make functions globally available
 window.handleDirectClick = handleDirectClick;
 window.setUserRole = setUserRole;
 window.getUserRole = getUserRole;
+window.navigateToProfile = navigateToProfile;
 
 function showErrorMessage(message) {
     // Create error message element
@@ -2914,18 +2949,79 @@ function getRoleDisplayName(role) {
     return roleNames[role] || currentUserData.roleDisplay || role || 'ผู้ใช้งาน';
 }
 
+// FIXED logout function - ไม่ redirect ไป Profile.html อัตโนมัติ
+function logout() {
+    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+        try {
+            SafeStorage.removeItem('isLoggedIn');
+            SafeStorage.removeItem('userData');
+            SafeStorage.removeItem('userRole');
+            SafeStorage.removeItem('attendanceStatistics');
+            
+            // รีเซ็ตตัวแปร
+            currentUserData = {
+                firstName: 'ผู้ใช้',
+                lastName: 'ตัวอย่าง',
+                username: 'user_demo',
+                role: 'student'
+            };
+            currentUserRole = 'student';
+            isLoggedIn = false;
+            
+            console.log('User logged out successfully');
+            
+            // ไปหน้า login แทน Profile.html
+            window.location.href = 'login.html'; // หรือหน้าที่ต้องการ
+            
+        } catch (error) {
+            console.error('Error during logout:', error);
+            showErrorMessage('เกิดข้อผิดพลาดในการออกจากระบบ');
+        }
+    }
+}
+
 // Placeholder functions to prevent errors
-function handlePeriodChange() {
-    const period = periodSelector ? periodSelector.value : 'week';
-    console.log('Period changed to:', period);
+function handlePeriodChange(event) {
+    const periodSelector = document.querySelector('.period-selector');
+    if (periodSelector) {
+        const period = periodSelector.value;
+        console.log('Period changed to:', period);
+        
+        // อัพเดทสถิติ
+        loadAttendanceStatistics();
+        updateIndexStatistics();
+        
+        // แจ้งเตือน
+        const periodNames = {
+            'week': 'สัปดาห์นี้',
+            'month': 'เดือนนี้', 
+            'semester': 'ภาคเรียนนี้'
+        };
+        const periodName = periodNames[period] || 'ช่วงเวลาที่เลือก';
+        
+        setTimeout(() => {
+            showStatisticsNotification(`เปลี่ยนการแสดงสถิติเป็น${periodName}`, 'user_action');
+        }, 200);
+    }
 }
 
 function handleNotificationClick() {
     console.log('Notification clicked');
+    currentNotifications = Math.max(0, currentNotifications - 1);
+    
+    const badge = document.querySelector('.notification-badge');
+    if (badge) {
+        if (currentNotifications > 0) {
+            badge.textContent = currentNotifications.toString();
+        } else {
+            badge.style.display = 'none';
+        }
+    }
 }
 
 function handleWindowResize() {
     console.log('Window resized');
+    // อัพเดท layout หรือ responsive elements ถ้าจำเป็น
 }
 
 function handleVisibilityChange() {
@@ -2935,6 +3031,9 @@ function handleVisibilityChange() {
         console.log('Page visible');
         // อัพเดทเวลาเมื่อกลับมาดูหน้า
         updateDateTime();
+        // อัพเดทสถิติ
+        loadAttendanceStatistics();
+        updateIndexStatistics();
     }
 }
 
@@ -2950,7 +3049,8 @@ window.CheckInSystem = {
     getUserRole,
     updateUIByRole,
     initializeUserRole,
-    updateStatisticsDisplay: updateIndexStatistics
+    updateStatisticsDisplay: updateIndexStatistics,
+    navigateToProfile
 };
 
 // Statistics Sync System Export
@@ -3109,31 +3209,6 @@ function hideStatisticsNotification() {
     NotificationManager.hide();
 }
 
-// Enhanced Period Change Handler
-function handlePeriodChange(event) {
-    const periodSelector = document.querySelector('.period-selector');
-    if (periodSelector) {
-        const period = periodSelector.value;
-        console.log('Period changed to:', period);
-        
-        // อัพเดทสถิติ
-        loadAttendanceStatistics();
-        updateIndexStatistics();
-        
-        // แจ้งเตือน
-        const periodNames = {
-            'week': 'สัปดาห์นี้',
-            'month': 'เดือนนี้', 
-            'semester': 'ภาคเรียนนี้'
-        };
-        const periodName = periodNames[period] || 'ช่วงเวลาที่เลือก';
-        
-        setTimeout(() => {
-            showStatisticsNotification(`เปลี่ยนการแสดงสถิติเป็น${periodName}`, 'user_action');
-        }, 200);
-    }
-}
-
 // Enhanced User Management Functions
 function checkUserLogin() {
     const loginStatus = SafeStorage.getItem('isLoggedIn');
@@ -3153,39 +3228,6 @@ function checkUserLogin() {
     // ใช้ข้อมูล default สำหรับ demo
     console.log('Using default user data for demo');
     return true;
-}
-
-function logout() {
-    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
-        try {
-            SafeStorage.removeItem('isLoggedIn');
-            SafeStorage.removeItem('userData');
-            SafeStorage.removeItem('userRole');
-            SafeStorage.removeItem('attendanceStatistics');
-            
-            // รีเซ็ตตัวแปร
-            currentUserData = {
-                firstName: 'ผู้ใช้',
-                lastName: 'ตัวอย่าง',
-                username: 'user_demo',
-                role: 'student'
-            };
-            currentUserRole = 'student';
-            isLoggedIn = false;
-            
-            console.log('User logged out successfully');
-            
-            // Navigate safely
-            const loginPage = safeNavigate('./Profile.html');
-            if (loginPage && loginPage !== '#') {
-                window.location.href = loginPage;
-            }
-            
-        } catch (error) {
-            console.error('Error during logout:', error);
-            showErrorMessage('เกิดข้อผิดพลาดในการออกจากระบบ');
-        }
-    }
 }
 
 // Multi-user system compatibility layer
@@ -3213,12 +3255,111 @@ window.MultiUserSystem = {
     }
 };
 
+// Enhanced Statistics Management
+function resetStatistics() {
+    attendanceStatistics = {
+        totalPresent: 0,
+        totalAbsent: 0,
+        totalLate: 0,
+        totalLeave: 0,
+        attendanceRate: 0,
+        weeklyData: [],
+        monthlyData: [],
+        subjectStats: [],
+        lastUpdated: new Date().toISOString()
+    };
+    saveStatisticsToStorage();
+    updateIndexStatistics();
+    showStatisticsNotification('รีเซ็ตสถิติการเข้าเรียนแล้ว', 'user_action');
+}
+
+function addAttendanceRecord(type) {
+    switch(type) {
+        case 'present':
+            attendanceStatistics.totalPresent++;
+            break;
+        case 'absent':
+            attendanceStatistics.totalAbsent++;
+            break;
+        case 'late':
+            attendanceStatistics.totalLate++;
+            break;
+        case 'leave':
+            attendanceStatistics.totalLeave++;
+            break;
+    }
+    
+    // คำนวณเปอร์เซ็นต์ใหม่
+    const total = attendanceStatistics.totalPresent + attendanceStatistics.totalAbsent + 
+                  attendanceStatistics.totalLate + attendanceStatistics.totalLeave;
+    
+    if (total > 0) {
+        attendanceStatistics.attendanceRate = Math.round(
+            ((attendanceStatistics.totalPresent + attendanceStatistics.totalLate) / total) * 100
+        );
+    }
+    
+    attendanceStatistics.lastUpdated = new Date().toISOString();
+    saveStatisticsToStorage();
+    updateIndexStatistics();
+    
+    const typeNames = {
+        'present': 'เข้าเรียน',
+        'absent': 'ขาดเรียน', 
+        'late': 'มาสาย',
+        'leave': 'ลา'
+    };
+    
+    showStatisticsNotification(`บันทึก${typeNames[type]}สำเร็จ`, 'user_action');
+}
+
+// Button ripple effect
+function addRippleEffect(button, e) {
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+    `;
+    
+    ripple.className = 'btn-ripple';
+    button.style.position = 'relative';
+    button.style.overflow = 'hidden';
+    button.appendChild(ripple);
+    
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+// Enhanced button click handlers
+document.addEventListener('click', function(e) {
+    if (e.target.matches('.action-btn, .nav-link')) {
+        addRippleEffect(e.target, e);
+    }
+});
+
 // Make functions globally available
 window.logout = logout;
 window.checkUserLogin = checkUserLogin;
 window.showStatisticsNotification = showStatisticsNotification;
 window.hideStatisticsNotification = hideStatisticsNotification;
 window.handlePeriodChange = handlePeriodChange;
+window.resetStatistics = resetStatistics;
+window.addAttendanceRecord = addAttendanceRecord;
+window.addRippleEffect = addRippleEffect;
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -3253,6 +3394,31 @@ function cleanup() {
 }
 
 window.addEventListener('beforeunload', cleanup);
+
+// Performance monitoring
+const PerformanceMonitor = {
+    startTime: Date.now(),
+    
+    logLoadTime() {
+        const loadTime = Date.now() - this.startTime;
+        console.log(`System loaded in ${loadTime}ms`);
+    },
+    
+    measureFunction(func, name) {
+        return function(...args) {
+            const start = performance.now();
+            const result = func.apply(this, args);
+            const end = performance.now();
+            console.log(`${name} took ${(end - start).toFixed(2)}ms`);
+            return result;
+        };
+    }
+};
+
+// Wrap performance-critical functions
+window.addEventListener('load', () => {
+    PerformanceMonitor.logLoadTime();
+});
 
 console.log('GitHub Pages Compatible JavaScript loaded successfully!');
     </script>
