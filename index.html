@@ -1680,6 +1680,8 @@ html {
 
 <!-- Body Content Only for GitHub Pages -->
 <body>
+   <!-- Body Content Only for GitHub Pages -->
+<body>
    <!-- Floating Background Elements -->
     <div class="floating-bg">
         <div class="floating-element element-1"></div>
@@ -1718,63 +1720,62 @@ html {
         </div>
     </header>
 
-<!-- Fixed Navigation Sidebar -->
+<!-- Fixed Navigation Sidebar - แก้ไขแล้ว -->
 <nav class="vertical-nav">
     <div class="nav-container">
         <ul class="nav-menu">
             <li class="nav-item" data-tooltip="หน้าแรก">
-                <div class="nav-link active" data-page="index.html" role="button" tabindex="0" aria-label="หน้าแรก">
+                <a href="./index.html" class="nav-link active" role="button" tabindex="0" aria-label="หน้าแรก">
                     <ion-icon name="home" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
             
             <li class="nav-item" data-tooltip="สแกน QR Code">
-                <div class="nav-link" data-page="member.html" role="button" tabindex="0" aria-label="สแกน QR Code">
+                <a href="./member.html" class="nav-link" role="button" tabindex="0" aria-label="สแกน QR Code">
                     <ion-icon name="qr-code" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
             
             <!-- เช็คอิน - จะซ่อนสำหรับนักเรียน -->
             <li class="nav-item checkin-feature" data-tooltip="เช็คอิน">
-                <div class="nav-link" data-page="students.html" role="button" tabindex="0" aria-label="เช็คอิน">
+                <a href="./attendance.html" class="nav-link" role="button" tabindex="0" aria-label="เช็คอิน">
                     <ion-icon name="checkmark-circle" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
             
             <li class="nav-item" data-tooltip="ตารางเรียน">
-                <div class="nav-link" data-page="classroom.html" role="button" tabindex="0" aria-label="ตารางเรียน">
+                <a href="./schedule.html" class="nav-link" role="button" tabindex="0" aria-label="ตารางเรียน">
                     <ion-icon name="calendar" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
             
             <li class="nav-item" data-tooltip="สถิติการเข้าเรียน">
-                <div class="nav-link" data-page="user.html" role="button" tabindex="0" aria-label="รายงาน">
+                <a href="./reports.html" class="nav-link" role="button" tabindex="0" aria-label="รายงาน">
                     <ion-icon name="bar-chart" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
             
             <li class="nav-item" data-tooltip="โปรไฟล์">
-                <div class="nav-link" data-page="profile.html" role="button" tabindex="0" aria-label="โปรไฟล์">
+                <a href="./profile.html" class="nav-link" role="button" tabindex="0" aria-label="โปรไฟล์">
                     <ion-icon name="person" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
             
             <li class="nav-item" data-tooltip="ติดต่อ">
-                <div class="nav-link external-link" data-external="https://www.facebook.com/profile.php?id=100087243115176" role="button" tabindex="0" aria-label="ติดต่อ">
+                <a href="https://www.facebook.com/profile.php?id=100087243115176" target="_blank" class="nav-link external-link" role="button" tabindex="0" aria-label="ติดต่อ">
                     <ion-icon name="help-circle" class="nav-icon"></ion-icon>
                     <span class="nav-ripple"></span>
-                </div>
+                </a>
             </li>
         </ul>
     </div>
 </nav>
-
 
     <!-- Main Content -->
     <main class="main-content">
@@ -1839,7 +1840,7 @@ html {
                 </div>
             </div>
             
-            <div class="status-card info" onclick="navigateToPage('./news.html')">
+            <div class="status-card info clickable" data-page="./news.html">
                 <div class="status-icon">
                     <ion-icon name="information-circle"></ion-icon>
                 </div>
@@ -1864,11 +1865,11 @@ html {
                     </div>
                     <h4>สแกน QR Code</h4>
                     <p>เช็คอินเข้าเรียนด้วย QR Code</p>
-                    <button class="action-btn primary" data-page="member.html">
+                    <a href="./member.html" class="action-btn primary">
                         <ion-icon name="camera"></ion-icon>
                         <span>เริ่มสแกน</span>
                         <div class="btn-ripple"></div>
-                    </button>
+                    </a>
                 </div>
                 
                 <div class="action-card schedule-card">
@@ -1877,11 +1878,11 @@ html {
                     </div>
                     <h4>ตารางเรียนวันนี้</h4>
                     <p>ดูตารางเรียนและกิจกรรมวันนี้</p>
-                    <button class="action-btn secondary" data-page="./classroom.html">
+                    <a href="./schedule.html" class="action-btn secondary">
                         <ion-icon name="time"></ion-icon>
                         <span>ดูตาราง</span>
                         <div class="btn-ripple"></div>
-                    </button>
+                    </a>
                 </div>
                 
                 <!-- การเช็คอิน - จะซ่อนสำหรับนักเรียน -->
@@ -1891,11 +1892,11 @@ html {
                     </div>
                     <h4>การเช็คอิน</h4>
                     <p>ดูสถิติและการเข้าเรียน</p>
-                    <button class="action-btn tertiary" data-page="students.html">
+                    <a href="./attendance.html" class="action-btn tertiary">
                         <ion-icon name="checkmark-circle"></ion-icon>
                         <span>เช็คอิน</span>
                         <div class="btn-ripple"></div>
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>
@@ -1904,10 +1905,10 @@ html {
         <section class="today-schedule">
             <div class="section-header">
                 <h3>ตารางเรียนวันนี้</h3>
-                <button class="view-all-btn" onclick="navigateToPage('classroom.html')">
+                <a href="./schedule.html" class="view-all-btn">
                     <span>ดูทั้งหมด</span>
                     <ion-icon name="arrow-forward"></ion-icon>
-                </button>
+                </a>
             </div>
             <div class="schedule-container">
                 <div class="schedule-item completed">
@@ -2119,9 +2120,9 @@ html {
                 <div class="footer-section">
                     <h4>ลิงก์ด่วน</h4>
                     <div class="footer-links">
-                        <a href="./about.html" onclick="navigateToPage('about.html')">เกี่ยวกับเรา</a>
-                        <a href="./N.html" onclick="navigateToPage('terms.html')">เงื่อนไขการใช้งาน</a>
-                        <a href="./help.html" onclick="navigateToPage('help.html')">ช่วยเหลือ</a>
+                        <a href="./about.html">เกี่ยวกับเรา</a>
+                        <a href="./terms.html">เงื่อนไขการใช้งาน</a>
+                        <a href="./help.html">ช่วยเหลือ</a>
                     </div>
                 </div>
             </div>
@@ -2131,281 +2132,26 @@ html {
         </div>
     </footer>
 
-    <!-- Statistics Update Notification -->
-    <div class="statistics-notification" id="statisticsNotification" style="display: none;">
-        <div class="notification-content">
-            <ion-icon name="bar-chart-outline"></ion-icon>
-            <span>สถิติการเข้าเรียนได้รับการอัพเดท</span>
-            <button class="close-notification" onclick="hideStatisticsNotification()">
-                <ion-icon name="close"></ion-icon>
-            </button>
-        </div>
-    </div>
-
-    <!-- Loading indicator -->
-    <div id="pageLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10000; align-items: center; justify-content: center;">
-        <div style="text-align: center;">
-            <div class="loading-spinner"></div>
-            <p style="margin-top: 16px; color: #4285f4; font-weight: 500;">กำลังโหลด...</p>
-        </div>
-    </div>
+    <!-- Notification Toast Container -->
+    <div id="notificationContainer" style="position: fixed; top: 80px; right: 20px; z-index: 9999;"></div>
     
-    <!-- JavaScript -->
+    <!-- JavaScript - แก้ไขแล้ว -->
     <script>
-// Enhanced JavaScript for Navigation System - แก้ไขปัญหา Navigation
-// ปัญหาหลัก: Event Handlers ไม่ทำงาน, Path mapping ผิด, Modal ขัดขวาง
+// ===== แก้ไข Navigation System สำหรับ GitHub Pages =====
 
-// ===== 1. PATH CONFIGURATION =====
-const PathConfig = {
-    isGitHubPages: function() {
-        return window.location.hostname.includes('github.io') || 
-               window.location.hostname.includes('githubusercontent.com');
-    },
-    
-    getBasePath: function() {
-        if (this.isGitHubPages()) {
-            const pathParts = window.location.pathname.split('/').filter(part => part);
-            return pathParts.length > 0 ? `/${pathParts[0]}` : '';
-        }
-        return '';
-    },
-    
-    // แก้ไข Path mapping ให้ถูกต้อง
-    fixPath: function(originalPath) {
-        if (!originalPath) return '';
-        
-        let cleanPath = originalPath.replace(/^\.?\//, '');
-        
-        // Path mappings ที่ถูกต้อง
-        const pathMappings = {
-            'member.html': 'member.html',
-            'students.html': 'students.html',  // แก้ไขจาก studens.html
-            'studens.html': 'students.html',   // สำหรับ backward compatibility
-            'classroom.html': 'classroom.html', // แก้ไขจาก ClassRoom.html
-            'ClassRoom.html': 'classroom.html',
-            'user.html': 'user.html',          // แก้ไขจาก User.html
-            'User.html': 'user.html',
-            'nav.html': 'nav.html',            // แก้ไขจาก Nav.html
-            'Nav.html': 'nav.html',
-            'profile.html': 'profile.html',    // แก้ไขจาก Profile.html
-            'Profile.html': 'profile.html',
-            'news.html': 'news.html',          // แก้ไขจาก new.html
-            'new.html': 'news.html',
-            'about.html': 'about.html',
-            'N.html': 'terms.html',            // แก้ไขเป็นชื่อที่เหมาะสม
-            'help.html': 'help.html',
-            'index.html': 'index.html'
-        };
-        
-        if (pathMappings[cleanPath]) {
-            cleanPath = pathMappings[cleanPath];
-        }
-        
-        return cleanPath;
-    }
-};
-
-// ===== 2. MODAL MANAGEMENT - แก้ไขปัญหาหลัก =====
-const ModalManager = {
-    activeModals: new Set(),
-    
-    createModal: function(content, options = {}) {
-        const modalId = `modal_${Date.now()}`;
-        
-        const modalHTML = `
-            <div id="${modalId}" class="modal-overlay" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 10000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            ">
-                <div class="modal-content" style="
-                    background: white;
-                    border-radius: 12px;
-                    padding: 24px;
-                    max-width: 90%;
-                    max-height: 90%;
-                    overflow: auto;
-                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-                    transform: scale(0.9);
-                    transition: transform 0.3s ease;
-                " onclick="event.stopPropagation()">
-                    ${content}
-                </div>
-            </div>
-        `;
-        
-        const modalElement = document.createElement('div');
-        modalElement.innerHTML = modalHTML;
-        const modal = modalElement.firstElementChild;
-        
-        modal.addEventListener('click', () => this.closeModal(modalId));
-        
-        const escHandler = (e) => {
-            if (e.key === 'Escape') {
-                this.closeModal(modalId);
-            }
-        };
-        
-        document.addEventListener('keydown', escHandler);
-        modal.escHandler = escHandler;
-        
-        document.body.appendChild(modal);
-        this.activeModals.add(modalId);
-        
-        setTimeout(() => {
-            modal.style.opacity = '1';
-            modal.querySelector('.modal-content').style.transform = 'scale(1)';
-        }, 10);
-        
-        return modalId;
-    },
-    
-    closeModal: function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (!modal) return;
-        
-        modal.style.opacity = '0';
-        modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
-        
-        setTimeout(() => {
-            if (modal.escHandler) {
-                document.removeEventListener('keydown', modal.escHandler);
-            }
-            modal.remove();
-            this.activeModals.delete(modalId);
-        }, 300);
-    },
-    
-    closeAllModals: function() {
-        this.activeModals.forEach(modalId => {
-            this.closeModal(modalId);
-        });
-    },
-    
-    showError: function(message, details = '') {
-        const content = `
-            <div style="text-align: center;">
-                <div style="color: #ef4444; font-size: 48px; margin-bottom: 16px;">
-                    <ion-icon name="alert-circle"></ion-icon>
-                </div>
-                <h3 style="color: #ef4444; margin-bottom: 12px; font-size: 18px;">เกิดข้อผิดพลาด</h3>
-                <p style="color: #64748b; margin-bottom: 20px; line-height: 1.5;">
-                    ${message}
-                </p>
-                ${details ? `<p style="color: #9ca3af; font-size: 12px; margin-bottom: 20px;">${details}</p>` : ''}
-                <div style="display: flex; gap: 12px; justify-content: center;">
-                    <button onclick="ModalManager.closeAllModals()" style="
-                        background: #ef4444;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">ตกลง</button>
-                    <button onclick="window.location.reload()" style="
-                        background: #64748b;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">รีโหลดหน้า</button>
-                </div>
-            </div>
-        `;
-        
-        return this.createModal(content);
-    },
-    
-    showLoading: function(message = 'กำลังโหลด...') {
-        const content = `
-            <div style="text-align: center; padding: 20px;">
-                <div style="margin-bottom: 16px;">
-                    <div style="
-                        width: 40px;
-                        height: 40px;
-                        border: 4px solid #e5e7eb;
-                        border-top: 4px solid #4285f4;
-                        border-radius: 50%;
-                        animation: spin 1s linear infinite;
-                        margin: 0 auto;
-                    "></div>
-                </div>
-                <p style="color: #4285f4; font-weight: 500; margin: 0;">${message}</p>
-            </div>
-            <style>
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            </style>
-        `;
-        
-        return this.createModal(content);
-    }
-};
-
-// ===== 3. NAVIGATION SYSTEM - แก้ไขปัญหาหลัก =====
-const NavigationManager = {
-    // ฟังก์ชันสำหรับนำทางที่แก้ไขแล้ว
-    navigateToPage: function(targetPage) {
-        if (!targetPage) {
-            console.error('No target page specified');
-            return false;
-        }
-
-        console.log('Navigating to:', targetPage);
-        
-        // แสดง loading
-        const loadingModal = ModalManager.showLoading('กำลังโหลดหน้า...');
-        
-        // แก้ไข path
-        const fixedPath = PathConfig.fixPath(targetPage);
-        console.log('Fixed path:', fixedPath);
-        
-        // ตรวจสอบสิทธิ์
-        const userRole = getUserRole();
-        if (this.isCheckinFeature(fixedPath) && (userRole === 'student' || userRole === 'นักเรียน')) {
-            ModalManager.closeModal(loadingModal);
-            ModalManager.showError('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
-            return false;
-        }
-        
-        // นำทางไปหน้าใหม่
-        setTimeout(() => {
-            ModalManager.closeModal(loadingModal);
-            try {
-                window.location.href = fixedPath;
-            } catch (error) {
-                console.error('Navigation error:', error);
-                ModalManager.showError('ไม่สามารถเปิดหน้านี้ได้', 'กรุณาลองใหม่อีกครั้ง');
-            }
-        }, 500);
-        
-        return true;
-    },
-    
-    isCheckinFeature: function(targetPage) {
-        const checkinPages = ['students.html', 'studens.html', 'checkin.html'];
-        return checkinPages.some(page => targetPage && targetPage.includes(page));
-    }
-};
-
-// ===== 4. USER ROLE MANAGEMENT =====
+// ===== 1. ตัวแปรสำหรับจัดการสถานะ =====
 let currentUserRole = null;
 let currentUserData = null;
+let attendanceStatistics = {
+    totalPresent: 18,
+    totalAbsent: 2,
+    totalLate: 1,
+    totalLeave: 0,
+    attendanceRate: 90,
+    lastUpdated: null
+};
 
+// ===== 2. จัดการบทบาทผู้ใช้ =====
 function setUserRole(role) {
     currentUserRole = role;
     console.log('User role set to:', role);
@@ -2449,7 +2195,7 @@ function getUserRole() {
         }
     }
     
-    return 'student';
+    return 'student'; // default
 }
 
 function updateUIByRole(role) {
@@ -2466,104 +2212,80 @@ function updateUIByRole(role) {
     }
 }
 
-// ===== 5. EVENT HANDLERS - แก้ไขปัญหาหลัก =====
-function setupEventListeners() {
-    console.log('Setting up event listeners...');
-    
-    // ลบ event listeners เก่าทั้งหมด
-    document.removeEventListener('click', globalClickHandler);
-    
-    // เพิ่ม global click handler
-    document.addEventListener('click', globalClickHandler);
-    
-    console.log('Event listeners setup complete');
-}
-
-// Global Click Handler - จัดการ click ทั้งหมดในที่เดียว
-function globalClickHandler(e) {
-    const target = e.target.closest('[data-page], .nav-link, .action-btn');
-    if (!target) return;
-    
-    e.preventDefault();
-    e.stopPropagation();
-    
-    let targetPage = null;
-    
-    // หา target page
-    if (target.hasAttribute('data-page')) {
-        targetPage = target.getAttribute('data-page');
-    } else if (target.classList.contains('nav-link')) {
-        // จาก navigation links
-        const navItem = target.closest('.nav-item');
-        if (navItem) {
-            const tooltip = navItem.getAttribute('data-tooltip');
-            switch (tooltip) {
-                case 'หน้าแรก':
-                    targetPage = 'index.html';
-                    break;
-                case 'สแกน QR Code':
-                    targetPage = 'member.html';
-                    break;
-                case 'เช็คอิน':
-                    targetPage = 'students.html';
-                    break;
-                case 'ตารางเรียน':
-                    targetPage = 'classroom.html';
-                    break;
-                case 'สถิติการเข้าเรียน':
-                    targetPage = 'user.html';
-                    break;
-                case 'โปรไฟล์':
-                    targetPage = 'nav.html';
-                    break;
-                case 'ติดต่อ':
-                    // External link - จัดการแยก
-                    window.open('https://www.facebook.com/profile.php?id=100087243115176', '_blank');
-                    return;
-            }
-        }
-    }
-    
-    if (!targetPage) {
-        console.warn('No target page found for:', target);
-        return;
-    }
-    
-    // Update active nav state
-    if (target.classList.contains('nav-link')) {
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-        });
-        target.classList.add('active');
-    }
-    
-    // ป้องกันการ click ซ้ำ
-    if (target.disabled) return;
-    target.disabled = true;
-    
-    // Navigate
-    NavigationManager.navigateToPage(targetPage).finally(() => {
+// ===== 3. ระบบแจ้งเตือน =====
+const NotificationManager = {
+    show: function(message, type = 'info', duration = 4000) {
+        const container = document.getElementById('notificationContainer');
+        if (!container) return;
+        
+        // ลบแจ้งเตือนเก่า
+        const existing = container.querySelectorAll('.toast-notification');
+        existing.forEach(n => n.remove());
+        
+        const notification = document.createElement('div');
+        notification.className = 'toast-notification';
+        notification.style.cssText = `
+            background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#4285f4'};
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 300px;
+            font-size: 14px;
+            font-weight: 500;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            margin-bottom: 8px;
+        `;
+        
+        const icon = type === 'error' ? 'alert-circle' : type === 'success' ? 'checkmark-circle' : 'information-circle';
+        notification.innerHTML = `
+            <ion-icon name="${icon}"></ion-icon>
+            <span>${message}</span>
+        `;
+        
+        container.appendChild(notification);
+        
         setTimeout(() => {
-            target.disabled = false;
-        }, 1000);
-    });
-}
-
-// Legacy function สำหรับ onclick attributes
-function navigateToPage(targetPage) {
-    return NavigationManager.navigateToPage(targetPage);
-}
-
-// ===== 6. STATISTICS SYSTEM =====
-let attendanceStatistics = {
-    totalPresent: 18,
-    totalAbsent: 2,
-    totalLate: 1,
-    totalLeave: 0,
-    attendanceRate: 90,
-    lastUpdated: null
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+    }
 };
 
+// ===== 4. ระบบอัพเดทเวลา =====
+function updateDateTime() {
+    const now = new Date();
+    
+    const dateElement = document.getElementById('current-date');
+    const timeElement = document.getElementById('current-time');
+    
+    if (dateElement) {
+        dateElement.textContent = now.toLocaleDateString('th-TH', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+    
+    if (timeElement) {
+        timeElement.textContent = now.toLocaleTimeString('th-TH', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+}
+
+// ===== 5. จัดการสถิติ =====
 function loadAttendanceStatistics() {
     try {
         const savedData = localStorage.getItem('attendanceStatistics');
@@ -2617,32 +2339,7 @@ function updateProgressBars() {
     });
 }
 
-// ===== 7. DATE TIME SYSTEM =====
-function updateDateTime() {
-    const now = new Date();
-    
-    const dateElement = document.getElementById('current-date');
-    const timeElement = document.getElementById('current-time');
-    
-    if (dateElement) {
-        dateElement.textContent = now.toLocaleDateString('th-TH', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    }
-    
-    if (timeElement) {
-        timeElement.textContent = now.toLocaleTimeString('th-TH', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-    }
-}
-
-// ===== 8. USER DATA MANAGEMENT =====
+// ===== 6. โหลดข้อมูลผู้ใช้ =====
 function loadUserData() {
     try {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -2682,88 +2379,26 @@ function loadUserData() {
     }
 }
 
-// ===== 9. NOTIFICATION SYSTEM =====
-const NotificationManager = {
-    show: function(message, type = 'info', duration = 4000) {
-        const existing = document.querySelectorAll('.toast-notification');
-        existing.forEach(n => n.remove());
-        
-        const notification = document.createElement('div');
-        notification.className = 'toast-notification';
-        notification.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#4285f4'};
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 300px;
-            font-size: 14px;
-            font-weight: 500;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        `;
-        
-        const icon = type === 'error' ? 'alert-circle' : type === 'success' ? 'checkmark-circle' : 'information-circle';
-        notification.innerHTML = `
-            <ion-icon name="${icon}"></ion-icon>
-            <span>${message}</span>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 100);
-        
-        setTimeout(() => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        }, duration);
-    }
-};
-
-// ===== 10. CLEANUP FUNCTIONS =====
-function cleanupModals() {
-    const modalsToRemove = [
-        '#navigationError',
-        '.error-message',
-        '.modal-overlay'
-    ];
-    
-    modalsToRemove.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(el => el.remove());
-    });
-    
-    ModalManager.activeModals.clear();
-    console.log('Modals cleaned up');
-}
-
-// ===== 11. INITIALIZATION =====
+// ===== 7. ฟังก์ชันเริ่มต้นระบบ =====
 function initializeApp() {
     console.log('Initializing app...');
     
-    cleanupModals();
-    
+    // อัพเดทเวลา
     updateDateTime();
     setInterval(updateDateTime, 1000);
     
+    // โหลดข้อมูลผู้ใช้
     loadUserData();
-    setupEventListeners();
     
+    // โหลดสถิติ
     loadAttendanceStatistics();
     updateIndexStatistics();
     
+    // อัพเดท UI ตามบทบาท
     const role = getUserRole();
     updateUIByRole(role);
     
+    // แสดงการแจ้งเตือนว่าระบบพร้อม
     setTimeout(() => {
         NotificationManager.show('ระบบพร้อมใช้งานแล้ว', 'success');
     }, 1000);
@@ -2771,153 +2406,99 @@ function initializeApp() {
     console.log('App initialization complete');
 }
 
-// ===== 12. GLOBAL EXPORTS =====
-window.navigateToPage = navigateToPage;
-window.setUserRole = setUserRole;
-window.getUserRole = getUserRole;
-window.ModalManager = ModalManager;
-window.NotificationManager = NotificationManager;
-window.PathConfig = PathConfig;
-window.NavigationManager = NavigationManager;
-window.closeNavigationError = function() {
-    ModalManager.closeAllModals();
-};
-
-// ===== 13. ERROR HANDLING =====
-window.addEventListener('error', function(e) {
-    console.error('Global error:', e.error);
-    ModalManager.showError('เกิดข้อผิดพลาดในระบบ', 'กรุณารีโหลดหน้าเว็บ');
-});
-
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Unhandled promise rejection:', e.reason);
-    NotificationManager.show('เกิดข้อผิดพลาดในการโหลดข้อมูล', 'error');
-});
-
-// ===== 14. STORAGE EVENT HANDLING =====
-window.addEventListener('storage', function(e) {
-    if (e.key === 'studentAttendanceData' || e.key === 'attendanceStatistics') {
-        loadAttendanceStatistics();
-        updateIndexStatistics();
-        NotificationManager.show('ข้อมูลได้รับการอัพเดท', 'success');
-    }
-    
-    if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
-        NotificationManager.show('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่', 'error', 6000);
-    }
-});
-
-// ===== 15. PAGE VISIBILITY HANDLING =====
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-        loadAttendanceStatistics();
-        updateIndexStatistics();
-        updateDateTime();
-    }
-});
-
-// ===== 16. DOM READY INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    setTimeout(initializeApp, 100);
-}
-
-// เพิ่มใน global click handler เพื่อจัดการ external links
-function globalClickHandler(e) {
-    const target = e.target.closest('[data-page], [data-external], .nav-link, .action-btn, .clickable');
-    if (!target) return;
-    
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // จัดการ external links
-    if (target.hasAttribute('data-external')) {
-        const externalUrl = target.getAttribute('data-external');
-        window.open(externalUrl, '_blank');
-        return;
-    }
-    
-    // จัดการ clickable elements
-    if (target.classList.contains('clickable')) {
-        const targetPage = target.getAttribute('data-page');
-        if (targetPage) {
-            NavigationManager.navigateToPage(targetPage);
+// ===== 8. Event Listeners =====
+function setupEventListeners() {
+    // จัดการ Storage Events
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'studentAttendanceData' || e.key === 'attendanceStatistics') {
+            loadAttendanceStatistics();
+            updateIndexStatistics();
+            NotificationManager.show('ข้อมูลได้รับการอัพเดท', 'success');
         }
-        return;
-    }
-    
-    let targetPage = null;
-    
-    // หา target page
-    if (target.hasAttribute('data-page')) {
-        targetPage = target.getAttribute('data-page');
-    } else if (target.classList.contains('nav-link')) {
-        // จาก navigation links
-        const navItem = target.closest('.nav-item');
-        if (navItem) {
-            const tooltip = navItem.getAttribute('data-tooltip');
-            switch (tooltip) {
-                case 'หน้าแรก':
-                    targetPage = 'index.html';
-                    break;
-                case 'สแกน QR Code':
-                    targetPage = 'member.html';
-                    break;
-                case 'เช็คอิน':
-                    targetPage = 'students.html';
-                    break;
-                case 'ตารางเรียน':
-                    targetPage = 'classroom.html';
-                    break;
-                case 'สถิติการเข้าเรียน':
-                    targetPage = 'user.html';
-                    break;
-                case 'โปรไฟล์':
-                    targetPage = 'profile.html';
-                    break;
-                case 'ติดต่อ':
-                    // จัดการใน data-external แล้ว
-                    return;
-            }
+        
+        if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
+            NotificationManager.show('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่', 'error', 6000);
         }
-    }
+    });
     
-    if (!targetPage) {
-        console.warn('No target page found for:', target);
-        return;
-    }
+    // จัดการ Page Visibility
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            loadAttendanceStatistics();
+            updateIndexStatistics();
+            updateDateTime();
+        }
+    });
     
-    // Update active nav state
-    if (target.classList.contains('nav-link')) {
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-        });
-        target.classList.add('active');
-    }
-    
-    // ป้องกันการ click ซ้ำ
-    if (target.disabled) return;
-    target.disabled = true;
-    
-    // Navigate
-    NavigationManager.navigateToPage(targetPage).finally(() => {
-        setTimeout(() => {
-            target.disabled = false;
-        }, 1000);
+    // จัดการ Error
+    window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error);
+        NotificationManager.show('เกิดข้อผิดพลาดในระบบ กรุณารีโหลดหน้าเว็บ', 'error', 8000);
+    });
+
+    window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled promise rejection:', e.reason);
+        NotificationManager.show('เกิดข้อผิดพลาดในการโหลดข้อมูล', 'error');
     });
 }
 
-// เพิ่ม keyboard support
-document.addEventListener('keydown', function(e) {
-    if (e.target.matches('[role="button"]') && (e.key === 'Enter' || e.key === ' ')) {
-        e.preventDefault();
-        e.target.click();
+// ===== 9. Keyboard Support =====
+function setupKeyboardSupport() {
+    document.addEventListener('keydown', function(e) {
+        if (e.target.matches('[role="button"]') && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            e.target.click();
+        }
+    });
+}
+
+// ===== 10. Legacy Functions สำหรับ backward compatibility =====
+function navigateToPage(targetPage) {
+    console.log('Legacy navigateToPage called with:', targetPage);
+    // ใช้ native navigation แทน
+    if (targetPage && targetPage !== '#') {
+        window.location.href = targetPage;
     }
+}
+
+function setUserRole_legacy(role) {
+    setUserRole(role);
+}
+
+function getUserRole_legacy() {
+    return getUserRole();
+}
+
+// ===== 11. Global Exports =====
+window.navigateToPage = navigateToPage;
+window.setUserRole = setUserRole;
+window.getUserRole = getUserRole;
+window.NotificationManager = NotificationManager;
+window.setUserRole_legacy = setUserRole_legacy;
+window.getUserRole_legacy = getUserRole_legacy;
+
+// ===== 12. DOM Ready Initialization =====
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupEventListeners();
+    setupKeyboardSupport();
 });
 
-console.log('Fixed Navigation JavaScript loaded successfully!');
+// สำหรับกรณีที่ DOM โหลดเสร็จแล้ว
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+        setupEventListeners();
+        setupKeyboardSupport();
+    });
+} else {
+    setTimeout(() => {
+        initializeApp();
+        setupEventListeners();
+        setupKeyboardSupport();
+    }, 100);
+}
+
+console.log('✅ Fixed Navigation System loaded successfully!');
     </script>
 </html>
