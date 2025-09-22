@@ -2148,8 +2148,8 @@ html {
     
     <!-- JavaScript -->
     <script>
-// Enhanced JavaScript for GitHub Pages - Fixed Version
-// แก้ไขปัญหา 404 และ path issues สำหรับ GitHub Pages
+// Enhanced JavaScript for GitHub Pages - Fixed Modal Issue
+// แก้ไขปัญหา Modal ที่บังหน้าจอและไม่สามารถปิดได้
 
 // ===== 1. PATH CONFIGURATION FOR GITHUB PAGES =====
 const PathConfig = {
@@ -2163,7 +2163,6 @@ const PathConfig = {
     getBasePath: function() {
         if (this.isGitHubPages()) {
             const pathParts = window.location.pathname.split('/').filter(part => part);
-            // GitHub Pages format: /repository-name/...
             return pathParts.length > 0 ? `/${pathParts[0]}` : '';
         }
         return '';
@@ -2176,7 +2175,7 @@ const PathConfig = {
         // ลบ ./ หรือ / ที่อยู่หน้า path
         let cleanPath = originalPath.replace(/^\.?\//, '');
         
-        // แผนที่ path mapping สำหรับ GitHub Pages
+        // แผนที่ path mapping
         const pathMappings = {
             'member.html': 'member.html',
             'studens.html': 'studens.html',  
@@ -2191,32 +2190,178 @@ const PathConfig = {
             'index.html': 'index.html'
         };
         
-        // ใช้ path mapping ถ้ามี
         if (pathMappings[cleanPath]) {
             cleanPath = pathMappings[cleanPath];
         }
         
-        // สำหรับ GitHub Pages ให้ใช้ relative path
         if (this.isGitHubPages()) {
             return cleanPath;
         }
         
         return `./${cleanPath}`;
-    },
-    
-    // สร้าง URL สำหรับ external links
-    createExternalUrl: function(url) {
-        // ถ้าเป็น external link แล้วให้คืนค่าเดิม
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-            return url;
-        }
-        
-        // แก้ไข path ปกติ
-        return this.fixPath(url);
     }
 };
 
-// ===== 2. ENHANCED NAVIGATION SYSTEM =====
+// ===== 2. MODAL MANAGEMENT SYSTEM - แก้ไขปัญหาหลัก =====
+const ModalManager = {
+    activeModals: new Set(),
+    
+    // สร้าง modal ใหม่แบบปลอดภัย
+    createModal: function(content, options = {}) {
+        const modalId = `modal_${Date.now()}`;
+        
+        const modalHTML = `
+            <div id="${modalId}" class="modal-overlay" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            ">
+                <div class="modal-content" style="
+                    background: white;
+                    border-radius: 12px;
+                    padding: 24px;
+                    max-width: 90%;
+                    max-height: 90%;
+                    overflow: auto;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                    transform: scale(0.9);
+                    transition: transform 0.3s ease;
+                " onclick="event.stopPropagation()">
+                    ${content}
+                </div>
+            </div>
+        `;
+        
+        const modalElement = document.createElement('div');
+        modalElement.innerHTML = modalHTML;
+        const modal = modalElement.firstElementChild;
+        
+        // Event listeners
+        modal.addEventListener('click', () => this.closeModal(modalId));
+        
+        // ESC key listener
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal(modalId);
+            }
+        };
+        
+        document.addEventListener('keydown', escHandler);
+        modal.escHandler = escHandler; // Store for cleanup
+        
+        document.body.appendChild(modal);
+        this.activeModals.add(modalId);
+        
+        // Show animation
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            modal.querySelector('.modal-content').style.transform = 'scale(1)';
+        }, 10);
+        
+        return modalId;
+    },
+    
+    // ปิด modal
+    closeModal: function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        
+        modal.style.opacity = '0';
+        modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            if (modal.escHandler) {
+                document.removeEventListener('keydown', modal.escHandler);
+            }
+            modal.remove();
+            this.activeModals.delete(modalId);
+        }, 300);
+    },
+    
+    // ปิด modal ทั้งหมด
+    closeAllModals: function() {
+        this.activeModals.forEach(modalId => {
+            this.closeModal(modalId);
+        });
+    },
+    
+    // แสดง error modal
+    showError: function(message, details = '') {
+        const content = `
+            <div style="text-align: center;">
+                <div style="color: #ef4444; font-size: 48px; margin-bottom: 16px;">
+                    <ion-icon name="alert-circle"></ion-icon>
+                </div>
+                <h3 style="color: #ef4444; margin-bottom: 12px; font-size: 18px;">เกิดข้อผิดพลาด</h3>
+                <p style="color: #64748b; margin-bottom: 20px; line-height: 1.5;">
+                    ${message}
+                </p>
+                ${details ? `<p style="color: #9ca3af; font-size: 12px; margin-bottom: 20px;">${details}</p>` : ''}
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button onclick="ModalManager.closeAllModals()" style="
+                        background: #ef4444;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: 500;
+                    ">ตกลง</button>
+                    <button onclick="window.location.reload()" style="
+                        background: #64748b;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: 500;
+                    ">รีโหลดหน้า</button>
+                </div>
+            </div>
+        `;
+        
+        return this.createModal(content);
+    },
+    
+    // แสดง loading modal
+    showLoading: function(message = 'กำลังโหลด...') {
+        const content = `
+            <div style="text-align: center; padding: 20px;">
+                <div style="margin-bottom: 16px;">
+                    <div style="
+                        width: 40px;
+                        height: 40px;
+                        border: 4px solid #e5e7eb;
+                        border-top: 4px solid #4285f4;
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                        margin: 0 auto;
+                    "></div>
+                </div>
+                <p style="color: #4285f4; font-weight: 500; margin: 0;">${message}</p>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+        
+        return this.createModal(content);
+    }
+};
+
+// ===== 3. ENHANCED NAVIGATION SYSTEM =====
 const NavigationManager = {
     // ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
     checkFileExists: async function(path) {
@@ -2224,144 +2369,93 @@ const NavigationManager = {
             const response = await fetch(path, { method: 'HEAD' });
             return response.ok;
         } catch (error) {
-            console.warn('File check failed:', path, error);
+            console.warn('File check failed:', path);
             return false;
         }
-    },
-    
-    // สร้าง fallback options สำหรับ path ที่ไม่พบ
-    createFallbackOptions: function(originalPath) {
-        const fallbacks = [];
-        const cleanPath = originalPath.replace(/^\.?\//, '');
-        
-        // ลองหา path ต่างๆ
-        fallbacks.push(cleanPath);
-        fallbacks.push(`${cleanPath}`);
-        fallbacks.push(`pages/${cleanPath}`);
-        fallbacks.push(`html/${cleanPath}`);
-        fallbacks.push(`HTML/${cleanPath}`);
-        
-        // สำหรับ GitHub Pages
-        if (PathConfig.isGitHubPages()) {
-            const basePath = PathConfig.getBasePath();
-            fallbacks.push(`${basePath}/${cleanPath}`);
-            fallbacks.push(`${basePath}/pages/${cleanPath}`);
-            fallbacks.push(`${basePath}/html/${cleanPath}`);
-        }
-        
-        return fallbacks;
     },
     
     // นำทางแบบปลอดภัย
     safeNavigate: async function(originalPath, showError = true) {
         console.log('Safe navigation to:', originalPath);
         
+        // แสดง loading
+        const loadingModal = ModalManager.showLoading('กำลังโหลดหน้า...');
+        
         const fixedPath = PathConfig.fixPath(originalPath);
         console.log('Fixed path:', fixedPath);
         
-        // ตรวจสอบไฟล์หลัก
-        const exists = await this.checkFileExists(fixedPath);
-        
-        if (exists) {
-            window.location.href = fixedPath;
-            return true;
-        }
-        
-        // หาไฟล์ทางเลือก
-        const fallbacks = this.createFallbackOptions(originalPath);
-        console.log('Trying fallbacks:', fallbacks);
-        
-        for (const fallback of fallbacks) {
-            const fallbackExists = await this.checkFileExists(fallback);
-            if (fallbackExists) {
-                console.log('Found fallback:', fallback);
-                window.location.href = fallback;
+        try {
+            // ตรวจสอบไฟล์
+            const exists = await this.checkFileExists(fixedPath);
+            
+            if (exists) {
+                // ปิด loading และไปหน้าใหม่
+                ModalManager.closeModal(loadingModal);
+                setTimeout(() => {
+                    window.location.href = fixedPath;
+                }, 100);
                 return true;
             }
+            
+            // หาไฟล์ทางเลือก
+            const fallbacks = this.createFallbackOptions(originalPath);
+            
+            for (const fallback of fallbacks) {
+                const fallbackExists = await this.checkFileExists(fallback);
+                if (fallbackExists) {
+                    ModalManager.closeModal(loadingModal);
+                    setTimeout(() => {
+                        window.location.href = fallback;
+                    }, 100);
+                    return true;
+                }
+            }
+            
+            // ไม่พบไฟล์
+            ModalManager.closeModal(loadingModal);
+            
+            if (showError) {
+                ModalManager.showError(
+                    `ไม่พบหน้า "${originalPath}"`,
+                    'กรุณาตรวจสอบลิงก์หรือติดต่อผู้ดูแลระบบ'
+                );
+            }
+            
+            return false;
+            
+        } catch (error) {
+            ModalManager.closeModal(loadingModal);
+            console.error('Navigation error:', error);
+            
+            if (showError) {
+                ModalManager.showError(
+                    'ไม่สามารถเปิดหน้านี้ได้',
+                    'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่'
+                );
+            }
+            
+            return false;
         }
-        
-        // ไม่พบไฟล์ - แสดง error
-        if (showError) {
-            this.showNavigationError(originalPath);
-        }
-        
-        console.error('Navigation failed - file not found:', originalPath);
-        return false;
     },
     
-    // แสดงข้อผิดพลาดการนำทาง
-    showNavigationError: function(path) {
-        const errorMessage = `
-            <div style="
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 2px solid #ef4444;
-                border-radius: 12px;
-                padding: 24px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-                z-index: 10000;
-                text-align: center;
-                max-width: 400px;
-                width: 90%;
-            ">
-                <div style="color: #ef4444; font-size: 48px; margin-bottom: 16px;">
-                    <ion-icon name="warning"></ion-icon>
-                </div>
-                <h3 style="color: #ef4444; margin-bottom: 12px;">ไม่พบหน้าที่ต้องการ</h3>
-                <p style="color: #64748b; margin-bottom: 20px;">
-                    ไม่สามารถเปิดหน้า "${path}" ได้<br>
-                    กรุณาตรวจสอบลิงก์หรือติดต่อผู้ดูแลระบบ
-                </p>
-                <button onclick="closeNavigationError()" style="
-                    background: #ef4444;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-weight: 500;
-                    margin-right: 10px;
-                ">ตกลง</button>
-                <button onclick="window.location.reload()" style="
-                    background: #64748b;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-weight: 500;
-                ">รีโหลดหน้า</button>
-            </div>
-            <div style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 9999;
-            " onclick="closeNavigationError()"></div>
-        `;
+    createFallbackOptions: function(originalPath) {
+        const fallbacks = [];
+        const cleanPath = originalPath.replace(/^\.?\//, '');
         
-        const errorDiv = document.createElement('div');
-        errorDiv.innerHTML = errorMessage;
-        errorDiv.id = 'navigationError';
-        document.body.appendChild(errorDiv);
+        fallbacks.push(cleanPath);
+        fallbacks.push(`pages/${cleanPath}`);
+        fallbacks.push(`html/${cleanPath}`);
+        
+        if (PathConfig.isGitHubPages()) {
+            const basePath = PathConfig.getBasePath();
+            fallbacks.push(`${basePath}/${cleanPath}`);
+        }
+        
+        return fallbacks;
     }
 };
 
-// ปิด error dialog
-function closeNavigationError() {
-    const errorDiv = document.getElementById('navigationError');
-    if (errorDiv) {
-        errorDiv.remove();
-    }
-}
-
-// ===== 3. FIXED USER ROLE MANAGEMENT =====
+// ===== 4. USER ROLE MANAGEMENT =====
 let currentUserRole = null;
 let currentUserData = null;
 
@@ -2417,38 +2511,25 @@ function updateUIByRole(role) {
     if (role === 'student' || role === 'นักเรียน') {
         checkinElements.forEach(element => {
             element.style.display = 'none';
-            element.style.visibility = 'hidden';
-            element.setAttribute('aria-hidden', 'true');
         });
-        
         document.body.classList.add('role-student');
         document.body.classList.remove('role-teacher', 'role-admin');
-        
-        console.log('Hidden checkin features for student role');
     } else {
         checkinElements.forEach(element => {
             element.style.display = '';
-            element.style.visibility = '';
-            element.removeAttribute('aria-hidden');
         });
-        
         document.body.classList.remove('role-student');
+        
         if (role === 'teacher' || role === 'ครู') {
             document.body.classList.add('role-teacher');
-            document.body.classList.remove('role-admin');
         } else if (role === 'admin' || role === 'แอดมิน') {
             document.body.classList.add('role-admin');
-            document.body.classList.remove('role-teacher');
         }
-        
-        console.log('Shown checkin features for role:', role);
     }
 }
 
-// ===== 4. ENHANCED BUTTON CLICK HANDLERS =====
+// ===== 5. EVENT HANDLERS =====
 function handleActionClick(e) {
-    console.log('Button clicked!', this);
-    
     if (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2457,494 +2538,154 @@ function handleActionClick(e) {
     const button = this;
     const targetPage = button.getAttribute('data-page');
     
-    console.log('Target page:', targetPage);
-    
     if (!targetPage) {
-        console.error('No data-page attribute found on button');
-        showErrorMessage('ไม่พบลิงก์ที่ต้องการ');
+        ModalManager.showError('ไม่พบลิงก์ที่ต้องการ');
         return;
     }
     
-    // Check user role for checkin features
     const userRole = getUserRole();
     if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
-        console.log('Blocking checkin feature for student role');
-        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        ModalManager.showError('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
         return;
     }
     
-    // Disable button to prevent multiple clicks
     button.disabled = true;
+    button.style.opacity = '0.7';
     
-    // Animation effect
-    button.style.transform = 'scale(0.95)';
-    button.style.transition = 'transform 0.1s ease';
-    
-    const originalContent = button.innerHTML;
-    
-    button.innerHTML = `
-        <ion-icon name="hourglass"></ion-icon>
-        <span>กำลังโหลด...</span>
-        <div class="btn-ripple"></div>
-    `;
-    
-    createRipple(button);
-    
-    // ใช้ NavigationManager สำหรับการนำทาง
-    setTimeout(async () => {
-        try {
-            console.log('Attempting navigation to:', targetPage);
-            const success = await NavigationManager.safeNavigate(targetPage);
-            
-            if (!success) {
-                // Restore button state if navigation failed
-                button.style.transform = 'scale(1)';
-                button.innerHTML = originalContent;
-                button.disabled = false;
-            }
-        } catch (error) {
-            console.error('Navigation error:', error);
-            showErrorMessage('ไม่สามารถเปิดหน้านี้ได้ กรุณาลองใหม่อีกครั้ง');
-            
-            button.style.transform = 'scale(1)';
-            button.innerHTML = originalContent;
-            button.disabled = false;
-        }
-    }, 800);
+    NavigationManager.safeNavigate(targetPage).finally(() => {
+        button.disabled = false;
+        button.style.opacity = '1';
+    });
 }
 
-// Navigation Click Handler
-async function handleNavClick(e) {
+function handleNavClick(e) {
     e.preventDefault();
     
-    const href = this.getAttribute('href');
-    const userRole = getUserRole();
+    const href = this.getAttribute('href') || this.getAttribute('data-page');
+    if (!href || href === '#') return;
     
+    const userRole = getUserRole();
     if (isCheckinFeature(href) && (userRole === 'student' || userRole === 'นักเรียน')) {
-        console.log('Blocking navigation to checkin feature for student role');
-        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
+        ModalManager.showError('คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
         return;
     }
     
+    // Update active nav
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(navLink => navLink.classList.remove('active'));
     this.classList.add('active');
-    createRipple(this);
     
-    setTimeout(async () => {
-        if (href && href !== '#') {
-            await NavigationManager.safeNavigate(href);
-        }
-    }, 200);
+    NavigationManager.safeNavigate(href);
 }
 
-// Global function for direct onclick - Fixed for GitHub Pages
+// Global function สำหรับ onclick
 async function handleDirectClick(button) {
-    console.log('Direct click function called');
     const targetPage = button.getAttribute('data-page');
-    
-    if (!targetPage) {
-        console.error('No data-page attribute found');
-        return;
-    }
+    if (!targetPage) return;
     
     const userRole = getUserRole();
     if (isCheckinFeature(targetPage) && (userRole === 'student' || userRole === 'นักเรียน')) {
-        console.log('Blocking direct click to checkin feature for student role');
-        showErrorMessage('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
+        ModalManager.showError('คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้');
         return;
     }
     
-    console.log('Direct navigation to:', targetPage);
     await NavigationManager.safeNavigate(targetPage);
 }
 
-// Helper functions
 function isCheckinFeature(targetPage) {
-    const checkinPages = [
-        'studens.html',
-        'students.html', 
-        'checkin.html'
-    ];
+    const checkinPages = ['studens.html', 'students.html', 'checkin.html'];
     return checkinPages.some(page => targetPage && targetPage.includes(page));
 }
 
-function createRipple(element) {
-    const ripple = element.querySelector('.nav-ripple, .btn-ripple');
-    if (ripple) {
-        ripple.classList.remove('active');
-        ripple.offsetHeight;
-        ripple.classList.add('active');
-        
-        setTimeout(() => {
-            ripple.classList.remove('active');
-        }, 600);
-    }
-}
-
-function showErrorMessage(message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #ff4757;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 9999;
-        font-size: 14px;
-        max-width: 300px;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-    `;
-    
-    errorDiv.innerHTML = `
-        <ion-icon name="alert-circle" style="margin-right: 8px;"></ion-icon>
-        ${message}
-    `;
-    
-    document.body.appendChild(errorDiv);
-    
-    setTimeout(() => {
-        errorDiv.style.transform = 'translateX(0)';
-    }, 100);
-    
-    setTimeout(() => {
-        errorDiv.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            if (errorDiv.parentNode) {
-                errorDiv.parentNode.removeChild(errorDiv);
-            }
-        }, 300);
-    }, 4000);
-}
-
-// ===== 5. ENHANCED STATISTICS SYNC FOR GITHUB PAGES =====
+// ===== 6. STATISTICS SYSTEM =====
 let attendanceStatistics = {
-    totalPresent: 0,
-    totalAbsent: 0,
-    totalLate: 0,
+    totalPresent: 18,
+    totalAbsent: 2,
+    totalLate: 1,
     totalLeave: 0,
-    attendanceRate: 0,
-    weeklyData: [],
-    monthlyData: [],
-    subjectStats: [],
+    attendanceRate: 90,
     lastUpdated: null
 };
 
 function loadAttendanceStatistics() {
     try {
-        const savedAttendanceData = localStorage.getItem('studentAttendanceData');
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        
-        if (savedAttendanceData) {
-            const attendanceData = JSON.parse(savedAttendanceData);
-            calculateStatistics(attendanceData, userData);
-        } else {
-            setDefaultStatistics(userData);
+        const savedData = localStorage.getItem('attendanceStatistics');
+        if (savedData) {
+            attendanceStatistics = { ...attendanceStatistics, ...JSON.parse(savedData) };
         }
-        
-        console.log('Statistics loaded:', attendanceStatistics);
-        return attendanceStatistics;
     } catch (error) {
-        console.error('Error loading attendance statistics:', error);
-        setDefaultStatistics();
-        return attendanceStatistics;
+        console.error('Error loading statistics:', error);
     }
-}
-
-function calculateStatistics(attendanceData, userData) {
-    let totalPresent = 0;
-    let totalAbsent = 0;
-    let totalLate = 0;
-    let totalLeave = 0;
-    
-    if (attendanceData.gradeData) {
-        Object.keys(attendanceData.gradeData).forEach(grade => {
-            attendanceData.gradeData[grade].forEach(student => {
-                if (student.status) {
-                    switch (student.status) {
-                        case 'present':
-                            totalPresent++;
-                            break;
-                        case 'absent':
-                            totalAbsent++;
-                            break;
-                        case 'late':
-                            totalLate++;
-                            break;
-                        case 'leave':
-                            totalLeave++;
-                            break;
-                    }
-                }
-            });
-        });
-    }
-    
-    const totalRecords = totalPresent + totalAbsent + totalLate + totalLeave;
-    const attendanceRate = totalRecords > 0 ? Math.round(((totalPresent + totalLate) / totalRecords) * 100) : 0;
-    
-    attendanceStatistics = {
-        totalPresent,
-        totalAbsent,
-        totalLate,
-        totalLeave,
-        attendanceRate,
-        weeklyData: generateWeeklyData(totalPresent, totalAbsent, totalLate),
-        monthlyData: generateMonthlyData(totalPresent, totalAbsent),
-        subjectStats: calculateSubjectStats(attendanceData),
-        lastUpdated: new Date().toISOString()
-    };
-    
-    saveStatisticsToStorage();
-}
-
-function setDefaultStatistics(userData = {}) {
-    const defaultPresent = userData.attendedDays || 18;
-    const defaultAbsent = userData.absentDays || 2;
-    const defaultLate = userData.lateDays || 1;
-    const defaultRate = userData.attendanceRate || 90;
-    
-    attendanceStatistics = {
-        totalPresent: defaultPresent,
-        totalAbsent: defaultAbsent,
-        totalLate: defaultLate,
-        totalLeave: 0,
-        attendanceRate: defaultRate,
-        weeklyData: generateWeeklyData(defaultPresent, defaultAbsent, defaultLate),
-        monthlyData: generateMonthlyData(defaultPresent, defaultAbsent),
-        subjectStats: [],
-        lastUpdated: new Date().toISOString()
-    };
-    
-    saveStatisticsToStorage();
-}
-
-function generateWeeklyData(present, absent, late) {
-    const weeklyData = [];
-    const today = new Date();
-    
-    for (let i = 6; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        
-        const total = present + absent + late;
-        const dailyPresent = total > 0 ? Math.floor((present / total) * (Math.random() * 5 + 3)) : Math.floor(Math.random() * 3);
-        const dailyAbsent = total > 0 ? Math.floor((absent / total) * (Math.random() * 2 + 1)) : 0;
-        const dailyRate = dailyPresent > 0 ? Math.round((dailyPresent / (dailyPresent + dailyAbsent)) * 100) : 0;
-        
-        weeklyData.push({
-            date: date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric' }),
-            present: dailyPresent,
-            absent: dailyAbsent,
-            rate: dailyRate
-        });
-    }
-    
-    return weeklyData;
-}
-
-function generateMonthlyData(present, absent) {
-    const monthlyData = [];
-    const currentMonth = new Date().getMonth();
-    
-    for (let i = 11; i >= 0; i--) {
-        const date = new Date();
-        date.setMonth(currentMonth - i);
-        
-        const monthPresent = Math.floor(present * (0.8 + Math.random() * 0.4));
-        const monthAbsent = Math.floor(absent * (0.5 + Math.random() * 1));
-        const monthRate = monthPresent > 0 ? Math.round((monthPresent / (monthPresent + monthAbsent)) * 100) : 0;
-        
-        monthlyData.push({
-            month: date.toLocaleDateString('th-TH', { month: 'short' }),
-            present: monthPresent,
-            absent: monthAbsent,
-            rate: monthRate
-        });
-    }
-    
-    return monthlyData;
-}
-
-function calculateSubjectStats(attendanceData) {
-    const subjectStats = [];
-    
-    if (attendanceData.subjects) {
-        attendanceData.subjects.forEach(subject => {
-            let subjectPresent = 0;
-            let subjectAbsent = 0;
-            let subjectLate = 0;
-            
-            if (attendanceData.gradeData) {
-                Object.keys(attendanceData.gradeData).forEach(grade => {
-                    attendanceData.gradeData[grade].forEach(student => {
-                        if (student.subjectId === subject.id) {
-                            switch (student.status) {
-                                case 'present':
-                                    subjectPresent++;
-                                    break;
-                                case 'absent':
-                                    subjectAbsent++;
-                                    break;
-                                case 'late':
-                                    subjectLate++;
-                                    break;
-                            }
-                        }
-                    });
-                });
-            }
-            
-            const total = subjectPresent + subjectAbsent + subjectLate;
-            const rate = total > 0 ? Math.round(((subjectPresent + subjectLate) / total) * 100) : 0;
-            
-            if (total > 0) {
-                subjectStats.push({
-                    id: subject.id,
-                    name: subject.name,
-                    code: subject.code,
-                    present: subjectPresent,
-                    absent: subjectAbsent,
-                    late: subjectLate,
-                    rate: rate
-                });
-            }
-        });
-    }
-    
-    return subjectStats;
-}
-
-function saveStatisticsToStorage() {
-    try {
-        localStorage.setItem('attendanceStatistics', JSON.stringify(attendanceStatistics));
-        console.log('Statistics saved to storage');
-    } catch (error) {
-        console.error('Error saving statistics:', error);
-    }
+    return attendanceStatistics;
 }
 
 function updateIndexStatistics() {
     try {
-        const presentElement = document.querySelector('.stat-card.attendance h4');
-        if (presentElement) {
-            presentElement.textContent = attendanceStatistics.totalPresent.toString();
-        }
+        const elements = {
+            present: document.querySelector('#totalPresentDisplay, .stat-card.attendance h4'),
+            absent: document.querySelector('#totalAbsentDisplay, .stat-card.absence h4'),
+            late: document.querySelector('#totalLateDisplay, .stat-card.late h4'),
+            rate: document.querySelector('#attendanceRateDisplay, .stat-card.percentage h4')
+        };
         
-        const absentElement = document.querySelector('.stat-card.absence h4');
-        if (absentElement) {
-            absentElement.textContent = attendanceStatistics.totalAbsent.toString();
-        }
-        
-        const lateElement = document.querySelector('.stat-card.late h4');
-        if (lateElement) {
-            lateElement.textContent = attendanceStatistics.totalLate.toString();
-        }
-        
-        const percentageElement = document.querySelector('.stat-card.percentage h4');
-        if (percentageElement) {
-            percentageElement.textContent = `${attendanceStatistics.attendanceRate}%`;
-        }
+        if (elements.present) elements.present.textContent = attendanceStatistics.totalPresent.toString();
+        if (elements.absent) elements.absent.textContent = attendanceStatistics.totalAbsent.toString();
+        if (elements.late) elements.late.textContent = attendanceStatistics.totalLate.toString();
+        if (elements.rate) elements.rate.textContent = `${attendanceStatistics.attendanceRate}%`;
         
         updateProgressBars();
-        updateTrendIndicators();
-        
-        console.log('Index statistics updated');
-        
     } catch (error) {
-        console.error('Error updating index statistics:', error);
+        console.error('Error updating statistics:', error);
     }
 }
 
 function updateProgressBars() {
     const total = attendanceStatistics.totalPresent + attendanceStatistics.totalAbsent + 
-                  attendanceStatistics.totalLate + attendanceStatistics.totalLeave;
-    
+                  attendanceStatistics.totalLate;
     if (total === 0) return;
     
-    const presentPercentage = Math.round((attendanceStatistics.totalPresent / total) * 100);
-    const absentPercentage = Math.round((attendanceStatistics.totalAbsent / total) * 100);
-    const latePercentage = Math.round((attendanceStatistics.totalLate / total) * 100);
-    const attendancePercentage = attendanceStatistics.attendanceRate;
+    const percentages = {
+        present: Math.round((attendanceStatistics.totalPresent / total) * 100),
+        absent: Math.round((attendanceStatistics.totalAbsent / total) * 100),
+        late: Math.round((attendanceStatistics.totalLate / total) * 100),
+        rate: attendanceStatistics.attendanceRate
+    };
     
     const progressBars = document.querySelectorAll('.progress-fill');
-    if (progressBars.length >= 4) {
-        progressBars[0].style.width = `${attendancePercentage}%`;
-        progressBars[1].style.width = `${absentPercentage}%`;
-        progressBars[2].style.width = `${latePercentage}%`;
-        progressBars[3].style.width = `${attendancePercentage}%`;
-    }
-}
-
-function updateTrendIndicators() {
-    const trendElements = document.querySelectorAll('.stat-trend');
-    
-    trendElements.forEach((element, index) => {
-        const trendValue = element.querySelector('span');
-        if (trendValue) {
-            let trend = 0;
-            
-            switch (index) {
-                case 0:
-                    trend = Math.floor(Math.random() * 10) - 2;
-                    break;
-                case 1:
-                    trend = Math.floor(Math.random() * 6) - 5;
-                    break;
-                case 2:
-                    trend = Math.floor(Math.random() * 4) - 2;
-                    break;
-                case 3:
-                    trend = Math.floor(Math.random() * 8) + 1;
-                    break;
-            }
-            
-            trendValue.textContent = `${trend >= 0 ? '+' : ''}${trend}%`;
-            
-            element.className = 'stat-trend';
-            if (trend > 0) {
-                element.classList.add('up');
-            } else if (trend < 0) {
-                element.classList.add('down');
-            } else {
-                element.classList.add('neutral');
-            }
+    progressBars.forEach((bar, index) => {
+        const values = [percentages.rate, percentages.absent, percentages.late, percentages.rate];
+        if (values[index] !== undefined) {
+            bar.style.width = `${values[index]}%`;
         }
     });
 }
 
-// ===== 6. DATE TIME MANAGEMENT =====
+// ===== 7. DATE TIME SYSTEM =====
 function updateDateTime() {
     const now = new Date();
-    const dateOptions = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
-    const timeOptions = { 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit' 
-    };
     
-    const currentDateElement = document.getElementById('current-date');
-    const currentTimeElement = document.getElementById('current-time');
+    const dateElement = document.getElementById('current-date');
+    const timeElement = document.getElementById('current-time');
     
-    if (currentDateElement) {
-        currentDateElement.textContent = now.toLocaleDateString('th-TH', dateOptions);
+    if (dateElement) {
+        dateElement.textContent = now.toLocaleDateString('th-TH', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     }
-    if (currentTimeElement) {
-        currentTimeElement.textContent = now.toLocaleTimeString('th-TH', timeOptions);
+    
+    if (timeElement) {
+        timeElement.textContent = now.toLocaleTimeString('th-TH', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
     }
 }
 
-// ===== 7. USER MANAGEMENT =====
+// ===== 8. USER DATA MANAGEMENT =====
 function loadUserData() {
     try {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -2962,44 +2703,62 @@ function loadUserData() {
             
             const userRoleElement = document.getElementById('displayUserRole');
             if (userRoleElement) {
-                const roleDisplayNames = {
+                const roleNames = {
                     'student': 'นักเรียน',
-                    'teacher': 'ครู',
+                    'teacher': 'ครู', 
                     'admin': 'ผู้ดูแลระบบ'
                 };
-                userRoleElement.textContent = roleDisplayNames[userRole] || 'ผู้ใช้งาน';
+                userRoleElement.textContent = roleNames[userRole] || 'ผู้ใช้งาน';
             }
-            
-            console.log('User data loaded:', currentUserData);
         } else {
-            console.log('User not logged in, redirecting...');
-            // สำหรับ GitHub Pages อาจต้องเปลี่ยนเส้นทาง
-            const profilePath = PathConfig.fixPath('./Profile.html');
-            window.location.href = profilePath;
+            // ไม่ redirect ทันที ให้แสดง modal แทน
+            setTimeout(() => {
+                const loginModal = ModalManager.createModal(`
+                    <div style="text-align: center;">
+                        <h3 style="margin-bottom: 16px;">กรุณาเข้าสู่ระบบ</h3>
+                        <p style="margin-bottom: 20px; color: #64748b;">
+                            คุณยังไม่ได้เข้าสู่ระบบ กรุณาเข้าสู่ระบบก่อนใช้งาน
+                        </p>
+                        <button onclick="window.location.href = '${PathConfig.fixPath('Profile.html')}'" 
+                                style="
+                                    background: #4285f4;
+                                    color: white;
+                                    border: none;
+                                    padding: 12px 24px;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                    font-weight: 500;
+                                ">
+                            ไปหน้าเข้าสู่ระบบ
+                        </button>
+                    </div>
+                `);
+            }, 2000);
         }
     } catch (error) {
         console.error('Error loading user data:', error);
-        const profilePath = PathConfig.fixPath('./Profile.html');
-        window.location.href = profilePath;
     }
 }
 
-// ===== 8. EVENT LISTENERS SETUP =====
+// ===== 9. EVENT LISTENERS SETUP =====
 function setupEventListeners() {
-    console.log('Setting up event listeners for GitHub Pages...');
+    console.log('Setting up event listeners...');
     
     // Navigation links
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
+        // Remove existing listeners to prevent duplicates
+        link.removeEventListener('click', handleNavClick);
         link.addEventListener('click', handleNavClick);
     });
 
     // Action buttons
     const actionButtons = document.querySelectorAll('.action-btn');
     actionButtons.forEach(btn => {
+        btn.removeEventListener('click', handleActionClick);
         btn.addEventListener('click', handleActionClick);
         
-        // Add keyboard support
+        // Keyboard support
         btn.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -3012,148 +2771,116 @@ function setupEventListeners() {
     const periodSelector = document.querySelector('.period-selector');
     if (periodSelector) {
         periodSelector.addEventListener('change', function() {
-            console.log('Period changed to:', this.value);
             loadAttendanceStatistics();
             updateIndexStatistics();
         });
     }
 
-    // External links (Facebook, etc.)
-    const externalLinks = document.querySelectorAll('a[href^="http"]');
-    externalLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Allow external links to work normally
-            console.log('External link clicked:', this.href);
+    // Status cards with onclick
+    const statusCards = document.querySelectorAll('.status-card[onclick]');
+    statusCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const onclickAttr = this.getAttribute('onclick');
+            if (onclickAttr) {
+                // Parse onclick attribute safely
+                const match = onclickAttr.match(/navigateToPage\(['"]([^'"]+)['"]\)/);
+                if (match) {
+                    NavigationManager.safeNavigate(match[1]);
+                }
+            }
         });
     });
 
     console.log('Event listeners setup complete');
 }
 
-// ===== 9. NOTIFICATION SYSTEM FOR GITHUB PAGES =====
+// ===== 10. NOTIFICATION SYSTEM =====
 const NotificationManager = {
-    isShowing: false,
-    lastNotificationTime: 0,
-    minInterval: 5000, // 5 seconds minimum between notifications
-    
-    show: function(message, type = 'info') {
-        const now = Date.now();
-        
-        if (this.isShowing || (now - this.lastNotificationTime) < this.minInterval) {
-            console.log('Notification blocked - too soon or already showing');
-            return false;
-        }
-        
-        this.isShowing = true;
-        this.lastNotificationTime = now;
-        
-        this.display(message, type);
-        return true;
-    },
-    
-    display: function(message, type) {
-        // Remove existing notification
-        const existing = document.getElementById('githubPagesNotification');
-        if (existing) {
-            existing.remove();
-        }
+    show: function(message, type = 'info', duration = 4000) {
+        // Remove existing notifications
+        const existing = document.querySelectorAll('.toast-notification');
+        existing.forEach(n => n.remove());
         
         const notification = document.createElement('div');
-        notification.id = 'githubPagesNotification';
+        notification.className = 'toast-notification';
         notification.style.cssText = `
             position: fixed;
             top: 80px;
             right: 20px;
-            background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+            background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#4285f4'};
             color: white;
             padding: 12px 16px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(66, 133, 244, 0.3);
-            z-index: 9999;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9998;
             display: flex;
             align-items: center;
-            gap: 10px;
-            max-width: 320px;
+            gap: 8px;
+            max-width: 300px;
             font-size: 14px;
             font-weight: 500;
             transform: translateX(100%);
             transition: transform 0.3s ease;
         `;
         
-        if (type === 'error') {
-            notification.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        } else if (type === 'success') {
-            notification.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        }
-        
+        const icon = type === 'error' ? 'alert-circle' : type === 'success' ? 'checkmark-circle' : 'information-circle';
         notification.innerHTML = `
-            <ion-icon name="${type === 'error' ? 'alert-circle' : type === 'success' ? 'checkmark-circle' : 'information-circle'}"></ion-icon>
+            <ion-icon name="${icon}"></ion-icon>
             <span>${message}</span>
-            <button onclick="NotificationManager.hide()" style="
-                background: rgba(255,255,255,0.2);
-                border: none;
-                color: white;
-                cursor: pointer;
-                padding: 4px;
-                border-radius: 4px;
-                display: flex;
-                align-items: center;
-            ">
-                <ion-icon name="close" style="font-size: 16px;"></ion-icon>
-            </button>
         `;
         
         document.body.appendChild(notification);
         
-        // Show animation
         setTimeout(() => {
             notification.style.transform = 'translateX(0)';
         }, 100);
         
-        // Auto hide after 4 seconds
         setTimeout(() => {
-            this.hide();
-        }, 4000);
-    },
-    
-    hide: function() {
-        const notification = document.getElementById('githubPagesNotification');
-        if (notification) {
             notification.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                notification.remove();
-                this.isShowing = false;
-            }, 300);
-        }
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
     }
 };
 
-// ===== 10. GITHUB PAGES INITIALIZATION =====
-function initializeApp() {
-    console.log('Initializing app for GitHub Pages...');
-    console.log('Current location:', window.location.href);
-    console.log('Is GitHub Pages:', PathConfig.isGitHubPages());
-    console.log('Base path:', PathConfig.getBasePath());
+// ===== 11. CLEANUP FUNCTIONS =====
+function cleanupModals() {
+    // ลบ modal และ error dialog ที่อาจค้างอยู่
+    const modalsToRemove = [
+        '#navigationError',
+        '.error-message',
+        '.modal-overlay'
+    ];
     
-    // Update date and time
+    modalsToRemove.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => el.remove());
+    });
+    
+    ModalManager.activeModals.clear();
+    console.log('Modals cleaned up');
+}
+
+// ===== 12. INITIALIZATION =====
+function initializeApp() {
+    console.log('Initializing app...');
+    
+    // Clean up any existing modals first
+    cleanupModals();
+    
+    // Initialize components
     updateDateTime();
     setInterval(updateDateTime, 1000);
     
-    // Load user data
     loadUserData();
-    
-    // Setup event listeners
     setupEventListeners();
     
-    // Load statistics
     loadAttendanceStatistics();
     updateIndexStatistics();
     
-    // Initialize user role
     const role = getUserRole();
     updateUIByRole(role);
     
-    // Show initialization complete notification
+    // Show ready notification
     setTimeout(() => {
         NotificationManager.show('ระบบพร้อมใช้งานแล้ว', 'success');
     }, 1000);
@@ -3161,30 +2888,25 @@ function initializeApp() {
     console.log('App initialization complete');
 }
 
-// ===== 11. UTILITY FUNCTIONS =====
-function debugInfo() {
-    console.log('=== Debug Information ===');
-    console.log('Current URL:', window.location.href);
-    console.log('Is GitHub Pages:', PathConfig.isGitHubPages());
-    console.log('Base Path:', PathConfig.getBasePath());
-    console.log('Current User Role:', getUserRole());
-    console.log('Current User Data:', currentUserData);
-    console.log('Statistics:', attendanceStatistics);
-    
-    // Test path fixing
-    const testPaths = ['member.html', './studens.html', './ClassRoom.html'];
-    testPaths.forEach(path => {
-        console.log(`Path "${path}" -> "${PathConfig.fixPath(path)}"`);
-    });
-}
+// ===== 13. GLOBAL EXPORTS =====
+// Make functions available globally
+window.handleDirectClick = handleDirectClick;
+window.setUserRole = setUserRole;
+window.getUserRole = getUserRole;
+window.ModalManager = ModalManager;
+window.NotificationManager = NotificationManager;
+window.PathConfig = PathConfig;
+window.NavigationManager = NavigationManager;
 
-// Add debug function to window for console access
-window.debugInfo = debugInfo;
+// Legacy function for compatibility
+window.closeNavigationError = function() {
+    ModalManager.closeAllModals();
+};
 
-// ===== 12. ERROR HANDLING =====
+// ===== 14. ERROR HANDLING =====
 window.addEventListener('error', function(e) {
-    console.error('Global error caught:', e.error);
-    NotificationManager.show('เกิดข้อผิดพลาดในระบบ กรุณารีโหลดหน้าเว็บ', 'error');
+    console.error('Global error:', e.error);
+    ModalManager.showError('เกิดข้อผิดพลาดในระบบ', 'กรุณารีโหลดหน้าเว็บ');
 });
 
 window.addEventListener('unhandledrejection', function(e) {
@@ -3192,91 +2914,38 @@ window.addEventListener('unhandledrejection', function(e) {
     NotificationManager.show('เกิดข้อผิดพลาดในการโหลดข้อมูล', 'error');
 });
 
-// ===== 13. STORAGE EVENT HANDLING =====
+// ===== 15. STORAGE EVENT HANDLING =====
 window.addEventListener('storage', function(e) {
     if (e.key === 'studentAttendanceData' || e.key === 'attendanceStatistics') {
-        console.log('Storage data changed, reloading statistics...');
         loadAttendanceStatistics();
         updateIndexStatistics();
-        NotificationManager.show('ข้อมูลสถิติได้รับการอัพเดท', 'info');
+        NotificationManager.show('ข้อมูลได้รับการอัพเดท', 'success');
     }
     
     if (e.key === 'isLoggedIn' && e.newValue !== 'true') {
-        console.log('User logged out from another tab');
-        const profilePath = PathConfig.fixPath('./Profile.html');
-        window.location.href = profilePath;
+        ModalManager.showError('เซสชันหมดอายุ', 'กรุณาเข้าสู่ระบบใหม่');
     }
 });
 
-// ===== 14. PAGE VISIBILITY HANDLING =====
+// ===== 16. PAGE VISIBILITY HANDLING =====
 document.addEventListener('visibilitychange', function() {
     if (!document.hidden) {
-        // Page became visible, refresh data
         loadAttendanceStatistics();
         updateIndexStatistics();
         updateDateTime();
     }
 });
 
-// ===== 15. GLOBAL EXPORTS =====
-// Make functions globally available
-window.handleDirectClick = handleDirectClick;
-window.setUserRole = setUserRole;
-window.getUserRole = getUserRole;
-window.closeNavigationError = closeNavigationError;
-window.NotificationManager = NotificationManager;
-window.PathConfig = PathConfig;
-window.NavigationManager = NavigationManager;
+// ===== 17. DOM READY INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', initializeApp);
 
-// Statistics system
-window.StatisticsSync = {
-    initialize: loadAttendanceStatistics,
-    load: loadAttendanceStatistics,
-    update: updateIndexStatistics,
-    getStatistics: () => attendanceStatistics
-};
-
-// User management system
-window.UserManagement = {
-    getCurrentUser: () => currentUserData,
-    getUserRole: getUserRole,
-    setUserRole: setUserRole,
-    loadUserData: loadUserData
-};
-
-// Navigation system
-window.CheckInSystem = {
-    updateDateTime,
-    handleActionClick,
-    handleDirectClick,
-    setUserRole,
-    getUserRole,
-    updateUIByRole,
-    debugInfo
-};
-
-// ===== 16. DOM READY INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - Starting GitHub Pages initialization...');
-    
-    try {
-        initializeApp();
-    } catch (error) {
-        console.error('Initialization error:', error);
-        NotificationManager.show('เกิดข้อผิดพลาดในการเริ่มต้นระบบ', 'error');
-    }
-});
-
-// ===== 17. FALLBACK HANDLING =====
-// Fallback for older browsers or if DOMContentLoaded already fired
+// Fallback initialization
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
-    // DOM already loaded
     setTimeout(initializeApp, 100);
 }
 
-console.log('GitHub Pages Enhanced Script loaded successfully!');
-console.log('System ready for:', PathConfig.isGitHubPages() ? 'GitHub Pages' : 'Local Development');
+console.log('Enhanced JavaScript loaded - Modal issues fixed!');
     </script>
 </html>
