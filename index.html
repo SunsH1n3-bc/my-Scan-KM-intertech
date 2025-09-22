@@ -2949,36 +2949,8 @@ function getRoleDisplayName(role) {
     return roleNames[role] || currentUserData.roleDisplay || role || 'ผู้ใช้งาน';
 }
 
-// FIXED logout function - ไม่ redirect ไป Profile.html อัตโนมัติ
-function logout() {
-    if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
-        try {
-            SafeStorage.removeItem('isLoggedIn');
-            SafeStorage.removeItem('userData');
-            SafeStorage.removeItem('userRole');
-            SafeStorage.removeItem('attendanceStatistics');
-            
-            // รีเซ็ตตัวแปร
-            currentUserData = {
-                firstName: 'ผู้ใช้',
-                lastName: 'ตัวอย่าง',
-                username: 'user_demo',
-                role: 'student'
-            };
-            currentUserRole = 'student';
-            isLoggedIn = false;
-            
-            console.log('User logged out successfully');
-            
-            // ไปหน้า login แทน Profile.html
-            window.location.href = 'login.html'; // หรือหน้าที่ต้องการ
-            
-        } catch (error) {
-            console.error('Error during logout:', error);
-            showErrorMessage('เกิดข้อผิดพลาดในการออกจากระบบ');
-        }
-    }
-}
+// REMOVED logout function - ลบระบบที่เด้งไป Profile.html
+// ไม่มีการ auto-redirect แล้ว
 
 // Placeholder functions to prevent errors
 function handlePeriodChange(event) {
@@ -3230,7 +3202,7 @@ function checkUserLogin() {
     return true;
 }
 
-// Multi-user system compatibility layer
+// Multi-user system compatibility layer - REMOVED logout redirect
 window.MultiUserSystem = {
     login: function(userData) {
         currentUserData = userData;
@@ -3244,7 +3216,7 @@ window.MultiUserSystem = {
         return { success: true, message: 'เข้าสู่ระบบสำเร็จ' };
     },
     
-    logout: logout,
+    // REMOVED logout function reference
     getCurrentUser: () => currentUserData,
     getUserRole: () => currentUserRole,
     isLoggedIn: () => isLoggedIn,
@@ -3351,8 +3323,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Make functions globally available
-window.logout = logout;
+// Make functions globally available - REMOVED logout function
 window.checkUserLogin = checkUserLogin;
 window.showStatisticsNotification = showStatisticsNotification;
 window.hideStatisticsNotification = hideStatisticsNotification;
