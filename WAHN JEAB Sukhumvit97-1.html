@@ -519,6 +519,7 @@
             <a href="#gallery">รูปอาหาร</a>
             <a href="#promotion">โปรโมชั่น</a>
             <a href="#contact">ติดต่อเรา</a>
+            <button id="loginBtn">เข้าสู่ระบบ</button>
         </nav>
     </header>
 
@@ -671,79 +672,114 @@
         // Scroll effect สำหรับ header
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
-            if (window.scrollY > 50) {
+            if (header && window.scrollY > 50) {
                 header.classList.add('scrolled');
-            } else {
+            } else if (header) {
                 header.classList.remove('scrolled');
             }
         });
 
-        // ฟังก์ชันสลับโหมดผู้จัดการ (สำหรับทดสอบ)
-        document.getElementById('loginBtn').addEventListener('click', function() {
-            isManager = !isManager;
-            toggleManagerMode();
-            this.textContent = isManager ? 'ออกจากระบบ' : 'เข้าสู่ระบบ';
-        });
+        // ฟังก์ชันสลับโหมดผู้จัดการ (เช็คว่า element มีอยู่จริง)
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function() {
+                isManager = !isManager;
+                toggleManagerMode();
+                this.textContent = isManager ? 'ออกจากระบบ' : 'เข้าสู่ระบบ';
+            });
+        }
 
         // แสดง/ซ่อนฟีเจอร์ผู้จัดการ
         function toggleManagerMode() {
             const managerControls = document.getElementById('managerControls');
             const managerActions = document.querySelectorAll('.manager-actions');
             
-            if (isManager) {
-                managerControls.style.display = 'block';
-                managerActions.forEach(action => action.style.display = 'block');
-            } else {
-                managerControls.style.display = 'none';
-                managerActions.forEach(action => action.style.display = 'none');
-                document.getElementById('menuForm').style.display = 'none';
+            if (managerControls) {
+                managerControls.style.display = isManager ? 'block' : 'none';
+            }
+            
+            managerActions.forEach(action => {
+                action.style.display = isManager ? 'block' : 'none';
+            });
+            
+            const menuForm = document.getElementById('menuForm');
+            if (menuForm && !isManager) {
+                menuForm.style.display = 'none';
             }
         }
 
         // เปิดฟอร์มเพิ่มเมนู
-        document.getElementById('addMenuBtn').addEventListener('click', function() {
-            document.getElementById('menuForm').style.display = 'block';
-            clearMenuForm();
-        });
+        const addMenuBtn = document.getElementById('addMenuBtn');
+        if (addMenuBtn) {
+            addMenuBtn.addEventListener('click', function() {
+                const menuForm = document.getElementById('menuForm');
+                if (menuForm) {
+                    menuForm.style.display = 'block';
+                    clearMenuForm();
+                }
+            });
+        }
 
         // ยกเลิกฟอร์ม
-        document.getElementById('cancelMenuBtn').addEventListener('click', function() {
-            document.getElementById('menuForm').style.display = 'none';
-            clearMenuForm();
-        });
+        const cancelMenuBtn = document.getElementById('cancelMenuBtn');
+        if (cancelMenuBtn) {
+            cancelMenuBtn.addEventListener('click', function() {
+                const menuForm = document.getElementById('menuForm');
+                if (menuForm) {
+                    menuForm.style.display = 'none';
+                    clearMenuForm();
+                }
+            });
+        }
 
         // ล้างฟอร์ม
         function clearMenuForm() {
-            document.getElementById('menuName').value = '';
-            document.getElementById('menuPrice').value = '';
-            document.getElementById('menuImage').value = '';
-            document.getElementById('menuDescription').value = '';
+            const menuName = document.getElementById('menuName');
+            const menuPrice = document.getElementById('menuPrice');
+            const menuImage = document.getElementById('menuImage');
+            const menuDescription = document.getElementById('menuDescription');
+            
+            if (menuName) menuName.value = '';
+            if (menuPrice) menuPrice.value = '';
+            if (menuImage) menuImage.value = '';
+            if (menuDescription) menuDescription.value = '';
         }
 
-        // บันทึกเมนู (ยังไม่ได้ทำฟังก์ชันเต็มรูปแบบ)
-        document.getElementById('saveMenuBtn').addEventListener('click', function() {
-            const name = document.getElementById('menuName').value;
-            const price = document.getElementById('menuPrice').value;
-            const image = document.getElementById('menuImage').value || 'https://via.placeholder.com/200';
-            const description = document.getElementById('menuDescription').value;
+        // บันทึกเมนู
+        const saveMenuBtn = document.getElementById('saveMenuBtn');
+        if (saveMenuBtn) {
+            saveMenuBtn.addEventListener('click', function() {
+                const menuName = document.getElementById('menuName');
+                const menuPrice = document.getElementById('menuPrice');
+                const menuImage = document.getElementById('menuImage');
+                const menuDescription = document.getElementById('menuDescription');
+                
+                const name = menuName ? menuName.value : '';
+                const price = menuPrice ? menuPrice.value : '';
+                const image = menuImage ? menuImage.value || 'https://via.placeholder.com/200' : 'https://via.placeholder.com/200';
+                const description = menuDescription ? menuDescription.value : '';
 
-            if (name && price) {
-                alert('บันทึกเมนู: ' + name);
-                document.getElementById('menuForm').style.display = 'none';
-                clearMenuForm();
-            } else {
-                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-            }
-        });
+                if (name && price) {
+                    alert('บันทึกเมนู: ' + name);
+                    const menuForm = document.getElementById('menuForm');
+                    if (menuForm) {
+                        menuForm.style.display = 'none';
+                    }
+                    clearMenuForm();
+                } else {
+                    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                }
+            });
+        }
 
-        // ปุ่มแก้ไข (ยังไม่ได้ทำฟังก์ชันเต็มรูปแบบ)
+        // ปุ่มแก้ไข
         document.querySelectorAll('.editBtn').forEach(btn => {
             btn.addEventListener('click', function() {
                 alert('ฟังก์ชันแก้ไขเมนู (จะเพิ่มทีหลัง)');
             });
         });
 
-        // ปุ่มลบ (ยังไม่ได้ทำฟังก์ชันเต็มรูปแบบ)
+        // ปุ่มลบ
         document.querySelectorAll('.deleteBtn').forEach(btn => {
             btn.addEventListener('click', function() {
                 if (confirm('ต้องการลบเมนูนี้?')) {
