@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หวานเจี๊ยบ - ร้านหมูกระทะ สุขุมวิท 97/1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%);
+            color: #222222;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* พื้นหลังเคลื่อนไหว */
+        .light-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.6), transparent 60%);
+            animation: moveLight 25s ease-in-out infinite alternate;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes moveLight {
+            0% { transform: translate(0,0); }
+            100% { transform: translate(10%,10%); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 2px 30px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #222222;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #000;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        #loginBtn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+        }
+
+        #loginBtn:hover {
+            background: rgba(0,0,0,0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #000;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        section h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: #000;
+            margin: 1rem auto 0;
+        }
+
+        /* Home Section */
+        #home {
+            text-align: center;
+            padding: 6rem 5% 5rem;
+        }
+
+        #home h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        #home img {
+            max-width: 800px;
+            width: 100%;
+            border-radius: 20px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #home img:hover {
+            transform: scale(1.02);
+        }
+
+        #home p {
+            font-size: 1.2rem;
+            color: #444;
+            margin: 1rem 0;
+            font-weight: 300;
+        }
+
+        /* Menu Section */
+        #menu {
+            background: #fafafa;
+            border-radius: 20px;
+            padding: 5rem 5%;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+        }
+
+        #managerControls {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #addMenuBtn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+        }
+
+        #addMenuBtn:hover {
+            background: rgba(0,0,0,0.8);
+            transform: translateY(-2px);
+        }
+
+        #menuForm {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #menuForm h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #000;
+        }
+
+        #menuForm label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: 500;
+            color: #222;
+        }
+
+        #menuForm input,
+        #menuForm textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Noto Sans Thai', sans-serif;
+            transition: border 0.3s ease;
+        }
+
+        #menuForm input:focus,
+        #menuForm textarea:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        #menuForm button {
+            margin-top: 1.5rem;
+            margin-right: 1rem;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+        }
+
+        #saveMenuBtn {
+            background: #000;
+            color: #fff;
+        }
+
+        #saveMenuBtn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        #cancelMenuBtn {
+            background: #e0e0e0;
+            color: #222;
+        }
+
+        #cancelMenuBtn:hover {
+            background: #d0d0d0;
+        }
+
+        #menuList {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .menu-item {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .menu-item h3 {
+            font-size: 1.3rem;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-top: 1rem;
+        }
+
+        .manager-actions {
+            margin-top: 1rem;
+        }
+
+        .manager-actions button {
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+        }
+
+        .editBtn {
+            background: #000;
+            color: #fff;
+        }
+
+        .editBtn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .deleteBtn {
+            background: #e0e0e0;
+            color: #222;
+        }
+
+        .deleteBtn:hover {
+            background: #ffcccb;
+            color: #c00;
+        }
+
+        /* Gallery Section */
+        #gallery {
+            padding: 5rem 5%;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Promotion Section */
+        #promotion {
+            background: #fafafa;
+            border-radius: 20px;
+            padding: 5rem 5%;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+        }
+
+        .promotion-item {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .promotion-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        }
+
+        .promotion-item h3 {
+            font-size: 1.5rem;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .promotion-item p {
+            color: #444;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .promotion-item strong {
+            color: #000;
+        }
+
+        /* Contact Section */
+        #contact {
+            padding: 5rem 5%;
+        }
+
+        .contact-info {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            color: #000;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .contact-info h3:first-child {
+            margin-top: 0;
+        }
+
+        .contact-info p {
+            color: #444;
+            margin: 0.8rem 0;
+            font-size: 1rem;
+        }
+
+        .contact-info iframe {
+            width: 100%;
+            max-width: 100%;
+            height: 400px;
+            border-radius: 15px;
+            margin-top: 1rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            section h2 {
+                font-size: 2rem;
+            }
+
+            #home h2 {
+                font-size: 2.2rem;
+            }
+
+            #menuList {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- พื้นหลังเคลื่อนไหว -->
+    <div class="light-effect"></div>
+
+    <!-- Header -->
+    <header id="header">
+        <h1>หวานเจี๊ยบ สุขุมวิท 97/1</h1>
+        <nav>
+            <a href="#home">หน้าแรก</a>
+            <a href="#menu">เมนูอาหาร</a>
+            <a href="#gallery">รูปอาหาร</a>
+            <a href="#promotion">โปรโมชั่น</a>
+            <a href="#contact">ติดต่อเรา</a>
+        </nav>
+    </header>
+
+    <!-- หน้าแรก -->
+    <section id="home">
+        <h2>ยินดีต้อนรับสู่ หวานเจี๊ยบ</h2>
+        <img src="https://scontent.fnak3-1.fna.fbcdn.net/v/t39.30808-6/565306543_1384615790336996_6508995297859116383_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeEbXU3kXyihSC4TXFmdEaqjBR2x3MIwDe0FHbHcwjAN7ZMzT1EqEZX9CglLxPXuTTyNPziYWYuizFnR80gDfYqt&_nc_ohc=aZe8MT4VffEQ7kNvwG3blZc&_nc_oc=AdlSBiXRojsf5BHdu51YqjSm8bQtAAIs7ICRR5d_NnRrB64dTuZo0c4yXH4N3CxlJSxMR2ARl1aPbcpj6RQiWFMs&_nc_zt=23&_nc_ht=scontent.fnak3-1.fna&_nc_gid=5v-JTCdeHXZpBMRCOLwQcQ&oh=00_AfdL97m9elU7IVZECIXJsWCvnIOU28xpOXr_XN4y_hjsHw&oe=690B3B01" alt="Banner ร้าน">
+        <p>หมูกระทะ อาหารหลากหลายเมนู และเครื่องดื่ม</p>
+        <p>บรรยากาศชิวๆ ราคาเป็นกันเอง</p>
+    </section>
+
+    <!-- เมนูอาหาร -->
+    <section id="menu">
+        <h2>เมนูอาหาร</h2>
+        
+        <!-- ปุ่มเพิ่มเมนูสำหรับผู้จัดการ (ซ่อนไว้) -->
+        <div id="managerControls" style="display: none;">
+            <button id="addMenuBtn">+ เพิ่มเมนูใหม่</button>
+        </div>
+
+        <!-- ฟอร์มเพิ่ม/แก้ไขเมนู (ซ่อนไว้) -->
+        <div id="menuForm" style="display: none;">
+            <h3>เพิ่ม/แก้ไขเมนู</h3>
+            <form>
+                <label>ชื่อเมนู:</label>
+                <input type="text" id="menuName" required>
+                
+                <label>ราคา:</label>
+                <input type="number" id="menuPrice" required>
+                
+                <label>รูปภาพ URL:</label>
+                <input type="text" id="menuImage">
+                
+                <label>คำอธิบาย:</label>
+                <textarea id="menuDescription"></textarea>
+                
+                <button type="button" id="saveMenuBtn">บันทึก</button>
+                <button type="button" id="cancelMenuBtn">ยกเลิก</button>
+            </form>
+        </div>
+
+        <!-- รายการเมนู -->
+        <div id="menuList">
+            <!-- บุฟเฟ่ต์ -->
+            <div class="menu-item">
+                <img src="https://via.placeholder.com/200" alt="บุฟเฟ่ต์หมูกระทะ">
+                <h3>บุฟเฟ่ต์หมูกระทะ ธรรมดา</h3>
+                <p>เนื้อหมู ผัก น้ำซุป</p>
+                <p class="price">199 บาท</p>
+                <!-- ปุ่มแก้ไข/ลบสำหรับผู้จัดการ (ซ่อนไว้) -->
+                <div class="manager-actions" style="display: none;">
+                    <button class="editBtn">แก้ไข</button>
+                    <button class="deleteBtn">ลบ</button>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://via.placeholder.com/200" alt="บุฟเฟ่ต์พิเศษ">
+                <h3>บุฟเฟ่ต์หมูกระทะ พิเศษ</h3>
+                <p>เนื้อหมู เนื้อวัว ซีฟู้ด ผัก น้ำซุป</p>
+                <p class="price">299 บาท</p>
+                <div class="manager-actions" style="display: none;">
+                    <button class="editBtn">แก้ไข</button>
+                    <button class="deleteBtn">ลบ</button>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://via.placeholder.com/200" alt="บุฟเฟ่ต์พรีเมียม">
+                <h3>บุฟเฟ่ต์หมูกระทะ พรีเมียม</h3>
+                <p>เนื้อหมู เนื้อวัว ซีฟู้ดพรีเมียม ผัก น้ำซุป ไอศกรีม</p>
+                <p class="price">399 บาท</p>
+                <div class="manager-actions" style="display: none;">
+                    <button class="editBtn">แก้ไข</button>
+                    <button class="deleteBtn">ลบ</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- รูปอาหาร -->
+    <section id="gallery">
+        <h2>รูปอาหาร</h2>
+        <div class="gallery-grid">
+            <img src="https://via.placeholder.com/300" alt="อาหาร 1">
+            <img src="https://via.placeholder.com/300" alt="อาหาร 2">
+            <img src="https://via.placeholder.com/300" alt="อาหาร 3">
+            <img src="https://via.placeholder.com/300" alt="อาหาร 4">
+            <img src="https://via.placeholder.com/300" alt="อาหาร 5">
+            <img src="https://via.placeholder.com/300" alt="อาหาร 6">
+        </div>
+    </section>
+
+    <!-- โปรโมชั่น -->
+    <section id="promotion">
+        <h2>โปรโมชั่น</h2>
+        
+        <div class="promotion-item">
+            <h3>โปรเบียร์พิเศษ! (ถึง 23:00 น.)</h3>
+            <p><ion-icon name="beer-outline"></ion-icon> เบียร์ช้าง 3 ขวด 259฿</p>
+            <p><ion-icon name="beer-outline"></ion-icon> เบียร์สิงห์ 3 ขวด 269฿</p>
+            <p><strong>ทุก 3 ขวด แถมอาหารฟรี 1 อย่าง</strong></p>
+            <p>เมนูแถม: ข้าวเกรียบกุ้ง / ข้าวเกรียบใบไม้ / เกี๊ยวทอด / เฟรนช์ฟราย / ถั่วแระ</p>
+        </div>
+
+        <div class="promotion-item">
+            <h3>ถ่ายรูป + เช็คอิน รับส่วนลด 5%</h3>
+            <p>ถ่ายรูป + เช็คอิน + กดไลค์ + แชร์ + ให้คะแนนใน Google</p>
+            <p><strong>รับส่วนลด 5% เฉพาะค่าอาหาร</strong></p>
+        </div>
+
+        <div class="promotion-item">
+            <h3>จัดเลี้ยงวันเกิด</h3>
+            <p>รับส่วนลดค่าอาหาร + <strong>ฟรีเค้ก 1 ปอนด์</strong></p>
+            <p>(เฉพาะจองโต๊ะเท่านั้น)</p>
+        </div>
+    </section>
+
+    <!-- ติดต่อเรา -->
+    <section id="contact">
+        <h2>ติดต่อเรา</h2>
+        <div class="contact-info">
+            <h3>ข้อมูลร้าน</h3>
+            <p>📞 เบอร์โทร: 095-589-5959, 064-151-5962</p>
+            <p>📍 ที่อยู่: 96 Sukumvit 97-1, Bangkok, Thailand 10260</p>
+            <p>🗺️ พิกัด: สุขุมวิท 97/1 แยก 2, แยก 6 (BTS บางจาก)</p>
+            <p>🕐 เวลาทำการ: 18:00 น. เป็นต้นไป (ทุกวัน)</p>
+            <p>💬 Line: @802yllkz</p>
+            <p>📷 Instagram: @wahnjeab_skv</p>
+            <p>🎵 TikTok: @wahn_jaeb97.1</p>
+            <p>🍽️ บริการ: รับประทานในร้าน, ที่นั่งกลางแจ้ง</p>
+            
+            <h3>แผนที่ร้าน</h3>
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.0645749999997!2d100.6339!3d13.7307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDQzJzUwLjUiTiAxMDDCsDM4JzAyLjAiRQ!5e0!3m2!1sth!2sth!4v1234567890"
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 หวานเจี๊ยบ สงวนลิขสิทธิ์</p>
+    </footer>
+
+    <script>
+        // ตัวแปรเช็คสถานะผู้ใช้ (false = ลูกค้า, true = ผู้จัดการ)
+        let isManager = false;
+
+        // Scroll effect สำหรับ header
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // ฟังก์ชันสลับโหมดผู้จัดการ (สำหรับทดสอบ)
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            isManager = !isManager;
+            toggleManagerMode();
+            this.textContent = isManager ? 'ออกจากระบบ' : 'เข้าสู่ระบบ';
+        });
+
+        // แสดง/ซ่อนฟีเจอร์ผู้จัดการ
+        function toggleManagerMode() {
+            const managerControls = document.getElementById('managerControls');
+            const managerActions = document.querySelectorAll('.manager-actions');
+            
+            if (isManager) {
+                managerControls.style.display = 'block';
+                managerActions.forEach(action => action.style.display = 'block');
+            } else {
+                managerControls.style.display = 'none';
+                managerActions.forEach(action => action.style.display = 'none');
+                document.getElementById('menuForm').style.display = 'none';
+            }
+        }
+
+        // เปิดฟอร์มเพิ่มเมนู
+        document.getElementById('addMenuBtn').addEventListener('click', function() {
+            document.getElementById('menuForm').style.display = 'block';
+            clearMenuForm();
+        });
+
+        // ยกเลิกฟอร์ม
+        document.getElementById('cancelMenuBtn').addEventListener('click', function() {
+            document.getElementById('menuForm').style.display = 'none';
+            clearMenuForm();
+        });
+
+        // ล้างฟอร์ม
+        function clearMenuForm() {
+            document.getElementById('menuName').value = '';
+            document.getElementById('menuPrice').value = '';
+            document.getElementById('menuImage').value = '';
+            document.getElementById('menuDescription').value = '';
+        }
+
+        // บันทึกเมนู (ยังไม่ได้ทำฟังก์ชันเต็มรูปแบบ)
+        document.getElementById('saveMenuBtn').addEventListener('click', function() {
+            const name = document.getElementById('menuName').value;
+            const price = document.getElementById('menuPrice').value;
+            const image = document.getElementById('menuImage').value || 'https://via.placeholder.com/200';
+            const description = document.getElementById('menuDescription').value;
+
+            if (name && price) {
+                alert('บันทึกเมนู: ' + name);
+                document.getElementById('menuForm').style.display = 'none';
+                clearMenuForm();
+            } else {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+            }
+        });
+
+        // ปุ่มแก้ไข (ยังไม่ได้ทำฟังก์ชันเต็มรูปแบบ)
+        document.querySelectorAll('.editBtn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('ฟังก์ชันแก้ไขเมนู (จะเพิ่มทีหลัง)');
+            });
+        });
+
+        // ปุ่มลบ (ยังไม่ได้ทำฟังก์ชันเต็มรูปแบบ)
+        document.querySelectorAll('.deleteBtn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (confirm('ต้องการลบเมนูนี้?')) {
+                    alert('ลบเมนู (จะเพิ่มทีหลัง)');
+                }
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
