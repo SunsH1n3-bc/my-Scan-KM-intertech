@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หวานเจี๊ยบ - ร้านหมูกระทะ สุขุมวิท 97/1</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <title>ร้านอาหาร หวานเจี๊ยบ - Wahn Jeab Restaurant</title>
+    
     <style>
         * {
             margin: 0;
@@ -17,790 +13,901 @@
         }
 
         body {
-            font-family: 'Noto Sans Thai', 'Poppins', sans-serif;
-            background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%);
-            color: #222222;
-            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* Hero Section with Background */
+        #hero-section {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+                        url('https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565306543_1384615790336996_6508995297859116383_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeEbXU3kXyihSC4TXFmdEaqjBR2x3MIwDe0FHbHcwjAN7ZMzT1EqEZX9CglLxPXuTTyNPziYWYuizFnR80gDfYqt&_nc_ohc=fV8E-_cbwE0Q7kNvwENt831&_nc_oc=Adnype62OwqWO7SZfOKmAr-PcbvGkM6s8WFV4O5VIjLNxN1WruJC16H2sNpwZdDGOj8&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=LKPQMvbUU0xCbwqrPyatww&oh=00_AfjlTa8PKDHgAAV9N59hEdLfF-a3B1vPbYzpIyIJOy-5yA&oe=69108101');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             position: relative;
         }
 
-        /* พื้นหลังเคลื่อนไหว */
-        .light-effect {
+        /* Navigation Bar */
+        #navbar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.6), transparent 60%);
-            animation: moveLight 25s ease-in-out infinite alternate;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        @keyframes moveLight {
-            0% { transform: translate(0,0); }
-            100% { transform: translate(10%,10%); }
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(10px);
-            padding: 1.5rem 5%;
-            position: sticky;
-            top: 0;
+            padding: 1rem 0;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
-        header.scrolled {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 2px 30px rgba(0,0,0,0.1);
+        #navbar.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
-        header h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        nav {
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
         }
 
-        nav a {
-            color: #222222;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: #ccc;
+            font-style: italic;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-menu li a {
+            color: #fff;
             text-decoration: none;
-            font-weight: 400;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
+            padding: 0.5rem 0;
         }
 
-        nav a::after {
+        .nav-menu li a:hover {
+            color: #ddd;
+        }
+
+        .nav-menu li a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 0;
             height: 2px;
-            background: #000;
+            background: #fff;
             transition: width 0.3s ease;
         }
 
-        nav a:hover::after {
+        .nav-menu li a:hover::after {
             width: 100%;
         }
 
-        #loginBtn {
-            background: #000;
-            color: #fff;
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
             border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
             cursor: pointer;
-            font-weight: 500;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
             transition: all 0.3s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
+            border-radius: 3px;
         }
 
-        #loginBtn:hover {
-            background: rgba(0,0,0,0.8);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
         }
 
-        /* Sections */
-        section {
-            padding: 5rem 5%;
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Hero Content */
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            animation: fadeInUp 1s ease;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #e0e0e0;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .welcome-description {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            color: #ccc;
+            max-width: 600px;
+            animation: fadeInUp 1.4s ease;
+        }
+
+        /* Search Container */
+        .search-container {
+            display: flex;
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1.6s ease;
+        }
+
+        #search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-right: none;
+            border-radius: 50px 0 0 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        #search-btn {
+            padding: 1rem 1.5rem;
+            background: #fff;
+            color: #000;
+            border: 2px solid #fff;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #search-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            animation: fadeInUp 2s ease;
+        }
+
+        .mouse {
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            margin: 0 auto 0.5rem;
+            position: relative;
+        }
+
+        .mouse::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+            animation: scroll 2s infinite;
+        }
+
+        .scroll-indicator p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Gallery Section */
+        #gallery-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, #000, #0a0a0a);
+        }
+
+        .container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        section h2 {
+        .section-title {
             font-size: 2.5rem;
-            font-weight: 600;
-            color: #000;
+            font-weight: 700;
             text-align: center;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: #aaa;
             margin-bottom: 3rem;
+        }
+
+        /* Gallery Grid - Zigzag Pattern */
+        .gallery-grid {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .gallery-item {
             position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            flex: 0 0 280px;
         }
 
-        section h2::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 3px;
-            background: #000;
-            margin: 1rem auto 0;
+        .gallery-item:nth-child(odd) {
+            align-self: flex-start;
         }
 
-        /* Home Section */
-        #home {
-            text-align: center;
-            padding: 6rem 5% 5rem;
+        .gallery-item:nth-child(even) {
+            align-self: flex-end;
+            margin-top: 40px;
         }
 
-        #home h2 {
-            font-size: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        #home img {
-            max-width: 800px;
+        .gallery-item img {
             width: 100%;
-            border-radius: 20px;
-            margin: 2rem auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            height: 320px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
         }
 
-        #home img:hover {
-            transform: scale(1.02);
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2);
         }
 
-        #home p {
-            font-size: 1.2rem;
-            color: #444;
-            margin: 1rem 0;
-            font-weight: 300;
+        .gallery-item:nth-child(even):hover {
+            transform: translateY(30px) scale(1.02);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
         }
 
         /* Menu Section */
-        #menu {
-            background: #fafafa;
-            border-radius: 20px;
-            padding: 5rem 5%;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+        #menu-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, #0a0a0a, #000);
         }
 
-        #managerControls {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        #addMenuBtn {
-            background: #000;
-            color: #fff;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
-        }
-
-        #addMenuBtn:hover {
-            background: rgba(0,0,0,0.8);
-            transform: translateY(-2px);
-        }
-
-        #menuForm {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        #menuForm h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #000;
-        }
-
-        #menuForm label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: 500;
-            color: #222;
-        }
-
-        #menuForm input,
-        #menuForm textarea {
-            width: 100%;
-            padding: 0.8rem;
-            margin-top: 0.5rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            font-family: 'Noto Sans Thai', sans-serif;
-            transition: border 0.3s ease;
-        }
-
-        #menuForm input:focus,
-        #menuForm textarea:focus {
-            outline: none;
-            border-color: #000;
-        }
-
-        #menuForm button {
-            margin-top: 1.5rem;
-            margin-right: 1rem;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
-        }
-
-        #saveMenuBtn {
-            background: #000;
-            color: #fff;
-        }
-
-        #saveMenuBtn:hover {
-            background: rgba(0,0,0,0.8);
-        }
-
-        #cancelMenuBtn {
-            background: #e0e0e0;
-            color: #222;
-        }
-
-        #cancelMenuBtn:hover {
-            background: #d0d0d0;
-        }
-
-        #menuList {
+        .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding: 1rem 0;
         }
 
-        .menu-item {
-            background: #fff;
+        .menu-card {
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            text-align: center;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .menu-item:hover {
+        .menu-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
-        .menu-item img {
+        .menu-image {
             width: 100%;
-            height: 200px;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .menu-image img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease;
         }
 
-        .menu-item:hover img {
-            transform: scale(1.05);
+        .menu-card:hover .menu-image img {
+            transform: scale(1.1);
         }
 
-        .menu-item h3 {
-            font-size: 1.3rem;
-            color: #000;
-            margin-bottom: 0.5rem;
+        .menu-content {
+            padding: 1.5rem;
         }
 
-        .menu-item p {
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .menu-item .price {
+        .menu-name {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #000;
-            margin-top: 1rem;
-        }
-
-        .manager-actions {
-            margin-top: 1rem;
-        }
-
-        .manager-actions button {
-            padding: 0.5rem 1rem;
-            margin: 0.3rem;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
-        }
-
-        .editBtn {
-            background: #000;
+            margin-bottom: 0.5rem;
             color: #fff;
         }
 
-        .editBtn:hover {
-            background: rgba(0,0,0,0.8);
-        }
-
-        .deleteBtn {
-            background: #e0e0e0;
-            color: #222;
-        }
-
-        .deleteBtn:hover {
-            background: #ffcccb;
-            color: #c00;
-        }
-
-        /* Gallery Section */
-        #gallery {
-            padding: 5rem 5%;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .gallery-grid img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .gallery-grid img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        }
-
-        /* Promotion Section */
-        #promotion {
-            background: #fafafa;
-            border-radius: 20px;
-            padding: 5rem 5%;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
-        }
-
-        .promotion-item {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .promotion-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-        }
-
-        .promotion-item h3 {
-            font-size: 1.5rem;
-            color: #000;
+        .menu-description {
+            font-size: 0.95rem;
+            color: #aaa;
             margin-bottom: 1rem;
+            line-height: 1.5;
         }
 
-        .promotion-item p {
-            color: #444;
-            margin: 0.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .promotion-item strong {
-            color: #000;
-        }
-
-        /* Contact Section */
-        #contact {
-            padding: 5rem 5%;
-        }
-
-        .contact-info {
-            background: #fff;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.08);
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .contact-info h3 {
-            font-size: 1.5rem;
-            color: #000;
-            margin: 2rem 0 1rem 0;
-        }
-
-        .contact-info h3:first-child {
-            margin-top: 0;
-        }
-
-        .contact-info p {
-            color: #444;
-            margin: 0.8rem 0;
-            font-size: 1rem;
-        }
-
-        .contact-info iframe {
-            width: 100%;
-            max-width: 100%;
-            height: 400px;
-            border-radius: 15px;
-            margin-top: 1rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        /* Footer */
-        footer {
-            background: #000;
+        .menu-price {
+            font-size: 1.3rem;
+            font-weight: 700;
             color: #fff;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
         }
 
-        /* Responsive */
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 2rem;
+            right: 3rem;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2001;
+        }
+
+        .close-lightbox:hover {
+            color: #ddd;
+            transform: rotate(90deg);
+        }
+
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 3rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .prev:hover,
+        .next:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .prev {
+            left: 2rem;
+        }
+
+        .next {
+            right: 2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scroll {
+            0% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(15px);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            nav {
-                gap: 1rem;
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.98);
+                width: 100%;
+                padding: 2rem;
+                gap: 1.5rem;
+                transition: left 0.3s ease;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            nav a {
-                font-size: 0.85rem;
+            .nav-menu.active {
+                left: 0;
             }
 
-            section h2 {
+            .hamburger {
+                display: flex;
+            }
+
+            .logo img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .logo-text p {
+                font-size: 0.65rem;
+            }
+
+            .welcome-title {
                 font-size: 2rem;
             }
 
-            #home h2 {
-                font-size: 2.2rem;
+            .welcome-subtitle {
+                font-size: 1.1rem;
             }
 
-            #menuList {
-                grid-template-columns: 1fr;
+            .welcome-description {
+                font-size: 0.95rem;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            #search-input {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.9rem;
+            }
+
+            #search-btn {
+                padding: 0.875rem 1.25rem;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
             }
 
             .gallery-grid {
+                display: grid;
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+                overflow-x: visible;
             }
 
-            .contact-info {
-                padding: 2rem 1.5rem;
+            .gallery-item {
+                flex: 1 1 100%;
+                border-radius: 20px;
+            }
+
+            .gallery-item:nth-child(even),
+            .gallery-item:nth-child(odd) {
+                align-self: auto;
+                margin-top: 0;
+                transform: translateY(0);
+            }
+
+            .gallery-item:hover {
+                transform: translateY(-10px) scale(1.02);
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .close-lightbox {
+                top: 1rem;
+                right: 1.5rem;
+                font-size: 2.5rem;
+            }
+
+            .prev,
+            .next {
+                font-size: 2rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .prev {
+                left: 1rem;
+            }
+
+            .next {
+                right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 1.75rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+
+            .welcome-description {
+                font-size: 0.9rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1rem;
+            }
+
+            .logo-text p {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .gallery-item img {
+                height: 250px;
+            }
+
+            .menu-image {
+                height: 200px;
             }
         }
     </style>
+
 </head>
 <body>
-    <!-- พื้นหลังเคลื่อนไหว -->
-    <div class="light-effect"></div>
-
-    <!-- Header -->
-    <header id="header">
-        <h1>หวานเจี๊ยบ สุขุมวิท 97/1</h1>
-        <nav>
-            <a href="#home">หน้าแรก</a>
-            <a href="#menu">เมนูอาหาร</a>
-            <a href="#gallery">รูปอาหาร</a>
-            <a href="#promotion">โปรโมชั่น</a>
-            <a href="#contact">ติดต่อเรา</a>
-            <button id="loginBtn">เข้าสู่ระบบ</button>
-        </nav>
-    </header>
-
-    <!-- หน้าแรก -->
-    <section id="home">
-        <h2>ยินดีต้อนรับสู่ หวานเจี๊ยบ</h2>
-        <img src="https://scontent.fnak3-1.fna.fbcdn.net/v/t39.30808-6/565306543_1384615790336996_6508995297859116383_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeEbXU3kXyihSC4TXFmdEaqjBR2x3MIwDe0FHbHcwjAN7ZMzT1EqEZX9CglLxPXuTTyNPziYWYuizFnR80gDfYqt&_nc_ohc=aZe8MT4VffEQ7kNvwG3blZc&_nc_oc=AdlSBiXRojsf5BHdu51YqjSm8bQtAAIs7ICRR5d_NnRrB64dTuZo0c4yXH4N3CxlJSxMR2ARl1aPbcpj6RQiWFMs&_nc_zt=23&_nc_ht=scontent.fnak3-1.fna&_nc_gid=5v-JTCdeHXZpBMRCOLwQcQ&oh=00_AfdL97m9elU7IVZECIXJsWCvnIOU28xpOXr_XN4y_hjsHw&oe=690B3B01" alt="Banner ร้าน">
-        <p>หมูกระทะ อาหารหลากหลายเมนู และเครื่องดื่ม</p>
-        <p>บรรยากาศชิวๆ ราคาเป็นกันเอง</p>
-    </section>
-
-    <!-- เมนูอาหาร -->
-    <section id="menu">
-        <h2>เมนูอาหาร</h2>
-        
-        <!-- ปุ่มเพิ่มเมนูสำหรับผู้จัดการ (ซ่อนไว้) -->
-        <div id="managerControls" style="display: none;">
-            <button id="addMenuBtn">+ เพิ่มเมนูใหม่</button>
-        </div>
-
-        <!-- ฟอร์มเพิ่ม/แก้ไขเมนู (ซ่อนไว้) -->
-        <div id="menuForm" style="display: none;">
-            <h3>เพิ่ม/แก้ไขเมนู</h3>
-            <form>
-                <label>ชื่อเมนู:</label>
-                <input type="text" id="menuName" required>
-                
-                <label>ราคา:</label>
-                <input type="number" id="menuPrice" required>
-                
-                <label>รูปภาพ URL:</label>
-                <input type="text" id="menuImage">
-                
-                <label>คำอธิบาย:</label>
-                <textarea id="menuDescription"></textarea>
-                
-                <button type="button" id="saveMenuBtn">บันทึก</button>
-                <button type="button" id="cancelMenuBtn">ยกเลิก</button>
-            </form>
-        </div>
-
-        <!-- รายการเมนู -->
-        <div id="menuList">
-            <!-- บุฟเฟ่ต์ -->
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/200" alt="บุฟเฟ่ต์หมูกระทะ">
-                <h3>บุฟเฟ่ต์หมูกระทะ ธรรมดา</h3>
-                <p>เนื้อหมู ผัก น้ำซุป</p>
-                <p class="price">199 บาท</p>
-                <!-- ปุ่มแก้ไข/ลบสำหรับผู้จัดการ (ซ่อนไว้) -->
-                <div class="manager-actions" style="display: none;">
-                    <button class="editBtn">แก้ไข</button>
-                    <button class="deleteBtn">ลบ</button>
+    <!-- Hero Section with Background Image -->
+    <div id="hero-section">
+        <!-- Navigation Bar -->
+        <header id="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/487040832_1202643561867554_4220306532272459921_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHx9KxTs_lQ_4Wl4e0JrsXThd8rRQikEseF3ytFCKQSx0xef4B3mZiymwQROep6AkOQpgGg5wAN7mevt8i4QFN_&_nc_ohc=sq0uXzCyqKMQ7kNvwE_hezH&_nc_oc=AdmZBIKjUgB1G5QFu8wID5fpYKGJ-Qsbblc-dECr0mXBSCbwaveDPSnC4FrfK-hmTxs&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=IieleqCihyNf4orU8Ivqxw&oh=00_AfjBhw_DuZKdYlrLLGWLW0Y3vdaHnwJ5pbCVtVD3MhPE4A&oe=690F9C79" alt="โลโก้ร้านหวานเจี๊ยบ">
+                    <div class="logo-text">
+                        <h1>หวานเจี๊ยบ</h1>
+                        <p>Wahn Jeab Restaurant</p>
+                    </div>
                 </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="#home">หน้าแรก</a></li>
+                        <li><a href="./menu.html">เมนูอาหาร</a></li>
+                        <li><a href="#about">เกี่ยวกับเรา</a></li>
+                        <li><a href="#gallery">แกลเลอรี่</a></li>
+                        <li><a href="#contact">ติดต่อเรา</a></li>
+                    </ul>
+                </nav>
+                <button id="menu-toggle" class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
+        </header>
 
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/200" alt="บุฟเฟ่ต์พิเศษ">
-                <h3>บุฟเฟ่ต์หมูกระทะ พิเศษ</h3>
-                <p>เนื้อหมู เนื้อวัว ซีฟู้ด ผัก น้ำซุป</p>
-                <p class="price">299 บาท</p>
-                <div class="manager-actions" style="display: none;">
-                    <button class="editBtn">แก้ไข</button>
-                    <button class="deleteBtn">ลบ</button>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <img src="https://via.placeholder.com/200" alt="บุฟเฟ่ต์พรีเมียม">
-                <h3>บุฟเฟ่ต์หมูกระทะ พรีเมียม</h3>
-                <p>เนื้อหมู เนื้อวัว ซีฟู้ดพรีเมียม ผัก น้ำซุป ไอศกรีม</p>
-                <p class="price">399 บาท</p>
-                <div class="manager-actions" style="display: none;">
-                    <button class="editBtn">แก้ไข</button>
-                    <button class="deleteBtn">ลบ</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- รูปอาหาร -->
-    <section id="gallery">
-        <h2>รูปอาหาร</h2>
-        <div class="gallery-grid">
-            <img src="https://via.placeholder.com/300" alt="อาหาร 1">
-            <img src="https://via.placeholder.com/300" alt="อาหาร 2">
-            <img src="https://via.placeholder.com/300" alt="อาหาร 3">
-            <img src="https://via.placeholder.com/300" alt="อาหาร 4">
-            <img src="https://via.placeholder.com/300" alt="อาหาร 5">
-            <img src="https://via.placeholder.com/300" alt="อาหาร 6">
-        </div>
-    </section>
-
-    <!-- โปรโมชั่น -->
-    <section id="promotion">
-        <h2>โปรโมชั่น</h2>
-        
-        <div class="promotion-item">
-            <h3>โปรเบียร์พิเศษ! (ถึง 23:00 น.)</h3>
-            <p><ion-icon name="beer-outline"></ion-icon> เบียร์ช้าง 3 ขวด 259฿</p>
-            <p><ion-icon name="beer-outline"></ion-icon> เบียร์สิงห์ 3 ขวด 269฿</p>
-            <p><strong>ทุก 3 ขวด แถมอาหารฟรี 1 อย่าง</strong></p>
-            <p>เมนูแถม: ข้าวเกรียบกุ้ง / ข้าวเกรียบใบไม้ / เกี๊ยวทอด / เฟรนช์ฟราย / ถั่วแระ</p>
-        </div>
-
-        <div class="promotion-item">
-            <h3>ถ่ายรูป + เช็คอิน รับส่วนลด 5%</h3>
-            <p>ถ่ายรูป + เช็คอิน + กดไลค์ + แชร์ + ให้คะแนนใน Google</p>
-            <p><strong>รับส่วนลด 5% เฉพาะค่าอาหาร</strong></p>
-        </div>
-
-        <div class="promotion-item">
-            <h3>จัดเลี้ยงวันเกิด</h3>
-            <p>รับส่วนลดค่าอาหาร + <strong>ฟรีเค้ก 1 ปอนด์</strong></p>
-            <p>(เฉพาะจองโต๊ะเท่านั้น)</p>
-        </div>
-    </section>
-
-    <!-- ติดต่อเรา -->
-    <section id="contact">
-        <h2>ติดต่อเรา</h2>
-        <div class="contact-info">
-            <h3>ข้อมูลร้าน</h3>
-            <p>📞 เบอร์โทร: 095-589-5959, 064-151-5962</p>
-            <p>📍 ที่อยู่: 96 Sukumvit 97-1, Bangkok, Thailand 10260</p>
-            <p>🗺️ พิกัด: สุขุมวิท 97/1 แยก 2, แยก 6 (BTS บางจาก)</p>
-            <p>🕐 เวลาทำการ: 18:00 น. เป็นต้นไป (ทุกวัน)</p>
-            <p>💬 Line: @802yllkz</p>
-            <p>📷 Instagram: @wahnjeab_skv</p>
-            <p>🎵 TikTok: @wahn_jaeb97.1</p>
-            <p>🍽️ บริการ: รับประทานในร้าน, ที่นั่งกลางแจ้ง</p>
+        <!-- Welcome Section -->
+        <div class="hero-content">
+            <h2 class="welcome-title">ยินดีต้อนรับสู่ร้านหวานเจี๊ยบ</h2>
+            <p class="welcome-subtitle">บรรยากาศดีๆ บน Rooftop ย่านสุขุมวิท 97/1</p>
+            <p class="welcome-description">ร้านอาหารและเครื่องดื่ม กับบรรยากาศชิวๆ ราคาเป็นกันเอง</p>
             
-            <h3>แผนที่ร้าน</h3>
-            <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.0645749999997!2d100.6339!3d13.7307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDQzJzUwLjUiTiAxMDDCsDM4JzAyLjAiRQ!5e0!3m2!1sth!2sth!4v1234567890"
-                allowfullscreen="" 
-                loading="lazy">
-            </iframe>
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="ค้นหาเมนู ข้อมูล หรือบริการ..." />
+                <button id="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator">
+                <div class="mouse"></div>
+                <p>เลื่อนลงเพื่อดูข้อมูลเพิ่มเติม</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <section id="gallery-section">
+        <div class="container">
+            <h2 class="section-title">บรรยากาศภายในร้าน</h2>
+            <p class="section-subtitle">สัมผัสบรรยากาศชิวๆ บน Rooftop</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item" data-index="1">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/503906419_1262870539178189_2323395634945064094_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGFFcyc-E7CO2tm8f8NvdP4813zlVVp3jPzXfOVVWneMwXPSlXN5WjeQIQERGUpoNvRifJDrZNslxImsYy-A0Wf&_nc_ohc=ePupLWXyNr4Q7kNvwHK7nfJ&_nc_oc=Adk5vfe-wAegJSDo8eSLTusbWSsMoZtSKEPek4P4b4UmuOGbJOYxfcu0TXjcFvnafTQ&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=O42sPOUqj1URlTu7VetaRg&oh=00_AfiZ4Xcbd58NsrjKKhMK5Mkm_lV_xgl0bHqjkb3bmmThzQ&oe=6910A7DF" alt="บรรยากาศร้าน 2">
+                </div>
+                <div class="gallery-item" data-index="2">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/500105976_1254470543351522_8794086956557008945_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFxYeeHTFnd34THW6fhCSpd2wcIrnxyP-rbBwiufHI_6tqwPTaL3QFInHMVNrUSLMma42dclicH471hHc_VVAoG&_nc_ohc=9qVKAoKW-XoQ7kNvwGqGl3Y&_nc_oc=AdkepgKUPOsR7GXFjfaxfKEl1In16AMSX84XHZy5CRqRLZVNbo9bySwh-bwmcNdMMtw&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=iWMzbwIyVUlC9L2k8zIpnA&oh=00_Afgtyp0OTEk4zyWwQfw5BfcpaIODqf4kpX9AS9Yrqfed6w&oe=69109E4D" alt="บรรยากาศร้าน 3">
+                </div>
+                <div class="gallery-item" data-index="3">
+                    <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/500203478_1254470380018205_4842053857525021118_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE3dMTqX0XNq1OmguZW9ywauutO4iHBaeG6607iIcFp4Vq9ByBay78sEuGIGXeGRxkKwC_4TmJ_vhIfq8BIos7y&_nc_ohc=LLzjLSMwtrEQ7kNvwGnMDdr&_nc_oc=Adl9DgB2xf0M_KOX0Yt-aaPRaCelaVN-LP7PWsU4pyAlmI-ypXKflqhfvYOo5GhLq7Y&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=YciDLEDzLKfj5YwbxF9lnQ&oh=00_AfgUm7-HopwtQi--qlKZpxdFA6u-8MNze1EKLQ8GcgS69A&oe=6910B67E" alt="บรรยากาศร้าน 4">
+                </div>
+                <div class="gallery-item" data-index="4">
+                    <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/497874846_1248729073925669_8521642526276510094_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHWQCuqewTeNvFFf1amRcV7HvbFx23pRAQe9sXHbelEBAh6WNkMeHidBwnzDlYE_v6y10EnuPHc-NmBNC1IHzWe&_nc_ohc=Z_qa1NfieWwQ7kNvwHXHZ6k&_nc_oc=AdlXhIknG7EXU6z7wNaO-gbuxzuPVcTLp5P-Xd6f3Yc51k_s2sC58SufgxJ4oPh96zE&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=4Q0WTNlcGk09LFIs_pP1Qw&oh=00_Afg1o8qQjFuSAlWfOAwUeI5Wt0HA5HSEYXnkQR-TdSK5Ew&oe=6910A471" alt="บรรยากาศร้าน 5">
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2025 หวานเจี๊ยบ สงวนลิขสิทธิ์</p>
-    </footer>
+    <!-- Recommended Menu Section -->
+    <section id="menu-section">
+        <div class="container">
+            <h2 class="section-title">เมนูแนะนำ</h2>
+            <p class="section-subtitle">เมนูยอดนิยมของร้าน</p>
+            
+            <div class="menu-grid">
+                <div class="menu-card">
+                    <div class="menu-image">
+                        <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/498619272_1249520220513221_8916045793464191749_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFu2qLVba1R7YwxK7mCLmdwB-ptzNA1YsYH6m3M0DVixsE_9XR01u0g6x0N5wr8ngAfCMe_LNRzDziuDoC7OLwC&_nc_ohc=u6-5jo5h4AwQ7kNvwETaSA8&_nc_oc=AdlmIzuteEjugl74ClwbAMm5rI_xx8yrftw6iPfXnA5uzl8NuqEufUn9f5TEzB4MdkM&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=3tG7Wgp0JQ7aLnk1XxOwoA&oh=00_Afjyt1fg8nBDPdiJNQ1B-quzn-yt3PMNvdcFQQ2iwuEXPg&oe=6910960D" alt="หมูกระทะ">
+                    </div>
+                    <div class="menu-content">
+                        <h3 class="menu-name">หมูกระทะ</h3>
+                        <p class="menu-description">เสริฟพร้อมน้ำจิ้มของทางร้าน</p>
+                        <p class="menu-price">180 บาท</p>
+                    </div>
+                </div>
+
+                <div class="menu-card">
+                    <div class="menu-image">
+                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/499398339_1253689243429652_2323145684678038894_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGOvkfaYKtMVinAuFcoPz3Rix86-gfiEd2LHzr6B-IR3XqnbY4Ri-ag2_pGNcNYFMBl89VHiKamJA720B-8vfXG&_nc_ohc=aRfYHJ2fGJwQ7kNvwGobXFl&_nc_oc=AdkOdCKmqQQ5l7ppm2j_ouvhsptnqHtBAL1QpsKfhyg2-QBMXysEjU5BnMieym2W7JE&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=AkypQQLhZfQVGqAhzoVKbA&oh=00_AfhGRF4tBG8IXO0gmkBB5SUp-8jUrM762WWHdg27QdXi9A&oe=6910B08C" alt="จิ้มจุ่ม">
+                    </div>
+                    <div class="menu-content">
+                        <h3 class="menu-name">จิ้มจุ่ม</h3>
+                        <p class="menu-description">น้ำชุปนัว น้ำจิ้มแซ่บ</p>
+                        <p class="menu-price">180 บาท</p>
+                    </div>
+                </div>
+
+                <div class="menu-card">
+                    <div class="menu-image">
+                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565142917_1384590203672888_4431456045269649863_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=bd9a62&_nc_eui2=AeHerq9F4ikVcziQUZnze4du8onGvWCTQ1Xyica9YJNDVajDF6PKvmEjBtmK0pQ3aG8jLvIoiPsLgC02oCqbI3_k&_nc_ohc=uGXvfCgskbQQ7kNvwG16HsQ&_nc_oc=AdlJFRcq1U8N8QVAa_BUQuHI2UhKpIOgOfeivJTNc4oJj3WeWQe1dE5JTNC6i9mnQPU&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=XlfKLdc3AYc_FTywZTVO5A&oh=00_AfgGchoDyX5OZ-qEIbdjXhAQ-CmaDWdXS_kqC_ASW3xkJw&oe=6910BE58" alt="ตำหมูยอ">
+                    </div>
+                    <div class="menu-content">
+                        <h3 class="menu-name">ตำหมูยอ</h3>
+                        <p class="menu-description">ตำหมูยอแซ่บๆแสบดาก</p>
+                        <p class="menu-price">180 บาท</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
+    </div>
 
     <script>
-        // ตัวแปรเช็คสถานะผู้ใช้ (false = ลูกค้า, true = ผู้จัดการ)
-        let isManager = false;
+        // Hamburger Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
 
-        // Scroll effect สำหรับ header
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (header && window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else if (header) {
-                header.classList.remove('scrolled');
-            }
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
 
-        // ฟังก์ชันสลับโหมดผู้จัดการ (เช็คว่า element มีอยู่จริง)
-        const loginBtn = document.getElementById('loginBtn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', function() {
-                isManager = !isManager;
-                toggleManagerMode();
-                this.textContent = isManager ? 'ออกจากระบบ' : 'เข้าสู่ระบบ';
-            });
-        }
-
-        // แสดง/ซ่อนฟีเจอร์ผู้จัดการ
-        function toggleManagerMode() {
-            const managerControls = document.getElementById('managerControls');
-            const managerActions = document.querySelectorAll('.manager-actions');
-            
-            if (managerControls) {
-                managerControls.style.display = isManager ? 'block' : 'none';
-            }
-            
-            managerActions.forEach(action => {
-                action.style.display = isManager ? 'block' : 'none';
-            });
-            
-            const menuForm = document.getElementById('menuForm');
-            if (menuForm && !isManager) {
-                menuForm.style.display = 'none';
-            }
-        }
-
-        // เปิดฟอร์มเพิ่มเมนู
-        const addMenuBtn = document.getElementById('addMenuBtn');
-        if (addMenuBtn) {
-            addMenuBtn.addEventListener('click', function() {
-                const menuForm = document.getElementById('menuForm');
-                if (menuForm) {
-                    menuForm.style.display = 'block';
-                    clearMenuForm();
-                }
-            });
-        }
-
-        // ยกเลิกฟอร์ม
-        const cancelMenuBtn = document.getElementById('cancelMenuBtn');
-        if (cancelMenuBtn) {
-            cancelMenuBtn.addEventListener('click', function() {
-                const menuForm = document.getElementById('menuForm');
-                if (menuForm) {
-                    menuForm.style.display = 'none';
-                    clearMenuForm();
-                }
-            });
-        }
-
-        // ล้างฟอร์ม
-        function clearMenuForm() {
-            const menuName = document.getElementById('menuName');
-            const menuPrice = document.getElementById('menuPrice');
-            const menuImage = document.getElementById('menuImage');
-            const menuDescription = document.getElementById('menuDescription');
-            
-            if (menuName) menuName.value = '';
-            if (menuPrice) menuPrice.value = '';
-            if (menuImage) menuImage.value = '';
-            if (menuDescription) menuDescription.value = '';
-        }
-
-        // บันทึกเมนู
-        const saveMenuBtn = document.getElementById('saveMenuBtn');
-        if (saveMenuBtn) {
-            saveMenuBtn.addEventListener('click', function() {
-                const menuName = document.getElementById('menuName');
-                const menuPrice = document.getElementById('menuPrice');
-                const menuImage = document.getElementById('menuImage');
-                const menuDescription = document.getElementById('menuDescription');
-                
-                const name = menuName ? menuName.value : '';
-                const price = menuPrice ? menuPrice.value : '';
-                const image = menuImage ? menuImage.value || 'https://via.placeholder.com/200' : 'https://via.placeholder.com/200';
-                const description = menuDescription ? menuDescription.value : '';
-
-                if (name && price) {
-                    alert('บันทึกเมนู: ' + name);
-                    const menuForm = document.getElementById('menuForm');
-                    if (menuForm) {
-                        menuForm.style.display = 'none';
-                    }
-                    clearMenuForm();
-                } else {
-                    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-                }
-            });
-        }
-
-        // ปุ่มแก้ไข
-        document.querySelectorAll('.editBtn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                alert('ฟังก์ชันแก้ไขเมนู (จะเพิ่มทีหลัง)');
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
             });
         });
 
-        // ปุ่มลบ
-        document.querySelectorAll('.deleteBtn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (confirm('ต้องการลบเมนูนี้?')) {
-                    alert('ลบเมนู (จะเพิ่มทีหลัง)');
-                }
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Search functionality
+        const searchBtn = document.getElementById('search-btn');
+        const searchInput = document.getElementById('search-input');
+
+        searchBtn.addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                alert('กำลังค้นหา: ' + searchTerm);
+            }
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+        // Lightbox Gallery
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeLightbox = document.querySelector('.close-lightbox');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+        let currentIndex = 0;
+
+        const images = [];
+        galleryItems.forEach((item, index) => {
+            const img = item.querySelector('img');
+            images.push(img.src);
+            
+            item.addEventListener('click', () => {
+                currentIndex = index;
+                openLightbox(images[currentIndex]);
             });
         });
 
-        // Smooth scroll
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    targetSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        function openLightbox(src) {
+            lightbox.style.display = 'flex';
+            lightboxImg.src = src;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightboxFunc() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        closeLightbox.addEventListener('click', closeLightboxFunc);
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightboxFunc();
+            }
+        });
+
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            lightboxImg.src = images[currentIndex];
+        });
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex + 1) % images.length;
+            lightboxImg.src = images[currentIndex];
+        });
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeLightboxFunc();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextBtn.click();
                 }
-            });
+            }
         });
     </script>
 </body>
