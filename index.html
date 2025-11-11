@@ -4,710 +4,1460 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ร้านอาหาร หวานเจี๊ยบ - Wahn Jeab Restaurant</title>
-    
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            background-color: #000;
-            color: #fff;
-        }
-
-        /* Hero Section with Background */
-        #hero-section {
-            min-height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
-                        url('https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565306543_1384615790336996_6508995297859116383_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeEbXU3kXyihSC4TXFmdEaqjBR2x3MIwDe0FHbHcwjAN7ZMzT1EqEZX9CglLxPXuTTyNPziYWYuizFnR80gDfYqt&_nc_ohc=fV8E-_cbwE0Q7kNvwENt831&_nc_oc=Adnype62OwqWO7SZfOKmAr-PcbvGkM6s8WFV4O5VIjLNxN1WruJC16H2sNpwZdDGOj8&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=LKPQMvbUU0xCbwqrPyatww&oh=00_AfjlTa8PKDHgAAV9N59hEdLfF-a3B1vPbYzpIyIJOy-5yA&oe=69108101');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-        }
-
-        /* Navigation Bar */
-        #navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        #navbar.scrolled {
-            background: rgba(0, 0, 0, 0.95);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-        }
-
-        .logo-text h1 {
-            font-size: 1.5rem;
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .logo-text p {
-            font-size: 0.75rem;
-            color: #ccc;
-            font-style: italic;
-        }
-
-        /* Navigation Menu */
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .nav-menu li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .nav-menu li a:hover {
-            color: #ddd;
-        }
-
-        .nav-menu li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #fff;
-            transition: width 0.3s ease;
-        }
-
-        .nav-menu li a:hover::after {
-            width: 100%;
-        }
-
-        /* Hamburger Menu */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: #fff;
-            transition: all 0.3s ease;
-            border-radius: 3px;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        /* Hero Content */
-        .hero-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 8rem 2rem 4rem;
-            text-align: center;
-        }
-
-        .welcome-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #fff;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
-            animation: fadeInUp 1s ease;
-        }
-
-        .welcome-subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #e0e0e0;
-            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
-            animation: fadeInUp 1.2s ease;
-        }
-
-        .welcome-description {
-            font-size: 1.1rem;
-            margin-bottom: 2.5rem;
-            color: #ccc;
-            max-width: 600px;
-            animation: fadeInUp 1.4s ease;
-        }
-
-        /* Search Container */
-        .search-container {
-            display: flex;
-            max-width: 600px;
-            width: 100%;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1.6s ease;
-        }
-
-        #search-input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-right: none;
-            border-radius: 50px 0 0 50px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        #search-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        #search-input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        #search-btn {
-            padding: 1rem 1.5rem;
-            background: #fff;
-            color: #000;
-            border: 2px solid #fff;
-            border-radius: 0 50px 50px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #search-btn:hover {
-            background: #f0f0f0;
-            transform: scale(1.05);
-        }
-
-        /* Scroll Indicator */
-        .scroll-indicator {
-            animation: fadeInUp 2s ease;
-        }
-
-        .mouse {
-            width: 30px;
-            height: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            margin: 0 auto 0.5rem;
-            position: relative;
-        }
-
-        .mouse::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 2px;
-            animation: scroll 2s infinite;
-        }
-
-        .scroll-indicator p {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Gallery Section */
-        #gallery-section {
-            padding: 6rem 2rem;
-            background: linear-gradient(to bottom, #000, #0a0a0a);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .section-subtitle {
-            font-size: 1.1rem;
-            text-align: center;
-            color: #aaa;
-            margin-bottom: 3rem;
-        }
-
-        /* Gallery Grid - Zigzag Pattern */
-        .gallery-grid {
-            display: flex;
-            gap: 1.5rem;
-            padding: 1rem 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            flex: 0 0 280px;
-        }
-
-        .gallery-item:nth-child(odd) {
-            align-self: flex-start;
-        }
-
-        .gallery-item:nth-child(even) {
-            align-self: flex-end;
-            margin-top: 40px;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 320px;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2);
-        }
-
-        .gallery-item:nth-child(even):hover {
-            transform: translateY(30px) scale(1.02);
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
-
-        /* Menu Section */
-        #menu-section {
-            padding: 6rem 2rem;
-            background: linear-gradient(to bottom, #0a0a0a, #000);
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            padding: 1rem 0;
-        }
-
-        .menu-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .menu-image {
-            width: 100%;
-            height: 250px;
-            overflow: hidden;
-        }
-
-        .menu-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .menu-card:hover .menu-image img {
-            transform: scale(1.1);
-        }
-
-        .menu-content {
-            padding: 1.5rem;
-        }
-
-        .menu-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .menu-description {
-            font-size: 0.95rem;
-            color: #aaa;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .menu-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        /* Lightbox */
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .lightbox-content {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            animation: zoomIn 0.3s ease;
-        }
-
-        .close-lightbox {
-            position: absolute;
-            top: 2rem;
-            right: 3rem;
-            color: #fff;
-            font-size: 3rem;
-            font-weight: 300;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 2001;
-        }
-
-        .close-lightbox:hover {
-            color: #ddd;
-            transform: rotate(90deg);
-        }
-
-        .prev,
-        .next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #fff;
-            font-size: 3rem;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 1rem 1.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            user-select: none;
-        }
-
-        .prev:hover,
-        .next:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .prev {
-            left: 2rem;
-        }
-
-        .next {
-            right: 2rem;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes scroll {
-            0% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(15px);
-            }
-        }
-
-        @keyframes zoomIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                top: 80px;
-                left: -100%;
-                flex-direction: column;
-                background: rgba(0, 0, 0, 0.98);
-                width: 100%;
-                padding: 2rem;
-                gap: 1.5rem;
-                transition: left 0.3s ease;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .logo img {
-                width: 40px;
-                height: 40px;
-            }
-
-            .logo-text h1 {
-                font-size: 1.2rem;
-            }
-
-            .logo-text p {
-                font-size: 0.65rem;
-            }
-
-            .welcome-title {
-                font-size: 2rem;
-            }
-
-            .welcome-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .welcome-description {
-                font-size: 0.95rem;
-            }
-
-            .search-container {
-                max-width: 100%;
-            }
-
-            #search-input {
-                padding: 0.875rem 1.25rem;
-                font-size: 0.9rem;
-            }
-
-            #search-btn {
-                padding: 0.875rem 1.25rem;
-            }
-
-            .nav-container {
-                padding: 0 1rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .section-subtitle {
-                font-size: 1rem;
-            }
-
-            .gallery-grid {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                overflow-x: visible;
-            }
-
-            .gallery-item {
-                flex: 1 1 100%;
-                border-radius: 20px;
-            }
-
-            .gallery-item:nth-child(even),
-            .gallery-item:nth-child(odd) {
-                align-self: auto;
-                margin-top: 0;
-                transform: translateY(0);
-            }
-
-            .gallery-item:hover {
-                transform: translateY(-10px) scale(1.02);
-            }
-
-            .menu-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .close-lightbox {
-                top: 1rem;
-                right: 1.5rem;
-                font-size: 2.5rem;
-            }
-
-            .prev,
-            .next {
-                font-size: 2rem;
-                padding: 0.75rem 1rem;
-            }
-
-            .prev {
-                left: 1rem;
-            }
-
-            .next {
-                right: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .welcome-title {
-                font-size: 1.75rem;
-            }
-
-            .welcome-subtitle {
-                font-size: 1rem;
-            }
-
-            .welcome-description {
-                font-size: 0.9rem;
-            }
-
-            .logo-text h1 {
-                font-size: 1rem;
-            }
-
-            .logo-text p {
-                display: none;
-            }
-
-            .section-title {
-                font-size: 1.75rem;
-            }
-
-            .gallery-item img {
-                height: 250px;
-            }
-
-            .menu-image {
-                height: 200px;
-            }
-        }
+/* ==================== Global Styles ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    background-color: #000;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ==================== Navigation Bar ==================== */
+#navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#navbar.scrolled {
+    background: rgba(0, 0, 0, 0.98);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding: 0.75rem 0;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1001;
+}
+
+.logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+}
+
+.logo-text h1 {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.logo-text p {
+    font-size: 0.75rem;
+    color: #ccc;
+    font-style: italic;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.nav-menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-menu li a:hover {
+    color: #ddd;
+}
+
+.nav-menu li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: width 0.3s ease;
+}
+
+.nav-menu li a:hover::after {
+    width: 100%;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ==================== Hero Section ==================== */
+#hero-section {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+                url('https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565306543_1384615790336996_6508995297859116383_n.jpg?stp=cp6_dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=Ly_vzJEDw0sQ7kNvwECkS1q&_nc_oc=Adkp17vvzyAgGnJANHmrt3eroXvn83Dq2Tln-oZQxzZAEomapPg0mbhg1-dBBTz2C10&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=DX-wKMVjQ2mnDuXqk8GUlQ&oh=00_AfiwHlxd_rURQVwhAMS8NJqxsMpsGW0msOfKMf-GiQJ4rg&oe=69186A01');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    animation: fadeInUp 1s ease;
+}
+
+.welcome-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #e0e0e0;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+    animation: fadeInUp 1.2s ease;
+}
+
+.welcome-description {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    color: #ccc;
+    max-width: 600px;
+    animation: fadeInUp 1.4s ease;
+}
+
+/* Search Container */
+.search-container {
+    display: flex;
+    max-width: 600px;
+    width: 100%;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1.6s ease;
+}
+
+#search-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-right: none;
+    border-radius: 50px 0 0 50px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#search-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+#search-btn {
+    padding: 1rem 1.5rem;
+    background: #fff;
+    color: #000;
+    border: 2px solid #fff;
+    border-radius: 0 50px 50px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#search-btn:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    animation: fadeInUp 2s ease;
+}
+
+.mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    margin: 0 auto 0.5rem;
+    position: relative;
+}
+
+.mouse::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 2px;
+    animation: scroll 2s infinite;
+}
+
+.scroll-indicator p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ==================== Gallery Section ==================== */
+#gallery-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #000, #0a0a0a);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #aaa;
+    margin-bottom: 3rem;
+}
+
+.gallery-grid {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    flex: 0 0 280px;
+}
+
+.gallery-item:nth-child(odd) {
+    align-self: flex-start;
+}
+
+.gallery-item:nth-child(even) {
+    align-self: flex-end;
+    margin-top: 40px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2);
+}
+
+.gallery-item:nth-child(even):hover {
+    transform: translateY(30px) scale(1.02);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+/* ==================== About Section ==================== */
+#about-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #0a0a0a, #050505);
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.about-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.05);
+}
+
+.about-text {
+    padding: 2rem;
+}
+
+.about-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #ddd;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+.about-paragraph:first-of-type {
+    font-size: 1.15rem;
+    color: #fff;
+}
+
+/* ==================== Menu Section ==================== */
+#menu-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #050505, #000);
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    padding: 1rem 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.menu-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menu-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.menu-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.menu-card:hover .menu-image img {
+    transform: scale(1.1);
+}
+
+.menu-content {
+    padding: 1.5rem;
+}
+
+.menu-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.menu-description {
+    font-size: 0.95rem;
+    color: #aaa;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.menu-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ==================== Contact Section ==================== */
+.contact-hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 180px !important;
+    min-height: 60vh;
+    padding: 4rem 2rem;
+}
+
+.hero-overlay {
+    text-align: center;
+    padding: 4rem 2rem;
+    animation: fadeInUp 1s ease;
+}
+
+.contact-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.contact-subtitle {
+    font-size: 1.5rem;
+    color: #ddd;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+.contact-description {
+    font-size: 1.1rem;
+    color: #ccc;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.contact-info-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #000, #0a0a0a);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+}
+
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.icon-wrapper ion-icon {
+    font-size: 2.5rem;
+    color: #fff;
+}
+
+.phone-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.location-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.time-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.contact-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.contact-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.contact-detail {
+    font-size: 1.1rem;
+    color: #bbb;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.contact-link {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.contact-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.open-badge {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: rgba(34, 197, 94, 0.2);
+    border: 2px solid rgba(34, 197, 94, 0.5);
+    border-radius: 50px;
+    color: #22c55e;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Social Media Section */
+.social-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #0a0a0a, #050505);
+}
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.social-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.4s ease;
+    display: block;
+}
+
+.social-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
+}
+
+.social-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.social-icon ion-icon {
+    font-size: 2.2rem;
+    color: #fff;
+}
+
+.instagram .social-icon {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+}
+
+.line .social-icon {
+    background: linear-gradient(135deg, #00c300, #00e600);
+}
+
+.tiktok .social-icon {
+    background: linear-gradient(135deg, #000, #ee1d52, #69c9d0);
+}
+
+.facebook .social-icon {
+    background: linear-gradient(135deg, #1877f2, #42b0ff);
+}
+
+.social-card:hover .social-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.social-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.social-card p {
+    color: #bbb;
+    font-size: 1rem;
+}
+
+/* Map Section */
+.map-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #050505, #000);
+}
+
+.map-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.map-container iframe {
+    display: block;
+    width: 100%;
+    filter: grayscale(20%) contrast(1.1);
+}
+
+/* Footer */
+.footer {
+    padding: 3rem 2rem;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-logo {
+    margin-bottom: 1.5rem;
+}
+
+.footer-logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    margin-bottom: 1rem;
+}
+
+.footer-logo h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.footer-logo p {
+    font-size: 0.9rem;
+    color: #aaa;
+    font-style: italic;
+}
+
+.footer-text {
+    color: #777;
+    font-size: 0.95rem;
+}
+
+/* ==================== Lightbox ==================== */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    animation: zoomIn 0.3s ease;
+}
+
+.close-lightbox {
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2001;
+}
+
+.close-lightbox:hover {
+    color: #ddd;
+    transform: rotate(90deg);
+}
+
+.prev,
+.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.prev:hover,
+.next:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.prev {
+    left: 2rem;
+}
+
+.next {
+    right: 2rem;
+}
+
+/* ==================== Animations ==================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(15px);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* ==================== Responsive Design ==================== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .nav-container {
+        padding: 0 1.5rem;
+    }
+
+    .welcome-title {
+        font-size: 3rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .gallery-grid {
+        gap: 1.2rem;
+    }
+
+    .gallery-item {
+        flex: 0 0 250px;
+    }
+
+    .gallery-item:nth-child(even) {
+        margin-top: 30px;
+    }
+
+    .about-content {
+        gap: 3rem;
+    }
+
+    .about-paragraph {
+        font-size: 1rem;
+    }
+
+    .menu-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .contact-title {
+        font-size: 3rem;
+    }
+    
+    .contact-grid {
+        gap: 2rem;
+    }
+    
+    .social-grid {
+        gap: 1.5rem;
+    }
+}
+
+/* Mobile (Max 768px) */
+@media (max-width: 768px) {
+    /* Navigation */
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        width: 80%;
+        max-width: 320px;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.98);
+        backdrop-filter: blur(20px);
+        padding: 6rem 2rem 2rem;
+        gap: 2rem;
+        transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow-y: auto;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-menu li {
+        width: 100%;
+    }
+
+    .nav-menu li a {
+        display: block;
+        padding: 1rem 0;
+        font-size: 1.15rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .logo img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .logo-text h1 {
+        font-size: 1.3rem;
+    }
+
+    .logo-text p {
+        font-size: 0.7rem;
+    }
+
+    .nav-container {
+        padding: 0 1.2rem;
+    }
+
+    /* Hero Section */
+    #hero-section {
+        background-attachment: scroll;
+    }
+
+    .hero-content {
+        padding: 5rem 1.5rem 3rem;
+        min-height: 100vh;
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .welcome-description {
+        font-size: 1.05rem;
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+        max-width: 500px;
+    }
+
+    .search-container {
+        max-width: 100%;
+        padding: 0 0.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    #search-input {
+        padding: 1rem 1.3rem;
+        font-size: 0.95rem;
+    }
+
+    #search-btn {
+        padding: 1rem 1.3rem;
+    }
+
+    /* Gallery */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .gallery-item {
+        flex: 1 1 100%;
+        border-radius: 20px;
+    }
+
+    .gallery-item:nth-child(even),
+    .gallery-item:nth-child(odd) {
+        align-self: auto;
+        margin-top: 0;
+    }
+
+    .gallery-item img {
+        height: 220px;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    /* About Section */
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .about-text {
+        padding: 1.5rem;
+    }
+
+    .about-paragraph {
+        font-size: 1.05rem;
+        text-align: left;
+        line-height: 1.7;
+    }
+
+    /* Menu Grid - แก้ไขสำหรับมือถือ */
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .menu-card {
+        border-radius: 20px;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .menu-image {
+        height: 260px;
+    }
+
+    .menu-content {
+        padding: 1.75rem 1.5rem;
+    }
+
+    .menu-name {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .menu-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+    }
+
+    .menu-price {
+        font-size: 1.35rem;
+    }
+
+    /* Contact Section */
+    .contact-hero {
+        margin-top: 100px;
+    }
+
+    .contact-title {
+        font-size: 2.8rem;
+    }
+
+    .contact-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .contact-description {
+        font-size: 1.05rem;
+        padding: 0 1rem;
+    }
+
+    .contact-info-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .contact-card {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .icon-wrapper {
+        width: 75px;
+        height: 75px;
+    }
+
+    .icon-wrapper ion-icon {
+        font-size: 2.3rem;
+    }
+
+    .social-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.05rem;
+    }
+
+    .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .social-icon {
+        width: 65px;
+        height: 65px;
+    }
+
+    .social-icon ion-icon {
+        font-size: 2rem;
+    }
+
+    .social-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .map-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .map-container iframe {
+        height: 400px;
+    }
+
+    .footer {
+        padding: 2.5rem 1.5rem;
+    }
+
+    /* Lightbox */
+    .close-lightbox {
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 2.5rem;
+    }
+
+    .prev,
+    .next {
+        font-size: 2rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .prev {
+        left: 0.5rem;
+    }
+
+    .next {
+        right: 0.5rem;
+    }
+
+    .lightbox-content {
+        max-width: 95%;
+        max-height: 80%;
+    }
+
+    .scroll-indicator {
+        margin-top: 2rem;
+    }
+
+    .mouse {
+        width: 26px;
+        height: 46px;
+    }
+
+    .scroll-indicator p {
+        font-size: 0.88rem;
+    }
+}
+
+/* Extra Small Mobile (Max 480px) */
+@media (max-width: 480px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .welcome-description {
+        font-size: 0.98rem;
+    }
+
+    .logo-text h1 {
+        font-size: 1.15rem;
+    }
+
+    .logo-text p {
+        display: none;
+    }
+
+    .section-title {
+        font-size: 1.9rem;
+    }
+
+    /* Gallery - 1 คอลัมน์บนหน้าจอเล็ก */
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-item img {
+        height: 280px;
+    }
+
+    /* Menu - ปรับให้เหมาะกับหน้าจอเล็ก */
+    .menu-grid {
+        padding: 0;
+    }
+
+    .menu-card {
+        max-width: 100%;
+    }
+
+    .menu-image {
+        height: 240px;
+    }
+
+    .menu-content {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .menu-name {
+        font-size: 1.4rem;
+    }
+
+    .menu-description {
+        font-size: 0.95rem;
+    }
+
+    .menu-price {
+        font-size: 1.3rem;
+    }
+
+    .about-paragraph {
+        font-size: 1rem;
+    }
+
+    .contact-title {
+        font-size: 2.3rem;
+    }
+
+    .contact-subtitle {
+        font-size: 1.15rem;
+    }
+
+    .icon-wrapper {
+        width: 70px;
+        height: 70px;
+    }
+
+    .icon-wrapper ion-icon {
+        font-size: 2.1rem;
+    }
+
+    /* Social - 1 คอลัมน์บนหน้าจอเล็ก */
+    .social-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .map-container iframe {
+        height: 350px;
+    }
+}
+
+/* Landscape Orientation (Mobile) */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-content {
+        padding: 4rem 1.5rem 2rem;
+        min-height: 100vh;
+    }
+
+    .welcome-title {
+        font-size: 2.2rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-description {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-container {
+        margin-bottom: 2rem;
+    }
+
+    .scroll-indicator {
+        margin-top: 1.5rem;
+    }
+
+    .mouse {
+        width: 22px;
+        height: 38px;
+    }
+
+    .scroll-indicator p {
+        font-size: 0.8rem;
+    }
+}
+
+/* Medium screens (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .gallery-item img {
+        height: 240px;
+    }
+
+    /* Menu - 1 คอลัมน์บนหน้าจอกลาง เพื่อความสวยงาม */
+    .menu-grid {
+        grid-template-columns: 1fr;
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .menu-image {
+        height: 250px;
+    }
+
+    .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+    .contact-link,
+    .social-card {
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+        touch-action: manipulation;
+    }
+
+    .hamburger {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-menu li a {
+        padding: 1.2rem 0;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+    }
+
+    .contact-link {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
     </style>
-
 </head>
 <body>
-    <!-- Hero Section with Background Image -->
-    <div id="hero-section">
-        <!-- Navigation Bar -->
-        <header id="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/487040832_1202643561867554_4220306532272459921_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHx9KxTs_lQ_4Wl4e0JrsXThd8rRQikEseF3ytFCKQSx0xef4B3mZiymwQROep6AkOQpgGg5wAN7mevt8i4QFN_&_nc_ohc=sq0uXzCyqKMQ7kNvwE_hezH&_nc_oc=AdmZBIKjUgB1G5QFu8wID5fpYKGJ-Qsbblc-dECr0mXBSCbwaveDPSnC4FrfK-hmTxs&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=IieleqCihyNf4orU8Ivqxw&oh=00_AfjBhw_DuZKdYlrLLGWLW0Y3vdaHnwJ5pbCVtVD3MhPE4A&oe=690F9C79" alt="โลโก้ร้านหวานเจี๊ยบ">
-                    <div class="logo-text">
-                        <h1>หวานเจี๊ยบ</h1>
-                        <p>Wahn Jeab Restaurant</p>
-                    </div>
+    <!-- Navigation Bar -->
+    <header id="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='./index.html'" style="cursor: pointer;">
+                <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/487040832_1202643561867554_4220306532272459921_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=Q954lqdodewQ7kNvwHQzxXz&_nc_oc=AdmfFanezBY-HI5S5ZaHbIDCTK8yApcugmiucQxgbgzLIb2mOLeOeubUZIGaW7D92KA&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=WJz4OLrWLyY187vOhpaYSw&oh=00_AfhhWvwTbwH0E8qG71UozldT-gDfZAjl8QMdkpG4wcujkw&oe=69186679" alt="โลโก้ร้านหวานเจี๊ยบ">
+                <div class="logo-text">
+                    <h1>หวานเจี๊ยบ</h1>
+                    <p>Wahn Jeab Restaurant</p>
                 </div>
-                <nav>
-                    <ul class="nav-menu">
-                        <li><a href="#home">หน้าแรก</a></li>
-                        <li><a href="./menu.html">เมนูอาหาร</a></li>
-                        <li><a href="#about">เกี่ยวกับเรา</a></li>
-                        <li><a href="#gallery">แกลเลอรี่</a></li>
-                        <li><a href="#contact">ติดต่อเรา</a></li>
-                    </ul>
-                </nav>
-                <button id="menu-toggle" class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
-        </header>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#home">หน้าแรก</a></li>
+                    <li><a href="./menu.html">เมนูอาหาร</a></li>
+                    <li><a href="#about">เกี่ยวกับเรา</a></li>
+                    <li><a href="#gallery">แกลเลอรี่</a></li>
+                    <li><a href="#contact">ติดต่อเรา</a></li>
+                </ul>
+            </nav>
+            <button id="menu-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
 
-        <!-- Welcome Section -->
+    <!-- Hero Section -->
+    <div id="hero-section">
         <div class="hero-content">
             <h2 class="welcome-title">ยินดีต้อนรับสู่ร้านหวานเจี๊ยบ</h2>
-            <p class="welcome-subtitle">บรรยากาศดีๆ บน Rooftop ย่านสุขุมวิท 97/1</p>
-            <p class="welcome-description">ร้านอาหารและเครื่องดื่ม กับบรรยากาศชิวๆ ราคาเป็นกันเอง</p>
+            <p class="welcome-subtitle">บรรยากาศดีๆ บน Rooftopย่านสุขุมวิท 97/1</p>
+            <p class="welcome-description">ร้านอาหารและเครื่องดื่มกับบรรยากาศชิวๆ ราคาเป็นกันเอง</p>
             
-            <!-- Search Bar -->
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="ค้นหาเมนู ข้อมูล หรือบริการ..." />
                 <button id="search-btn">
@@ -718,7 +1468,6 @@
                 </button>
             </div>
 
-            <!-- Scroll Indicator -->
             <div class="scroll-indicator">
                 <div class="mouse"></div>
                 <p>เลื่อนลงเพื่อดูข้อมูลเพิ่มเติม</p>
@@ -733,23 +1482,23 @@
             <p class="section-subtitle">สัมผัสบรรยากาศชิวๆ บน Rooftop</p>
             
             <div class="gallery-grid">
+                <div class="gallery-item" data-index="0">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/514671833_1287768816688361_9195208557433660724_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=dH01BFNf7O0Q7kNvwGPuMga&_nc_oc=AdlSgB18xc7SaYTQ5DQbIBax3WM07wkeYGZJPefSPsO48NiADxecE_melwUXBvVXgR4&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=YUaplt2UzCMvxSJGEiWf7A&oh=00_AfiQ8nwnJm5xNcSPr5EHX2MJ_1nUFziCXI6NYJVxALB8Jg&oe=69187B85" alt="บรรยากาศร้าน 1">
+                </div>
                 <div class="gallery-item" data-index="1">
-                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/503906419_1262870539178189_2323395634945064094_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGFFcyc-E7CO2tm8f8NvdP4813zlVVp3jPzXfOVVWneMwXPSlXN5WjeQIQERGUpoNvRifJDrZNslxImsYy-A0Wf&_nc_ohc=ePupLWXyNr4Q7kNvwHK7nfJ&_nc_oc=Adk5vfe-wAegJSDo8eSLTusbWSsMoZtSKEPek4P4b4UmuOGbJOYxfcu0TXjcFvnafTQ&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=O42sPOUqj1URlTu7VetaRg&oh=00_AfiZ4Xcbd58NsrjKKhMK5Mkm_lV_xgl0bHqjkb3bmmThzQ&oe=6910A7DF" alt="บรรยากาศร้าน 2">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/504468144_1268715511927025_5994190504731770582_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=7AU0Up030i8Q7kNvwFrVJF_&_nc_oc=AdkRR97P2p5F8DQQNm-jyIFDoUEh5ddlMrSZKBO91moqIx-LruEwoMx36tpgGNCooCQ&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=P_z6cusuVdkfF1B74G_T6Q&oh=00_AfiD5YuFC8poHHYjrVKni-6LcbLOuP7eVQBurEoYii-zyw&oe=69188C66" alt="บรรยากาศร้าน 2">
                 </div>
                 <div class="gallery-item" data-index="2">
-                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/500105976_1254470543351522_8794086956557008945_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFxYeeHTFnd34THW6fhCSpd2wcIrnxyP-rbBwiufHI_6tqwPTaL3QFInHMVNrUSLMma42dclicH471hHc_VVAoG&_nc_ohc=9qVKAoKW-XoQ7kNvwGqGl3Y&_nc_oc=AdkepgKUPOsR7GXFjfaxfKEl1In16AMSX84XHZy5CRqRLZVNbo9bySwh-bwmcNdMMtw&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=iWMzbwIyVUlC9L2k8zIpnA&oh=00_Afgtyp0OTEk4zyWwQfw5BfcpaIODqf4kpX9AS9Yrqfed6w&oe=69109E4D" alt="บรรยากาศร้าน 3">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/498114974_1248728827259027_4965170748305773759_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=wUa8daMYYToQ7kNvwGBHz3-&_nc_oc=AdmLO55L6QZDqD3MKr8FQD3kKNBs0DiFVOjeTP3XeKDlMMu3wTmeBKhiuk2DOqzu1Eo&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=QM6pRusRxTAe-8GzY6aHAA&oh=00_AfjduN-WMbwneONnG5NV0UKDZ65Gani39u2oBVU1_BIeTw&oe=69187842" alt="บรรยากาศร้าน 3">
                 </div>
                 <div class="gallery-item" data-index="3">
-                    <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/500203478_1254470380018205_4842053857525021118_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE3dMTqX0XNq1OmguZW9ywauutO4iHBaeG6607iIcFp4Vq9ByBay78sEuGIGXeGRxkKwC_4TmJ_vhIfq8BIos7y&_nc_ohc=LLzjLSMwtrEQ7kNvwGnMDdr&_nc_oc=Adl9DgB2xf0M_KOX0Yt-aaPRaCelaVN-LP7PWsU4pyAlmI-ypXKflqhfvYOo5GhLq7Y&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=YciDLEDzLKfj5YwbxF9lnQ&oh=00_AfgUm7-HopwtQi--qlKZpxdFA6u-8MNze1EKLQ8GcgS69A&oe=6910B67E" alt="บรรยากาศร้าน 4">
-                </div>
-                <div class="gallery-item" data-index="4">
-                    <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/497874846_1248729073925669_8521642526276510094_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHWQCuqewTeNvFFf1amRcV7HvbFx23pRAQe9sXHbelEBAh6WNkMeHidBwnzDlYE_v6y10EnuPHc-NmBNC1IHzWe&_nc_ohc=Z_qa1NfieWwQ7kNvwHXHZ6k&_nc_oc=AdlXhIknG7EXU6z7wNaO-gbuxzuPVcTLp5P-Xd6f3Yc51k_s2sC58SufgxJ4oPh96zE&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=4Q0WTNlcGk09LFIs_pP1Qw&oh=00_Afg1o8qQjFuSAlWfOAwUeI5Wt0HA5HSEYXnkQR-TdSK5Ew&oe=6910A471" alt="บรรยากาศร้าน 5">
+                    <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/495542645_1242468224551754_6748426212444495067_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_ohc=gPDZY8GWoZsQ7kNvwGLc56u&_nc_oc=Adk7SZoYYODSlvARas6iHtOLT1kQ0SzLoo-vQC1rvhMxl7oeDnTTJW6rA1YZd8bhfW4&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=1OH5JpXR3uMj3JIcwTDC-w&oh=00_AfgWWTZOMRDbxk_voRQ918GG99pW8YWzgJM8GmavdbBPOQ&oe=691872A0" alt="บรรยากาศร้าน 4">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Recommended Menu Section -->
+    <!-- Menu Section -->
     <section id="menu-section">
         <div class="container">
             <h2 class="section-title">เมนูแนะนำ</h2>
@@ -758,7 +1507,7 @@
             <div class="menu-grid">
                 <div class="menu-card">
                     <div class="menu-image">
-                        <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/498619272_1249520220513221_8916045793464191749_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFu2qLVba1R7YwxK7mCLmdwB-ptzNA1YsYH6m3M0DVixsE_9XR01u0g6x0N5wr8ngAfCMe_LNRzDziuDoC7OLwC&_nc_ohc=u6-5jo5h4AwQ7kNvwETaSA8&_nc_oc=AdlmIzuteEjugl74ClwbAMm5rI_xx8yrftw6iPfXnA5uzl8NuqEufUn9f5TEzB4MdkM&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=3tG7Wgp0JQ7aLnk1XxOwoA&oh=00_Afjyt1fg8nBDPdiJNQ1B-quzn-yt3PMNvdcFQQ2iwuEXPg&oe=6910960D" alt="หมูกระทะ">
+                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565653512_1384587830339792_446495632342553061_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Apd9Yf3d-VoQ7kNvwFDEDJ6&_nc_oc=AdnQ7VWDZHL0BK2Ltx573KXk9jTn2whYFYER-HH5Il-JD6Q93TRWNT3ObASsAN2QT4M&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=9Ebfi1gOIvN6R201weJL-g&oh=00_AfhrQDWhxvXHfbdsNO4xHDY_PX8TKlAt_KItmqosL77pLA&oe=69187D0C" alt="หมูกระทะ">
                     </div>
                     <div class="menu-content">
                         <h3 class="menu-name">หมูกระทะ</h3>
@@ -769,7 +1518,7 @@
 
                 <div class="menu-card">
                     <div class="menu-image">
-                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/499398339_1253689243429652_2323145684678038894_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGOvkfaYKtMVinAuFcoPz3Rix86-gfiEd2LHzr6B-IR3XqnbY4Ri-ag2_pGNcNYFMBl89VHiKamJA720B-8vfXG&_nc_ohc=aRfYHJ2fGJwQ7kNvwGobXFl&_nc_oc=AdkOdCKmqQQ5l7ppm2j_ouvhsptnqHtBAL1QpsKfhyg2-QBMXysEjU5BnMieym2W7JE&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=AkypQQLhZfQVGqAhzoVKbA&oh=00_AfhGRF4tBG8IXO0gmkBB5SUp-8jUrM762WWHdg27QdXi9A&oe=6910B08C" alt="จิ้มจุ่ม">
+                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565653512_1384587830339792_446495632342553061_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Apd9Yf3d-VoQ7kNvwFDEDJ6&_nc_oc=AdnQ7VWDZHL0BK2Ltx573KXk9jTn2whYFYER-HH5Il-JD6Q93TRWNT3ObASsAN2QT4M&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=9Ebfi1gOIvN6R201weJL-g&oh=00_AfhrQDWhxvXHfbdsNO4xHDY_PX8TKlAt_KItmqosL77pLA&oe=69187D0C" alt="จิ้มจุ่ม">
                     </div>
                     <div class="menu-content">
                         <h3 class="menu-name">จิ้มจุ่ม</h3>
@@ -780,7 +1529,7 @@
 
                 <div class="menu-card">
                     <div class="menu-image">
-                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/565142917_1384590203672888_4431456045269649863_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=bd9a62&_nc_eui2=AeHerq9F4ikVcziQUZnze4du8onGvWCTQ1Xyica9YJNDVajDF6PKvmEjBtmK0pQ3aG8jLvIoiPsLgC02oCqbI3_k&_nc_ohc=uGXvfCgskbQQ7kNvwG16HsQ&_nc_oc=AdlJFRcq1U8N8QVAa_BUQuHI2UhKpIOgOfeivJTNc4oJj3WeWQe1dE5JTNC6i9mnQPU&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=XlfKLdc3AYc_FTywZTVO5A&oh=00_AfgGchoDyX5OZ-qEIbdjXhAQ-CmaDWdXS_kqC_ASW3xkJw&oe=6910BE58" alt="ตำหมูยอ">
+                        <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/558061891_1377722131026362_5470524154280145125_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fVrueSiu8_IQ7kNvwHPIsmU&_nc_oc=AdnyDbQzthjaO8g0nWkUsd4ycDizDkgzCTjTbEcWDB7Q5ZMBOVTYgyw_NQkzpaQjcxw&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=o237B4EIXZ6HDLn1e_Hj8A&oh=00_AfiTd5ISfYVzW8CNr7zjOfcFec0pItl1QXFCRqhvTlkK5Q&oe=69186E6C" alt="ตำหมูยอ">
                     </div>
                     <div class="menu-content">
                         <h3 class="menu-name">ตำหมูยอ</h3>
@@ -792,6 +1541,146 @@
         </div>
     </section>
 
+    <!-- About Section -->
+    <section id="about-section">
+        <div class="container">
+            <h2 class="section-title">เกี่ยวกับเรา</h2>
+            <p class="section-subtitle">พื้นที่แห่งความทรงจำและความอบอุ่น</p>
+            
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="https://scontent.fbkk14-1.fna.fbcdn.net/v/t39.30808-6/494597458_1240919254706651_4815787913394665268_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=3sVbN4PeveYQ7kNvwEUIYOz&_nc_oc=AdmYjZ4jooA0oJ3l270zneJnjZhFn_LO9Fa7r4f262XFqUWbxfEnIH3_ahttGzAPH4A&_nc_zt=23&_nc_ht=scontent.fbkk14-1.fna&_nc_gid=19RwP2-ZXG6B9nfEDEvlfA&oh=00_Afj9MhviI-7UfMzkFaZ9aAOvxffmRn8z2wy7w2-wqMP2RA&oe=69188BA2" alt="บรรยากาศภายในร้าน">
+                </div>
+                <div class="about-text">
+                    <p class="about-paragraph">เมื่อก้าวเข้ามาในร้าน คุณจะได้สัมผัสกับกลิ่นอาหารหอมอ่อน ๆ ลอยมากับลมเย็นใต้แสงไฟระยิบระยับ เสียงหัวเราะของผู้คนคลอเคลียไปกับเสียงเพลงเบา ๆ ที่ทำให้บรรยากาศดูมีชีวิต</p>
+                    
+                    <p class="about-paragraph">ร้านของเราไม่ใช่แค่สถานที่รับประทานอาหาร แต่คือ "พื้นที่แห่งความทรงจำ" ที่ทุกกลุ่มเพื่อนและครอบครัวสามารถใช้เวลาร่วมกันได้อย่างอบอุ่น</p>
+                    
+                    <p class="about-paragraph">ทุกโต๊ะเต็มไปด้วยรอยยิ้ม เสียงชวนคุย และจานอาหารที่จัดเสิร์ฟด้วยความตั้งใจ เราเชื่อว่าความอร่อยไม่ได้อยู่แค่ในรสชาติ แต่อยู่ในช่วงเวลาที่ได้แบ่งปันกัน</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-hero">
+        <div class="hero-overlay">
+            <h1 class="contact-title">ติดต่อเรา</h1>
+            <p class="contact-subtitle">Get in Touch</p>
+            <p class="contact-description">ไม่ว่าคุณจะอยากสอบถาม เสนอความคิดเห็น<br class="hide-mobile">หรือเพียงแค่แวะมาทักทาย<br>เรายินดีต้อนรับทุกข้อความจากคุณเสมอ</p>
+        </div>
+    </section>
+
+    <!-- Contact Info Section -->
+    <section class="contact-info-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="icon-wrapper phone-icon">
+                        <ion-icon name="call"></ion-icon>
+                    </div>
+                    <h3>โทรศัพท์</h3>
+                    <p class="contact-detail">095-589-5959</p>
+                    <a href="tel:0955895959" class="contact-link">โทรเลย</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="icon-wrapper location-icon">
+                        <ion-icon name="location"></ion-icon>
+                    </div>
+                    <h3>ที่อยู่</h3>
+                    <p class="contact-detail">96 Sukhumvit 97/1<br>Bangkok, Thailand</p>
+                    <a href="https://www.google.com/maps?q=324+%E0%B8%8B%E0%B8%AD%E0%B8%A2+%E0%B8%AA%E0%B8%B8%E0%B8%82%E0%B8%B8%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%97+97/1+%E0%B9%81%E0%B8%A2%E0%B8%81+6+%E0%B9%81%E0%B8%82%E0%B8%A7%E0%B8%87%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%88%E0%B8%B2%E0%B8%81+%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%82%E0%B8%99%E0%B8%87+%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3+10260&ftid=0x30e29f5bada8e1bb:0x3e79f6c03c77962c&entry=gps&lucs=,94224825,94227247,94227248,94231188,47071704,47069508,94218641,94203019,47084304,94208458,94208447&g_ep=CAISEjI1LjEyLjEuNzM3NzM5MTA4MBgAINeCAypjLDk0MjI0ODI1LDk0MjI3MjQ3LDk0MjI3MjQ4LDk0MjMxMTg4LDQ3MDcxNzA0LDQ3MDY5NTA4LDk0MjE4NjQxLDk0MjAzMDE5LDQ3MDg0MzA0LDk0MjA4NDU4LDk0MjA4NDQ3QgJUSA%3D%3D&skid=bcbc8eea-682c-4267-8ad6-e58c57a37fd6&g_st=com.google.maps.preview.copy" target="_blank" class="contact-link">ดูแผนที่</a>
+                </div>
+
+                <div class="contact-card">
+                    <div class="icon-wrapper time-icon">
+                        <ion-icon name="time"></ion-icon>
+                    </div>
+                    <h3>เวลาเปิดทำการ</h3>
+                    <p class="contact-detail">เปิดทุกวัน<br>18:30 น. - 04:00 น.</p>
+                    <span class="open-badge">เปิดอยู่</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section class="social-section">
+        <div class="container">
+            <h2 class="section-title">ติดตามเราได้ที่</h2>
+            <p class="section-subtitle">Follow us on social media</p>
+            
+            <div class="social-grid">
+                <a href="instagram.com/wahnjeab_skv" target="_blank" class="social-card instagram">
+                    <div class="social-icon">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                    </div>
+                    <h3>Instagram</h3>
+                    <p>@wahnjeab</p>
+                </a>
+
+                <a href="https://lin.ee/etANm0I" target="_blank" class="social-card line">
+                    <div class="social-icon">
+                        <ion-icon name="chatbubble-ellipses"></ion-icon>
+                    </div>
+                    <h3>LINE</h3>
+                    <p>แชทกับเรา</p>
+                </a>
+
+                <a href="https://www.tiktok.com/@wahn_jaeb97.1" target="_blank" class="social-card tiktok">
+                    <div class="social-icon">
+                        <ion-icon name="logo-tiktok"></ion-icon>
+                    </div>
+                    <h3>TikTok</h3>
+                    <p>@wahnjeab</p>
+                </a>
+
+                <a href="https://www.facebook.com/worksukhumvit" target="_blank" class="social-card facebook">
+                    <div class="social-icon">
+                        <ion-icon name="logo-facebook"></ion-icon>
+                    </div>
+                    <h3>Facebook</h3>
+                    <p>ร้านหวานเจี๊ยบ</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <h2 class="section-title">แผนที่ร้าน</h2>
+            <p class="section-subtitle">มาหาเราได้ที่นี่</p>
+            
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.324027263849!2d100.6136707!3d13.6988146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29f5bada8e1bb%3A0x3e79f6c03c77962c!2sWahn%20Jeab!5e0!3m2!1sth!2sth!4v1762417224805!5m2!1sth!2sth" 
+                    width="100%" 
+                    height="400" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/487040832_1202643561867554_4220306532272459921_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=Q954lqdodewQ7kNvwHQzxXz&_nc_oc=AdmfFanezBY-HI5S5ZaHbIDCTK8yApcugmiucQxgbgzLIb2mOLeOeubUZIGaW7D92KA&_nc_zt=23&_nc_ht=scontent.fbkk10-1.fna&_nc_gid=WJz4OLrWLyY187vOhpaYSw&oh=00_AfhhWvwTbwH0E8qG71UozldT-gDfZAjl8QMdkpG4wcujkw&oe=69186679" alt="หวานเจี๊ยบ">
+                    <h3>หวานเจี๊ยบ</h3>
+                    <p>Wahn Jeab Restaurant</p>
+                </div>
+                <p class="footer-text">© 2025 ร้านหวานเจี๊ยบ. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox">
         <span class="close-lightbox">&times;</span>
@@ -801,114 +1690,271 @@
     </div>
 
     <script>
-        // Hamburger Menu Toggle
-        const menuToggle = document.getElementById('menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
+       // ==================== Menu Toggle (Hamburger) ====================
+const menuToggle = document.getElementById('menu-toggle');
+const navMenu = document.querySelector('.nav-menu');
 
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
+// Toggle menu when hamburger is clicked
+menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('active');
+    navMenu.classList.toggle('active');
+    
+    // Prevent body scroll when menu is open
+    if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+});
 
-        // Close menu when clicking on a link
-        const navLinks = document.querySelectorAll('.nav-menu a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
+// Close menu when clicking on a link
+const navLinks = document.querySelectorAll('.nav-menu a');
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (navMenu.classList.contains('active') && 
+        !navMenu.contains(e.target) && 
+        !menuToggle.contains(e.target)) {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// ==================== Navbar Scroll Effect ====================
+const navbar = document.getElementById('navbar');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
+
+// ==================== Smooth Scroll ====================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        
+        if (href === '#' || href === '#home') {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-        });
-
-        // Navbar scroll effect
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Search functionality
-        const searchBtn = document.getElementById('search-btn');
-        const searchInput = document.getElementById('search-input');
-
-        searchBtn.addEventListener('click', () => {
-            const searchTerm = searchInput.value.trim();
-            if (searchTerm) {
-                alert('กำลังค้นหา: ' + searchTerm);
-            }
-        });
-
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchBtn.click();
-            }
-        });
-
-        // Lightbox Gallery
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const closeLightbox = document.querySelector('.close-lightbox');
-        const prevBtn = document.querySelector('.prev');
-        const nextBtn = document.querySelector('.next');
-        let currentIndex = 0;
-
-        const images = [];
-        galleryItems.forEach((item, index) => {
-            const img = item.querySelector('img');
-            images.push(img.src);
-            
-            item.addEventListener('click', () => {
-                currentIndex = index;
-                openLightbox(images[currentIndex]);
+            return;
+        }
+        
+        const target = document.querySelector(href);
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
-        });
-
-        function openLightbox(src) {
-            lightbox.style.display = 'flex';
-            lightboxImg.src = src;
-            document.body.style.overflow = 'hidden';
         }
+    });
+});
 
-        function closeLightboxFunc() {
-            lightbox.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+// ==================== Business Hours Status ====================
+function updateBusinessStatus() {
+    const openBadge = document.querySelector('.open-badge');
+    
+    if (!openBadge) return;
+    
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTime = currentHour * 60 + currentMinute;
+    
+    // เวลาเปิด 18:30 (1110 นาที) ถึง 04:00 (240 นาที)
+    const openTime = 18 * 60 + 30; // 18:30 = 1110 นาที
+    const closeTime = 4 * 60; // 04:00 = 240 นาที
+    
+    let isOpen = false;
+    
+    // ถ้าเวลาปัจจุบันหลัง 18:30 หรือก่อน 04:00
+    if (currentTime >= openTime || currentTime < closeTime) {
+        isOpen = true;
+    }
+    
+    if (isOpen) {
+        openBadge.textContent = 'เปิดอยู่';
+        openBadge.style.background = 'rgba(34, 197, 94, 0.2)';
+        openBadge.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+        openBadge.style.color = '#22c55e';
+    } else {
+        openBadge.textContent = 'ปิดแล้ว';
+        openBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+        openBadge.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+        openBadge.style.color = '#ef4444';
+    }
+}
 
-        closeLightbox.addEventListener('click', closeLightboxFunc);
-
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                closeLightboxFunc();
+// ==================== Fade-in Animation on Scroll ====================
+if ('IntersectionObserver' in window) {
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+                fadeObserver.unobserve(entry.target);
             }
         });
+    }, {
+        threshold: 0.1
+    });
 
-        prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            lightboxImg.src = images[currentIndex];
-        });
+    // Observe contact cards and social cards
+    document.querySelectorAll('.contact-card, .social-card').forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        fadeObserver.observe(item);
+    });
+}
 
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentIndex = (currentIndex + 1) % images.length;
-            lightboxImg.src = images[currentIndex];
-        });
+// ==================== Parallax Effect Disabled ====================
+// ปิดการทำงานของ parallax เพื่อไม่ให้แก้ไข margin-top
+// window.addEventListener('scroll', () => {
+//     const scrolled = window.scrollY;
+//     const hero = document.querySelector('.contact-hero');
+//     if (hero && scrolled < window.innerHeight) {
+//         hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+//     }
+// });
 
-        // Keyboard navigation for lightbox
-        document.addEventListener('keydown', (e) => {
-            if (lightbox.style.display === 'flex') {
-                if (e.key === 'Escape') {
-                    closeLightboxFunc();
-                } else if (e.key === 'ArrowLeft') {
-                    prevBtn.click();
-                } else if (e.key === 'ArrowRight') {
-                    nextBtn.click();
-                }
-            }
-        });
+// ==================== Phone Number Click Tracking ====================
+const phoneLink = document.querySelector('a[href^="tel:"]');
+if (phoneLink) {
+    phoneLink.addEventListener('click', () => {
+        console.log('📞 User clicked phone number');
+        // คุณสามารถเพิ่ม analytics tracking ที่นี่
+    });
+}
+
+// ==================== Map Link Click Tracking ====================
+const mapLinks = document.querySelectorAll('a[href*="maps"]');
+mapLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        console.log('🗺️ User clicked map link');
+        // คุณสามารถเพิ่ม analytics tracking ที่นี่
+    });
+});
+
+// ==================== Social Media Click Tracking ====================
+const socialLinks = document.querySelectorAll('.social-card');
+socialLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        const platform = link.querySelector('h3').textContent;
+        console.log(`📱 User clicked ${platform} link`);
+        // คุณสามารถเพิ่ม analytics tracking ที่นี่
+    });
+});
+
+// ==================== Initialize ====================
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('📧 Contact page loaded successfully!');
+    
+    // Update business status
+    updateBusinessStatus();
+    
+    // Update every minute
+    setInterval(updateBusinessStatus, 60000);
+    
+    // Add loading animation complete class
+    document.body.classList.add('loaded');
+});
+
+// ==================== Contact Form (ถ้ามีในอนาคต) ====================
+// สำหรับใช้งานในอนาคตถ้าต้องการเพิ่มฟอร์มติดต่อ
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // จัดการการส่งฟอร์ม
+        const formData = new FormData(contactForm);
+        
+        console.log('📬 Form submitted:', Object.fromEntries(formData));
+        
+        // แสดงข้อความสำเร็จ
+        alert('ขอบคุณที่ติดต่อเรา! เราจะตอบกลับโดยเร็วที่สุด 🙏');
+        
+        // รีเซ็ตฟอร์ม
+        contactForm.reset();
+    });
+}
+
+// ==================== Copy to Clipboard (สำหรับเบอร์โทร/ที่อยู่) ====================
+function copyToClipboard(text, type) {
+    navigator.clipboard.writeText(text).then(() => {
+        // สร้าง toast notification
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast';
+        toast.textContent = `คัดลอก${type}แล้ว! ✓`;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(34, 197, 94, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideInUp 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideOutDown 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+}
+
+// เพิ่ม CSS สำหรับ animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutDown {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
     </script>
 </body>
 </html>
